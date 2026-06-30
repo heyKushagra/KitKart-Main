@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { useSearchParams } from "next/navigation";
 
 interface Product {
   id: string;
@@ -57,8 +58,9 @@ const CATEGORIES = [
   "All Products",
   "Cricket Jerseys",
   "Football Jerseys",
-  "Basketball Jerseys",
-  "Custom Jerseys"
+  "Player Jerseys",
+  "Club Jerseys",
+  "Football Boots"
 ];
 
 const SORT_OPTIONS = [
@@ -69,6 +71,9 @@ const SORT_OPTIONS = [
 ];
 
 export default function ShopClient() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -77,6 +82,25 @@ export default function ShopClient() {
   const [sortOption, setSortOption] = useState("featured");
 
   const [visibleCount, setVisibleCount] = useState(12);
+
+  // Sync category query parameter on mount/load
+  useEffect(() => {
+    if (categoryParam) {
+      const lowerParam = categoryParam.toLowerCase();
+      if (lowerParam === "jerseys") {
+        setActiveCategory("Jerseys");
+      } else if (lowerParam === "boots" || lowerParam === "football boots") {
+        setActiveCategory("Football Boots");
+      } else {
+        const matched = CATEGORIES.find(
+          (c) => c.toLowerCase() === lowerParam
+        );
+        if (matched) {
+          setActiveCategory(matched);
+        }
+      }
+    }
+  }, [categoryParam]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -175,9 +199,20 @@ export default function ShopClient() {
     let result = [...products];
 
     if (activeCategory !== "All Products") {
-      result = result.filter(
-        (p) => p.category?.toLowerCase() === activeCategory.toLowerCase()
-      );
+      const lowerActive = activeCategory.toLowerCase();
+      if (lowerActive === "jerseys") {
+        result = result.filter(
+          (p) => p.category?.toLowerCase().includes("jersey")
+        );
+      } else if (lowerActive === "football boots" || lowerActive === "boots") {
+        result = result.filter(
+          (p) => p.category?.toLowerCase().includes("boot")
+        );
+      } else {
+        result = result.filter(
+          (p) => p.category?.toLowerCase() === lowerActive
+        );
+      }
     }
 
     if (searchQuery.trim()) {

@@ -35,11 +35,11 @@ export default function Footer() {
           <div>
             <h4 className="footer-title">Shop</h4>
             <div className="footer-links">
-              <Link href="#" className="footer-link">All Products</Link>
-              <Link href="#" className="footer-link">Football Jerseys</Link>
-              <Link href="#" className="footer-link">Cricket Jerseys</Link>
-              <Link href="#" className="footer-link">Club Jerseys</Link>
-              <Link href="#" className="footer-link">International Jerseys</Link>
+              <Link href="/shop" className="footer-link">All Products</Link>
+              <Link href="/shop?category=Football%20Jerseys" className="footer-link">Football Jerseys</Link>
+              <Link href="/shop?category=Cricket%20Jerseys" className="footer-link">Cricket Jerseys</Link>
+              <Link href="/shop?category=Club%20Jerseys" className="footer-link">Club Jerseys</Link>
+              <Link href="/shop?category=Player%20Jerseys" className="footer-link">Player Jerseys</Link>
             </div>
           </div>
           <div>

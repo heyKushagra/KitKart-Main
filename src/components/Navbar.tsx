@@ -86,7 +86,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="/" className="nav-link">
+            <Link href="/categories" className="nav-link">
               Categories
             </Link>
           </li>

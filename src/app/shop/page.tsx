@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import ShopClient from "./ShopClient";
 
 export const metadata: Metadata = {
@@ -8,5 +9,13 @@ export const metadata: Metadata = {
 };
 
 export default function ShopPage() {
-  return <ShopClient />;
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: "100vh", background: "var(--clr-bg)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--clr-text-secondary)" }}>
+        Loading Shop...
+      </div>
+    }>
+      <ShopClient />
+    </Suspense>
+  );
 }

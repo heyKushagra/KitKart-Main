@@ -218,7 +218,7 @@ export default function Home() {
               <p className="section-label">Shop by Category</p>
               <h2 className="section-title">Find Your Jersey</h2>
             </div>
-            <Link href="#" className="section-link">
+            <Link href="/categories" className="section-link">
               View All Categories
               <svg
                 viewBox="0 0 24 24"
@@ -234,7 +234,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="categories-grid reveal reveal-stagger">
-            <Link href="#" className="category-card">
+            <Link href="/shop?category=Football%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
                 <img src="/assets/jersey1.jpg" alt="Football Jerseys" />
               </div>
@@ -252,7 +252,7 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link href="#" className="category-card">
+            <Link href="/shop?category=Cricket%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
                 <img src="/assets/jersey2.jpg" alt="Cricket Jerseys" />
               </div>
@@ -270,11 +270,11 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link href="#" className="category-card">
+            <Link href="/shop?category=Club%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jersey3.jpg" alt="International Jerseys" />
+                <img src="/assets/jersey3.jpg" alt="Club Jerseys" />
               </div>
-              <h3 className="category-name">International</h3>
+              <h3 className="category-name">Club Jerseys</h3>
               <span className="category-explore">
                 Explore{" "}
                 <svg
@@ -288,9 +288,9 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link href="#" className="category-card">
+            <Link href="/shop?category=Player%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jersey4.jpg" alt="Club Jerseys" />
+                <img src="/assets/jersey4.jpg" alt="Player Jerseys" />
               </div>
               <h3 className="category-name">Player's Jerseys</h3>
               <span className="category-explore">
