@@ -20,6 +20,7 @@ export default function Login() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Form State
   const [fullName, setFullName] = useState("");
@@ -38,11 +39,11 @@ export default function Login() {
 
   // Redirect if user is already logged in
   useEffect(() => {
-    if (!authLoading && user) {
+    if (!authLoading && user && !isRedirecting) {
       const redirectPath = getRedirectPath();
       router.replace(redirectPath);
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, isRedirecting]);
 
   const showToast = (type: "success" | "error", message: string) => {
     const id = Date.now().toString();
@@ -96,16 +97,18 @@ export default function Login() {
     try {
       if (isLogin) {
         await login(email, password);
+        setIsRedirecting(true);
         showToast("success", "Successfully logged in! Redirecting...");
+        const redirectPath = getRedirectPath();
         setTimeout(() => {
-          const redirectPath = getRedirectPath();
           router.replace(redirectPath);
         }, 1500);
       } else {
         await signUp(email, password, fullName);
+        setIsRedirecting(true);
         showToast("success", "Account created successfully! Redirecting...");
+        const redirectPath = getRedirectPath();
         setTimeout(() => {
-          const redirectPath = getRedirectPath();
           router.replace(redirectPath);
         }, 1500);
       }
@@ -128,7 +131,7 @@ export default function Login() {
   };
 
   // Prevent UI flash while checking user state
-  if (authLoading || (user && !loading)) {
+  if (authLoading || (user && !loading && !isRedirecting)) {
     return (
       <div className="auth-loader-container">
         <div className="auth-spinner"></div>
