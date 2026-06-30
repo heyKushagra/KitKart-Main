@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import CategoriesClient from "./CategoriesClient";
+import CategoriesClient from "./CategoriesClient"; // Force import resolution refresh
 
 export const metadata: Metadata = {
   title: "Shop Sports Jerseys & Football Boots | KitKart Categories",
