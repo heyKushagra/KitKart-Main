@@ -963,6 +963,55 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--sp-10);
 }
 
+/* Delivery Info Block */
+.delivery-info {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  margin-bottom: var(--sp-8);
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+
+.delivery-info:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--clr-gold-dim);
+}
+
+.delivery-info-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--clr-gold-dim);
+  border-radius: var(--r-sm);
+  color: var(--clr-gold);
+  flex-shrink: 0;
+}
+
+.delivery-info-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-info-title {
+  font-family: var(--ff-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--clr-text);
+  margin-bottom: 2px;
+}
+
+.delivery-info-text {
+  font-size: 0.85rem;
+  color: var(--clr-text-secondary);
+}
+
+
 .product-options {
   margin-bottom: var(--sp-10);
 }

@@ -47,7 +47,9 @@ function ProductContent() {
     optionalImages: [] as string[],
     id: searchParams.get("id") || pathId || (local ? local.id : "kitkart-premium-jersey"),
     stock: 10,
-    status: "In Stock"
+    status: "In Stock",
+    category: "",
+    description: ""
   });
 
   useEffect(() => {
@@ -62,7 +64,9 @@ function ProductContent() {
         image: searchParams.get("image") || (local ? local.image : ""),
         optionalImages: [] as string[],
         stock: 10,
-        status: "In Stock"
+        status: "In Stock",
+        category: "",
+        description: ""
       };
       
       try {
@@ -77,7 +81,9 @@ function ProductContent() {
             image: data.mainImage || data.image || initialData.image,
             optionalImages: data.optionalImages || initialData.optionalImages,
             stock: data.stock !== undefined ? Number(data.stock) : 10,
-            status: data.status || "In Stock"
+            status: data.status || "In Stock",
+            category: data.category || "",
+            description: data.description || ""
           });
         } else {
           setProductData(initialData);
@@ -90,7 +96,7 @@ function ProductContent() {
     fetchProduct();
   }, [pathId]);
 
-  const { name, price, image, id, stock, status, optionalImages } = productData;
+  const { name, price, image, id, stock, status, optionalImages, category, description } = productData;
   const isOutOfStock = stock !== undefined ? (stock <= 0 || status === "Out of Stock") : false;
 
   const [selectedSize, setSelectedSize] = useState("m");
@@ -229,10 +235,28 @@ function ProductContent() {
               </p>
 
               <p className="product-page-desc">
-                Experience ultimate comfort and style with our premium jersey. Crafted with high-grade
-                breathable fabric, this jersey ensures you stay cool whether you're on the pitch or cheering
-                from the stands.
+                {description || (
+                  (name.toLowerCase().includes("boot") || name.toLowerCase().includes("shoe") || category?.toLowerCase().includes("boot"))
+                    ? "Take your game to the next level with our premium football boots. Engineered for maximum traction, superior ball control, and explosive speed on the pitch."
+                    : "Experience ultimate comfort and style with our premium jersey. Crafted with high-grade breathable fabric, this jersey ensures you stay cool whether you're on the pitch or cheering from the stands."
+                )}
               </p>
+
+              {/* Delivery Info Block */}
+              <div className="delivery-info">
+                <div className="delivery-info-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                    <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                    <circle cx="5.5" cy="18.5" r="2.5" />
+                    <circle cx="18.5" cy="18.5" r="2.5" />
+                  </svg>
+                </div>
+                <div className="delivery-info-content">
+                  <span className="delivery-info-title">Delivery Duration</span>
+                  <span className="delivery-info-text">Usually 5-6 business days for delivering.</span>
+                </div>
+              </div>
 
               {/* Sizes */}
               <div className="product-options">
