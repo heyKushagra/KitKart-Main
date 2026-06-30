@@ -14,6 +14,7 @@ interface Product {
   badge?: string;
   status?: string;
   stock?: number;
+  createdAt?: string;
 }
 
 const LOCAL_PRODUCTS: Product[] = [
@@ -71,13 +72,15 @@ export default function Home() {
               image: fp.mainImage || fp.image || lp.image,
               badge: fp.badge || fp.tag || lp.badge || "",
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
-              status: fp.status || "In Stock"
+              status: fp.status || "In Stock",
+              createdAt: fp.createdAt || "2024-01-01"
             };
           }
           return {
             ...lp,
             stock: 10,
-            status: "In Stock"
+            status: "In Stock",
+            createdAt: "2024-01-01"
           };
         });
 
@@ -91,12 +94,20 @@ export default function Home() {
               image: fp.mainImage || fp.image,
               badge: fp.badge || fp.tag || "",
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
-              status: fp.status || "In Stock"
+              status: fp.status || "In Stock",
+              createdAt: fp.createdAt || "2024-01-01"
             });
           }
         });
 
-        setProducts(merged);
+        // Sort by createdAt descending so newly added products are in the first column
+        const sorted = merged.sort((a, b) => {
+          const dateA = a.createdAt || "2024-01-01";
+          const dateB = b.createdAt || "2024-01-01";
+          return dateB.localeCompare(dateA);
+        });
+
+        setProducts(sorted);
         setLoading(false);
       } catch (err: any) {
         console.error("Error fetching products:", err);
@@ -321,7 +332,7 @@ export default function Home() {
               <p className="section-label">New Arrivals</p>
               <h2 className="section-title">Fresh Drops</h2>
             </div>
-            <Link href="#" className="section-link">
+            <Link href="/shop" className="section-link">
               View All Products
               <svg
                 viewBox="0 0 24 24"
@@ -337,7 +348,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="products-grid reveal reveal-stagger">
-            {products.map((product) => {
+            {products.slice(0, 8).map((product) => {
               const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
               return (
                 <Link
@@ -387,6 +398,12 @@ export default function Home() {
                 </Link>
               );
             })}
+          </div>
+
+          <div className="view-all-wrapper" style={{ display: "flex", justifyContent: "center", marginTop: "var(--sp-10)" }}>
+            <Link href="/shop" className="btn btn-outline" style={{ borderRadius: "var(--r-full)", padding: "12px 36px", fontSize: "0.95rem" }}>
+              View All Products
+            </Link>
           </div>
         </div>
       </section>

@@ -38,7 +38,7 @@ function ProductContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const pathId = pathname.split('/').pop() || "";
-  
+
   const local = LOCAL_PRODUCTS.find(p => p.id === pathId);
   const [productData, setProductData] = useState({
     name: searchParams.get("name") || (local ? local.name : "Loading..."),
@@ -55,7 +55,7 @@ function ProductContent() {
   useEffect(() => {
     const fetchProduct = async () => {
       if (!pathId) return;
-      
+
       const local = LOCAL_PRODUCTS.find(p => p.id === pathId);
       const initialData = {
         id: pathId,
@@ -68,7 +68,7 @@ function ProductContent() {
         category: "",
         description: ""
       };
-      
+
       try {
         const docRef = doc(db, "products", pathId);
         const docSnap = await getDoc(docRef);
@@ -137,7 +137,7 @@ function ProductContent() {
 
     let cart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
     const existingIndex = cart.findIndex((cItem: any) => cItem.id === item.id);
-    
+
     if (existingIndex > -1) {
       cart[existingIndex].quantity += 1;
     } else {
@@ -145,7 +145,7 @@ function ProductContent() {
     }
 
     localStorage.setItem("kitkart_cart", JSON.stringify(cart));
-    
+
     // Update badge
     window.dispatchEvent(new Event("cart_updated"));
 
@@ -197,23 +197,23 @@ function ProductContent() {
                   </div>
                 )}
               </div>
-              
+
               {/* Optional Images Thumbnails */}
               {optionalImages && optionalImages.length > 0 && (
                 <div className="product-thumbnails" style={{ display: 'flex', gap: '10px', marginTop: '16px', overflowX: 'auto', paddingBottom: '4px' }}>
-                  <img 
-                    src={image} 
-                    alt="Main thumbnail" 
+                  <img
+                    src={image}
+                    alt="Main thumbnail"
                     onClick={() => setActiveImage(image)}
-                    style={{ width: '80px', height: '80px', objectFit: 'cover', cursor: 'pointer', borderRadius: 'var(--r-md)', border: activeImage === image ? '2px solid var(--clr-gold, #f5c518)' : '2px solid transparent', flexShrink: 0 }} 
+                    style={{ width: '80px', height: '80px', objectFit: 'cover', cursor: 'pointer', borderRadius: 'var(--r-md)', border: activeImage === image ? '2px solid var(--clr-gold, #f5c518)' : '2px solid transparent', flexShrink: 0 }}
                   />
                   {optionalImages.map((optImg: string, idx: number) => (
-                    <img 
+                    <img
                       key={idx}
-                      src={optImg} 
-                      alt={`Thumbnail ${idx + 1}`} 
+                      src={optImg}
+                      alt={`Thumbnail ${idx + 1}`}
                       onClick={() => setActiveImage(optImg)}
-                      style={{ width: '80px', height: '80px', objectFit: 'cover', cursor: 'pointer', borderRadius: 'var(--r-md)', border: activeImage === optImg ? '2px solid var(--clr-gold, #f5c518)' : '2px solid transparent', flexShrink: 0 }} 
+                      style={{ width: '80px', height: '80px', objectFit: 'cover', cursor: 'pointer', borderRadius: 'var(--r-md)', border: activeImage === optImg ? '2px solid var(--clr-gold, #f5c518)' : '2px solid transparent', flexShrink: 0 }}
                     />
                   ))}
                 </div>
@@ -253,8 +253,8 @@ function ProductContent() {
                   </svg>
                 </div>
                 <div className="delivery-info-content">
-                  <span className="delivery-info-title">Delivery Duration</span>
-                  <span className="delivery-info-text">Usually 5-6 business days for delivering.</span>
+                  <span className="delivery-info-title">Delivery </span>
+                  <span className="delivery-info-text">Usually 5-6 business days.</span>
                 </div>
               </div>
 
@@ -323,7 +323,7 @@ function ProductContent() {
                     </>
                   )}
                 </button>
-                <button 
+                <button
                   className="btn btn-primary product-btn-buy"
                   disabled={isOutOfStock}
                   style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
@@ -337,16 +337,16 @@ function ProductContent() {
                   <p style={{ margin: "0 0 16px 0", fontSize: "0.95rem", color: "var(--clr-text-secondary)", lineHeight: "1.5" }}>
                     Want to get that product on special request? Do it right away
                   </p>
-                  <Link 
-                    href="https://wa.me/#" 
-                    target="_blank" 
+                  <Link
+                    href="https://wa.me/#"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-primary"
-                    style={{ 
-                      display: "inline-flex", 
-                      alignItems: "center", 
-                      justifyContent: "center", 
-                      gap: "10px", 
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "10px",
                       width: "100%",
                       backgroundColor: "#25D366",
                       borderColor: "#25D366",
