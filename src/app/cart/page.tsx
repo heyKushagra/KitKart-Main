@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { initiateShiprocketCheckout } from "@/lib/shiprocket/checkout";
 
 type CartItem = {
   id: string;
@@ -18,6 +19,7 @@ export default function Cart() {
   const router = useRouter();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
@@ -49,8 +51,21 @@ export default function Cart() {
     saveCart(newCart);
   };
 
-  const handleCheckout = () => {
-    router.push("/checkout");
+  const handleCheckout = async () => {
+    if (process.env.NEXT_PUBLIC_USE_SHIPROCKET_CHECKOUT === "true") {
+      setIsCheckingOut(true);
+      try {
+        await initiateShiprocketCheckout(cart);
+      } catch (err) {
+        console.error("Shiprocket checkout failed", err);
+        alert("Shiprocket checkout is currently unavailable. Proceeding with standard checkout.");
+        router.push("/checkout");
+      } finally {
+        setIsCheckingOut(false);
+      }
+    } else {
+      router.push("/checkout");
+    }
   };
 
   if (!loaded) return null; // Wait until local storage is loaded to avoid hydration mismatch
@@ -196,8 +211,9 @@ export default function Cart() {
                 <button
                   onClick={handleCheckout}
                   className="btn btn-primary checkout-btn"
+                  disabled={isCheckingOut}
                 >
-                  Proceed to Checkout
+                  {isCheckingOut ? "Loading Checkout..." : "Proceed to Checkout"}
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"

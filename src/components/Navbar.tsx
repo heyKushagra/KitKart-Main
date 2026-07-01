@@ -36,7 +36,7 @@ export default function Navbar() {
 
     // Listen to storage event (cross-tab)
     window.addEventListener("storage", updateCartBadge);
-    
+
     // Listen to custom event for same-tab updates
     window.addEventListener("cart_updated", updateCartBadge);
 
@@ -96,7 +96,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="/" className="nav-link">
+            <Link href="/contact" className="nav-link">
               Contact
             </Link>
           </li>
@@ -116,13 +116,13 @@ export default function Navbar() {
           </button>
 
           {/* User Account / Auth Status Dropdown */}
-          <div 
+          <div
             className="nav-user-dropdown-container"
             onMouseEnter={() => setDropdownOpen(true)}
             onMouseLeave={() => setDropdownOpen(false)}
           >
-            <button 
-              className="nav-icon-btn" 
+            <button
+              className="nav-icon-btn"
               aria-label="Account"
               onClick={() => setDropdownOpen(prev => !prev)}
             >
@@ -131,7 +131,7 @@ export default function Navbar() {
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </button>
-            
+
             <div className={`nav-user-dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
               {user ? (
                 <>
@@ -144,11 +144,11 @@ export default function Navbar() {
                   <Link href="/account/orders" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
                     My Orders
                   </Link>
-                  <button 
+                  <button
                     onClick={() => {
                       logout();
                       setDropdownOpen(false);
-                    }} 
+                    }}
                     className="dropdown-item logout-item"
                   >
                     Logout

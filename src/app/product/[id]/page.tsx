@@ -223,7 +223,7 @@ function ProductContent() {
                   </>
                 ) : (
                   <div style={{ width: "100%", aspectRatio: "3/4", backgroundColor: "rgba(255,255,255,0.05)", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--r-md)" }}>
-                    Loading image...
+                    Just a sec...
                   </div>
                 )}
               </div>
