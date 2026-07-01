@@ -50,7 +50,8 @@ function ProductContent() {
     stock: 10,
     status: "In Stock",
     category: "",
-    description: ""
+    description: "",
+    sizes: [] as string[]
   });
 
   useEffect(() => {
@@ -67,7 +68,8 @@ function ProductContent() {
         stock: 10,
         status: "In Stock",
         category: "",
-        description: ""
+        description: "",
+        sizes: [] as string[]
       };
 
       try {
@@ -84,7 +86,8 @@ function ProductContent() {
             stock: data.stock !== undefined ? Number(data.stock) : 10,
             status: data.status || "In Stock",
             category: data.category || "",
-            description: data.description || ""
+            description: data.description || "",
+            sizes: data.sizes || []
           });
         } else {
           setProductData(initialData);
@@ -97,10 +100,19 @@ function ProductContent() {
     fetchProduct();
   }, [pathId]);
 
-  const { name, price, image, id, stock, status, optionalImages, category, description } = productData;
+  const { name, price, image, id, stock, status, optionalImages, category, description, sizes } = productData;
   const isOutOfStock = stock !== undefined ? (stock <= 0 || status === "Out of Stock") : false;
 
+  const availableSizes = sizes && sizes.length > 0 ? sizes : ["xs", "s", "m", "l", "xl", "xxl"];
   const [selectedSize, setSelectedSize] = useState("m");
+
+  useEffect(() => {
+    if (sizes && sizes.length > 0) {
+      if (!sizes.includes(selectedSize)) {
+        setSelectedSize(sizes[0]);
+      }
+    }
+  }, [sizes, selectedSize]);
   const [isAdded, setIsAdded] = useState(false);
   const [activeImage, setActiveImage] = useState(image);
 
@@ -273,23 +285,25 @@ function ProductContent() {
               </p>
 
               {/* Sizes */}
-              <div className="product-options">
-                <h4 className="option-title">Select Size</h4>
-                <div className="size-selector">
-                  {["xs", "s", "m", "l", "xl", "xxl"].map((s) => (
-                    <label key={s} className="size-option">
-                      <input
-                        type="radio"
-                        name="size"
-                        value={s}
-                        checked={selectedSize === s}
-                        onChange={() => setSelectedSize(s)}
-                      />
-                      <span>{s.toUpperCase()}</span>
-                    </label>
-                  ))}
+              {availableSizes.length > 0 && (
+                <div className="product-options">
+                  <h4 className="option-title">Select Size</h4>
+                  <div className="size-selector">
+                    {availableSizes.map((s) => (
+                      <label key={s} className="size-option">
+                        <input
+                          type="radio"
+                          name="size"
+                          value={s}
+                          checked={selectedSize === s}
+                          onChange={() => setSelectedSize(s)}
+                        />
+                        <span>{s.toUpperCase()}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Actions */}
               <div className="product-actions">

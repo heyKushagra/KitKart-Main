@@ -18,32 +18,13 @@ interface Product {
 }
 
 const LOCAL_PRODUCTS: Product[] = [
-  {
-    id: "home-jersey-2024",
-    name: "Home Jersey 2024",
-    price: 999,
-    image: "/assets/jersey1.jpg",
-    badge: "New"
-  },
-  {
-    id: "away-kit-2024",
-    name: "Away Kit 2024",
-    price: 999,
-    image: "/assets/jersey2.jpg",
-    badge: "New"
-  },
-  {
-    id: "international-jersey-2024",
-    name: "International Jersey 2024",
-    price: 999,
-    image: "/assets/jersey3.jpg",
-    badge: "New"
-  },
+
+
   {
     id: "training-top-2024",
     name: "Training Top 2024",
     price: 999,
-    image: "/assets/jersey4.jpg",
+    image: "/assets/jersey-wp.jpg",
     badge: "New"
   }
 ];
@@ -210,7 +191,7 @@ export default function Home() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </Link>
-              <Link href="#" className="btn btn-outline">
+              <Link href="/categories" className="btn btn-outline">
                 Explore Categories
               </Link>
             </div>
@@ -247,7 +228,7 @@ export default function Home() {
           <div className="categories-grid reveal reveal-stagger">
             <Link href="/shop?category=Football%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jersey1.jpg" alt="Football Jerseys" />
+                <img src="/assets/football.jpg" alt="Football Jerseys" />
               </div>
               <h3 className="category-name">Football</h3>
               <span className="category-explore">
@@ -281,7 +262,7 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link href="/shop?category=Club%20Jerseys" className="category-card">
+            {/* <Link href="/shop?category=Club%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
                 <img src="/assets/jersey3.jpg" alt="Club Jerseys" />
               </div>
@@ -298,10 +279,10 @@ export default function Home() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </span>
-            </Link>
+            </Link> */}
             <Link href="/shop?category=Player%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jersey4.jpg" alt="Player Jerseys" />
+                <img src="/assets/player.jpg" alt="Player Jerseys" />
               </div>
               <h3 className="category-name">Player's Jerseys</h3>
               <span className="category-explore">

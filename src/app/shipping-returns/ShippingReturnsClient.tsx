@@ -21,7 +21,7 @@ export default function ShippingReturnsClient() {
 
     window.addEventListener("scroll", revealOnScroll);
     revealOnScroll();
-    
+
     // Trigger immediately and after a short delay to ensure elements are rendered
     const timer = setTimeout(revealOnScroll, 100);
 
@@ -52,7 +52,7 @@ export default function ShippingReturnsClient() {
 
         {/* Core Policy Grid */}
         <div className="policy-grid reveal reveal-stagger">
-          
+
           {/* SHIPPING POLICY CARD */}
           <section className="policy-card" id="shipping-policy">
             <div className="card-header">
@@ -66,7 +66,7 @@ export default function ShippingReturnsClient() {
               </div>
               <h2 className="card-title">Shipping Policy</h2>
             </div>
-            
+
             <ul className="policy-list">
               <li className="policy-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -104,13 +104,13 @@ export default function ShippingReturnsClient() {
                 </svg>
               </div>
               <div className="callout-content">
-                <strong>Cash on Delivery (COD) Restriction</strong>
-                <p>Cash on Delivery (COD) is <strong>not available</strong> for football boots. These products must be prepaid before dispatch.</p>
+                <strong>Cash on Delivery (COD) Available</strong>
+                <p>Cash on Delivery (COD) is Available for Jerseys. Boots must be prepaid before dispatch.</p>
               </div>
             </div>
           </section>
 
-          {/* EXCHANGE POLICY CARD */}
+          {/* RETURNS & EXCHANGE POLICY CARD */}
           <section className="policy-card" id="exchange-policy">
             <div className="card-header">
               <div className="card-icon-wrap" aria-hidden="true">
@@ -119,42 +119,47 @@ export default function ShippingReturnsClient() {
                   <path d="M7 23V1" />
                 </svg>
               </div>
-              <h2 className="card-title">Exchange Policy</h2>
+              <h2 className="card-title">Returns & Exchanges</h2>
             </div>
-            
+
             <p className="exchange-disclaimer">
-              We do <strong>not offer refunds</strong> on any products. We only provide exchanges under the conditions mentioned below.
+              Returns and exchanges are <strong>available for all products</strong> under the terms and conditions outlined below.
             </p>
 
-            {/* Sub-section 1: Damaged Product */}
+            {/* Sub-section 1: Return & Refund Policy */}
             <div className="policy-sub-section">
               <h3 className="sub-title">
-                1. Damaged Product Exchange
-                <span>Eligible</span>
+                1. Return & Refund Policy
+                <span>Refundable</span>
               </h3>
               <p className="sub-desc">
-                If you receive a product that is damaged during delivery, you are eligible for an exchange.
+                If you are not satisfied with your purchase, you can return any product for a refund.
               </p>
-              <div className="steps-container">
-                <p className="steps-label">To request an exchange:</p>
-                <ol className="steps-list">
-                  <li>Contact our support team as soon as possible after receiving the order.</li>
-                  <li>Provide clear photos or videos showing the damage along with your order details.</li>
-                  <li>Once the request is verified, we will arrange the exchange.</li>
-                </ol>
+              <div className="callout-box info" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                <div className="callout-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                  </svg>
+                </div>
+                <div className="callout-content">
+                  <strong>Refund Deductions & Charges</strong>
+                  <p>Your refund will be processed after deducting the <strong>original outward shipping charges</strong> and the <strong>return pickup shipping/handling fees</strong> required to return the package to our warehouse.</p>
+                </div>
               </div>
             </div>
 
             {/* Sub-section 2: Size Exchange */}
             <div className="policy-sub-section">
               <h3 className="sub-title">
-                2. Size Exchange
+                2. Size Exchange Policy
                 <span>Subject to Stock</span>
               </h3>
               <p className="sub-desc">
                 If you wish to exchange a product for a different size, the exchange is subject to product availability.
               </p>
-              <div className="callout-box info" style={{ marginTop: "1rem" }}>
+              <div className="callout-box info" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
                 <div className="callout-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
                     <circle cx="12" cy="12" r="10" />
@@ -164,8 +169,27 @@ export default function ShippingReturnsClient() {
                 </div>
                 <div className="callout-content">
                   <strong>Shipping Fee Obligations</strong>
-                  <p>The customer is responsible for shipping charges for both the return shipment and the replacement shipment. The total shipping cost is typically between <strong>₹150 and ₹200</strong>, depending on your location.</p>
+                  <p>For standard size exchanges, the customer is responsible for shipping charges of both the return shipment and the replacement shipment (typically <strong>₹150 to ₹200</strong> total).</p>
                 </div>
+              </div>
+            </div>
+
+            {/* Sub-section 3: Damaged Product */}
+            <div className="policy-sub-section">
+              <h3 className="sub-title">
+                3. Damaged Product Exchange
+                <span>Free Exchange</span>
+              </h3>
+              <p className="sub-desc">
+                If you receive a product that is damaged during delivery or is incorrect, you are eligible for a free exchange.
+              </p>
+              <div className="steps-container">
+                <p className="steps-label">To request a free exchange:</p>
+                <ol className="steps-list">
+                  <li>Contact our support team within 48 hours of receiving the order.</li>
+                  <li>Provide clear photos or videos showing the damage or issue along with your order details.</li>
+                  <li>Once verified, we will arrange the exchange at no extra shipping cost to you.</li>
+                </ol>
               </div>
             </div>
           </section>
@@ -178,18 +202,17 @@ export default function ShippingReturnsClient() {
           <p className="notes-desc">
             Please make sure you carefully read and understand the following terms before placing your order.
           </p>
-          
+
           <div className="notes-grid">
             <div className="note-box">
               <div className="note-bullet" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
               <div className="note-content">
-                <h3>No Refund Policy</h3>
-                <p>Refunds are <strong>not available</strong> under any circumstances. All sales are final, with exchanges being the sole remedy.</p>
+                <h3>Refund Policy</h3>
+                <p>Refunds are <strong>available for all products</strong>. The final refund amount will be credited after deducting outward and return shipping fees.</p>
               </div>
             </div>
 
@@ -225,7 +248,7 @@ export default function ShippingReturnsClient() {
               </div>
               <div className="note-content">
                 <h3>Right to Decline</h3>
-                <p>KitKart reserves the right to decline exchange requests that do not meet the specified conditions.</p>
+                <p>KitKart reserves the right to decline exchange or return requests that do not meet the specified conditions.</p>
               </div>
             </div>
           </div>
@@ -556,10 +579,6 @@ export default function ShippingReturnsClient() {
           margin-top: 4px;
         }
 
-        .note-box:first-of-type .note-bullet {
-          background: rgba(255, 71, 87, 0.08);
-          color: #ff4757;
-        }
 
         .note-bullet svg {
           width: 14px;

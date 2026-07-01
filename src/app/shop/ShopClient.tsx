@@ -33,50 +33,17 @@ const getTimestamp = (createdAt: any): number => {
 };
 
 const LOCAL_PRODUCTS: Product[] = [
-  {
-    id: "home-jersey-2024",
-    name: "Home Jersey 2024",
-    price: 999,
-    image: "/assets/jersey1.jpg",
-    badge: "New",
-    category: "Football Jerseys",
-    createdAt: "2024-01-01"
-  },
-  {
-    id: "away-kit-2024",
-    name: "Away Kit 2024",
-    price: 999,
-    image: "/assets/jersey2.jpg",
-    badge: "New",
-    category: "Football Jerseys",
-    createdAt: "2024-01-02"
-  },
-  {
-    id: "international-jersey-2024",
-    name: "International Jersey 2024",
-    price: 999,
-    image: "/assets/jersey3.jpg",
-    badge: "New",
-    category: "Cricket Jerseys",
-    createdAt: "2024-01-03"
-  },
-  {
-    id: "training-top-2024",
-    name: "Training Top 2024",
-    price: 999,
-    image: "/assets/jersey4.jpg",
-    badge: "New",
-    category: "Training Wear",
-    createdAt: "2024-01-04"
-  }
+
 ];
 
 const CATEGORIES = [
   "All Products",
-  "Cricket Jerseys",
-  "Football Jerseys",
-  "Player Jerseys",
-  "Club Jerseys",
+  "Football",
+  "Cricket",
+  "Player Version",
+  "Fan Version",
+  "Retro Version",
+  "Master Version",
   "Football Boots"
 ];
 
@@ -104,8 +71,18 @@ export default function ShopClient() {
   useEffect(() => {
     if (categoryParam) {
       const lowerParam = categoryParam.toLowerCase();
-      if (lowerParam === "jerseys") {
-        setActiveCategory("Jerseys");
+      if (lowerParam === "football jerseys" || lowerParam === "football") {
+        setActiveCategory("Football");
+      } else if (lowerParam === "cricket jerseys" || lowerParam === "cricket") {
+        setActiveCategory("Cricket");
+      } else if (lowerParam === "player jerseys" || lowerParam === "player version" || lowerParam === "player") {
+        setActiveCategory("Player Version");
+      } else if (lowerParam === "club jerseys" || lowerParam === "fan version" || lowerParam === "club" || lowerParam === "fan") {
+        setActiveCategory("Fan Version");
+      } else if (lowerParam === "retro jerseys" || lowerParam === "retro version" || lowerParam === "retro") {
+        setActiveCategory("Retro Version");
+      } else if (lowerParam === "master jerseys" || lowerParam === "master version" || lowerParam === "master") {
+        setActiveCategory("Master Version");
       } else if (lowerParam === "boots" || lowerParam === "football boots") {
         setActiveCategory("Football Boots");
       } else {
@@ -220,9 +197,52 @@ export default function ShopClient() {
 
     if (activeCategory !== "All Products") {
       const lowerActive = activeCategory.toLowerCase();
-      if (lowerActive === "jerseys") {
+      if (lowerActive === "football") {
         result = result.filter(
-          (p) => p.category?.toLowerCase().includes("jersey")
+          (p) => {
+            const cat = p.category?.toLowerCase() || "";
+            const isFootballOrJersey = cat.includes("football") || cat.includes("jersey") || cat.includes("club") || cat.includes("player") || cat.includes("retro");
+            const isExcluded = cat.includes("boot") || cat.includes("cricket") || cat.includes("uncategorized");
+            return isFootballOrJersey && !isExcluded;
+          }
+        );
+      } else if (lowerActive === "cricket") {
+        result = result.filter(
+          (p) => {
+            const cat = p.category?.toLowerCase() || "";
+            return cat.includes("cricket") || cat === "cricket jerseys";
+          }
+        );
+      } else if (lowerActive === "player version") {
+        result = result.filter(
+          (p) => {
+            const cat = p.category?.toLowerCase() || "";
+            return cat.includes("player") || cat === "player jerseys";
+          }
+        );
+      } else if (lowerActive === "fan version") {
+        result = result.filter(
+          (p) => {
+            const cat = p.category?.toLowerCase() || "";
+            const name = p.name?.toLowerCase() || "";
+            const isMaster = name.includes("master");
+            return (cat.includes("club") || cat.includes("fan") || cat === "club jerseys") && !isMaster;
+          }
+        );
+      } else if (lowerActive === "retro version") {
+        result = result.filter(
+          (p) => {
+            const cat = p.category?.toLowerCase() || "";
+            return cat.includes("retro") || cat === "retro jerseys";
+          }
+        );
+      } else if (lowerActive === "master version") {
+        result = result.filter(
+          (p) => {
+            const cat = p.category?.toLowerCase() || "";
+            const name = p.name?.toLowerCase() || "";
+            return cat.includes("master") || name.includes("master");
+          }
         );
       } else if (lowerActive === "football boots" || lowerActive === "boots") {
         result = result.filter(
