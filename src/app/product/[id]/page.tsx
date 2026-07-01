@@ -375,7 +375,7 @@ function ProductContent() {
                   </div>
                   <div className="delivery-info-content">
                     <span className="delivery-info-title">Returns & Exchange</span>
-                    <span className="delivery-info-text">Strictly no return, only free exchange if product is damaged or different.</span>
+                    <span className="delivery-info-text">No Return, Free exchange only if product is damaged or different.</span>
                   </div>
                 </div>
 
@@ -440,7 +440,7 @@ function ProductContent() {
 
 export default function Product() {
   return (
-    <Suspense fallback={<div style={{ paddingTop: "80px", textAlign: "center" }}>Loading product...</div>}>
+    <Suspense fallback={<div style={{ paddingTop: "80px", textAlign: "center" }}>Just a second...</div>}>
       <ProductContent />
     </Suspense>
   );
