@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, serverTimestamp, runTransaction, doc } from "firebase/firestore";
 
 interface CartItem {
   id: string;
@@ -125,22 +125,82 @@ export default function Checkout() {
 
     setLoading(true);
     try {
-      // Save order in Firestore `orders`
-      const orderRef = await addDoc(collection(db, "orders"), {
-        userId: user?.uid || "guest",
-        customerDetails: shippingForm,
-        products: cart.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          image: item.image,
-          size: item.size,
-          quantity: item.quantity
-        })),
-        totalAmount: total,
-        paymentMethod: paymentMethod,
-        status: "Pending",
-        createdAt: serverTimestamp(),
+      // 1. Aggregate quantities by product ID to handle multiple sizes of the same product
+      const productQuantities: { [productId: string]: { name: string; quantity: number } } = {};
+      for (const item of cart) {
+        const suffix = `-${item.size.toUpperCase()}`;
+        const productId = item.id.endsWith(suffix) ? item.id.slice(0, -suffix.length) : item.id;
+        if (!productQuantities[productId]) {
+          productQuantities[productId] = { name: item.name, quantity: 0 };
+        }
+        productQuantities[productId].quantity += item.quantity;
+      }
+
+      const orderCollectionRef = collection(db, "orders");
+      const orderRef = doc(orderCollectionRef);
+
+      // 2. Run Firestore transaction to update stock and save order
+      await runTransaction(db, async (transaction) => {
+        const productRefsAndData: Array<{
+          productRef: any;
+          newStock: number;
+          name: string;
+        }> = [];
+
+        // Read all product documents first
+        for (const productId in productQuantities) {
+          const { name, quantity } = productQuantities[productId];
+          const productRef = doc(db, "products", productId);
+          const productDoc = await transaction.get(productRef);
+
+          if (!productDoc.exists()) {
+            throw new Error(`Product "${name}" not found in database.`);
+          }
+
+          const data = productDoc.data();
+          const currentStock = data.stockQuantity !== undefined 
+            ? Number(data.stockQuantity) 
+            : (data.stock !== undefined ? Number(data.stock) : 10);
+
+          const newStock = currentStock - quantity;
+          if (newStock < 0) {
+            throw new Error(`Insufficient stock for "${name}". Only ${currentStock} items left.`);
+          }
+
+          productRefsAndData.push({ productRef, newStock, name });
+        }
+
+        // Perform all updates (writes) after reads
+        for (const { productRef, newStock } of productRefsAndData) {
+          const updateData: any = {
+            stockQuantity: newStock,
+            stock: newStock,
+          };
+          if (newStock === 0) {
+            updateData.status = "Out of Stock";
+          }
+          transaction.update(productRef, updateData);
+        }
+
+        // Save order document within the same transaction
+        const orderData = {
+          userId: user?.uid || "guest",
+          customerDetails: shippingForm,
+          products: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            image: item.image,
+            size: item.size,
+            quantity: item.quantity
+          })),
+          totalAmount: total,
+          paymentMethod: paymentMethod,
+          status: "Pending",
+          createdAt: serverTimestamp(),
+        };
+
+        transaction.set(orderRef, orderData);
       });
 
       // Clear the local cart
