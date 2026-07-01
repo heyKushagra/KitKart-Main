@@ -45,19 +45,19 @@ export default function Footer() {
           <div>
             <h4 className="footer-title">Company</h4>
             <div className="footer-links">
-              <Link href="#" className="footer-link">About Us</Link>
+              {/* <Link href="#" className="footer-link">About Us</Link> */}
               <Link href="#" className="footer-link">Our Story</Link>
               <Link href="#" className="footer-link">FAQ</Link>
-              <Link href="#" className="footer-link">Size Guide</Link>
+              {/* <Link href="#" className="footer-link">Size Guide</Link> */}
               <Link href="/shipping-returns" className="footer-link">Shipping & Returns</Link>
             </div>
           </div>
           <div>
             <h4 className="footer-title">Help</h4>
             <div className="footer-links">
-              <Link href="#" className="footer-link">Contact Us</Link>
-              <Link href="#" className="footer-link">Track Order</Link>
-              <Link href="#" className="footer-link">Privacy Policy</Link>
+              <Link href="/contact" className="footer-link">Contact Us</Link>
+              {/* <Link href="#" className="footer-link">Track Order</Link> */}
+              {/* <Link href="#" className="footer-link">Privacy Policy</Link> */}
               <Link href="#" className="footer-link">Terms & Conditions</Link>
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2024 KitKart. All Rights Reserved.</p>
+          <p>&copy; 2024 KitKart. All Rights Reserved. | Designed & Developed by <a href="https://kushworks.vercel.app" target="_blank" rel="noopener noreferrer"><strong>Kushagra Srivastava</strong></a></p>
         </div>
       </div>
     </footer>
