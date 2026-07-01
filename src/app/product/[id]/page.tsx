@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import { useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/firebase";
@@ -37,6 +37,7 @@ const LOCAL_PRODUCTS = [
 function ProductContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const router = useRouter();
   const pathId = pathname.split('/').pop() || "";
 
   const local = LOCAL_PRODUCTS.find(p => p.id === pathId);
@@ -156,6 +157,35 @@ function ProductContent() {
     }, 2000);
   };
 
+  const handleBuyNow = () => {
+    if (isOutOfStock) return;
+    const item = {
+      id: `${id}-${selectedSize.toUpperCase()}`,
+      name: name,
+      price: parseFloat(price.replace(/[^\d]/g, "")),
+      image: image,
+      size: selectedSize.toUpperCase(),
+      quantity: 1,
+    };
+
+    let cart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
+    const existingIndex = cart.findIndex((cItem: any) => cItem.id === item.id);
+
+    if (existingIndex > -1) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push(item);
+    }
+
+    localStorage.setItem("kitkart_cart", JSON.stringify(cart));
+
+    // Update badge
+    window.dispatchEvent(new Event("cart_updated"));
+
+    // Redirect to checkout
+    router.push("/checkout");
+  };
+
   return (
     <div style={{ paddingTop: "80px" }}>
       {/* ===== PRODUCT DETAILS ===== */}
@@ -242,22 +272,6 @@ function ProductContent() {
                 )}
               </p>
 
-              {/* Delivery Info Block */}
-              <div className="delivery-info">
-                <div className="delivery-info-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
-                    <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
-                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                    <circle cx="5.5" cy="18.5" r="2.5" />
-                    <circle cx="18.5" cy="18.5" r="2.5" />
-                  </svg>
-                </div>
-                <div className="delivery-info-content">
-                  <span className="delivery-info-title">Delivery </span>
-                  <span className="delivery-info-text">Usually 5-6 business days.</span>
-                </div>
-              </div>
-
               {/* Sizes */}
               <div className="product-options">
                 <h4 className="option-title">Select Size</h4>
@@ -325,11 +339,55 @@ function ProductContent() {
                 </button>
                 <button
                   className="btn btn-primary product-btn-buy"
+                  onClick={handleBuyNow}
                   disabled={isOutOfStock}
                   style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
                 >
                   Buy Now
                 </button>
+              </div>
+
+              {/* Delivery & Returns Info Blocks */}
+              <div className="delivery-returns-container" style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                {/* Delivery Box */}
+                <div className="delivery-info" style={{ marginBottom: 0 }}>
+                  <div className="delivery-info-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                      <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
+                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                      <circle cx="5.5" cy="18.5" r="2.5" />
+                      <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg>
+                  </div>
+                  <div className="delivery-info-content">
+                    <span className="delivery-info-title">Delivery</span>
+                    <span className="delivery-info-text">Usually 5-6 business days.</span>
+                  </div>
+                </div>
+
+                {/* Returns & Exchange Box */}
+                <div className="delivery-info" style={{ marginBottom: 0 }}>
+                  <div className="delivery-info-icon" style={{ backgroundColor: "rgba(245, 197, 24, 0.1)", color: "var(--clr-gold)" }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                      <polyline points="23 4 23 10 17 10" />
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                    </svg>
+                  </div>
+                  <div className="delivery-info-content">
+                    <span className="delivery-info-title">Returns & Exchange</span>
+                    <span className="delivery-info-text">Strictly no return, only free exchange if product is damaged or different.</span>
+                  </div>
+                </div>
+
+                {/* Returns size exchange note below the box */}
+                <div style={{ padding: "0 4px", fontSize: "0.8rem", color: "var(--clr-text-secondary)", lineHeight: "1.4", display: "flex", gap: "8px", alignItems: "flex-start" }}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" style={{ flexShrink: 0, marginTop: "2px", color: "var(--clr-gold)" }}>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span>Note: If you want to change the size, you must bear the shipping costs for both sides.</span>
+                </div>
               </div>
 
               {isOutOfStock && (

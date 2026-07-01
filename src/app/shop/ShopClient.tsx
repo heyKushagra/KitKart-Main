@@ -15,9 +15,22 @@ interface Product {
   badge?: string;
   status?: string;
   category?: string;
-  createdAt?: string | number;
+  createdAt?: any;
   stock?: number;
 }
+
+const getTimestamp = (createdAt: any): number => {
+  if (!createdAt) return 0;
+  if (typeof createdAt === 'object' && createdAt.seconds !== undefined) {
+    return createdAt.seconds * 1000;
+  }
+  if (typeof createdAt === 'object' && typeof createdAt.toDate === 'function') {
+    return createdAt.toDate().getTime();
+  }
+  const parsed = Date.parse(createdAt);
+  if (!isNaN(parsed)) return parsed;
+  return Number(createdAt) || 0;
+};
 
 const LOCAL_PRODUCTS: Product[] = [
   {
@@ -26,7 +39,8 @@ const LOCAL_PRODUCTS: Product[] = [
     price: 999,
     image: "/assets/jersey1.jpg",
     badge: "New",
-    category: "Football Jerseys"
+    category: "Football Jerseys",
+    createdAt: "2024-01-01"
   },
   {
     id: "away-kit-2024",
@@ -34,7 +48,8 @@ const LOCAL_PRODUCTS: Product[] = [
     price: 999,
     image: "/assets/jersey2.jpg",
     badge: "New",
-    category: "Football Jerseys"
+    category: "Football Jerseys",
+    createdAt: "2024-01-02"
   },
   {
     id: "international-jersey-2024",
@@ -42,7 +57,8 @@ const LOCAL_PRODUCTS: Product[] = [
     price: 999,
     image: "/assets/jersey3.jpg",
     badge: "New",
-    category: "Cricket Jerseys"
+    category: "Cricket Jerseys",
+    createdAt: "2024-01-03"
   },
   {
     id: "training-top-2024",
@@ -50,7 +66,8 @@ const LOCAL_PRODUCTS: Product[] = [
     price: 999,
     image: "/assets/jersey4.jpg",
     badge: "New",
-    category: "Training Wear"
+    category: "Training Wear",
+    createdAt: "2024-01-04"
   }
 ];
 
@@ -150,6 +167,9 @@ export default function ShopClient() {
           }
         });
 
+        // Sort descending (newest first)
+        merged.sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
+
         setProducts(merged);
         setLoading(false);
       } catch (err: any) {
@@ -228,8 +248,7 @@ export default function ShopClient() {
         result.sort((a, b) => b.price - a.price);
         break;
       case "newest":
-        // Sort by ID falling back, or reverse array order if no explicit date
-        result.reverse();
+        result.sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
         break;
       case "featured":
       default:

@@ -53,9 +53,9 @@ export default function CategoriesClient() {
         {/* Categories Two-Column Grid */}
         <div className="categories-grid reveal reveal-stagger">
           {/* CATEGORY CARD: JERSEYS */}
-          <Link href="/shop?category=Jerseys" className="category-item-card" id="category-jerseys">
+          <Link href="/shop" className="category-item-card" id="category-jerseys">
             <div className="card-image-wrapper">
-              <img src="/assets/jersey1.jpg" alt="Premium Sports Jerseys Collection" />
+              <img src="/assets/jerseyBG.jpg" alt="Premium Sports Jerseys Collection" />
               <div className="card-image-overlay"></div>
             </div>
             <div className="card-content">
