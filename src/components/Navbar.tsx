@@ -73,24 +73,10 @@ export default function Navbar() {
       <div className="container">
         {/* Brand */}
         <Link href="/" className="navbar-brand">
-          <svg viewBox="0 0 32 32" fill="none">
-            <path
-              d="M16 2L4 8v8c0 7.5 5.3 14.5 12 16 6.7-1.5 12-8.5 12-16V8L16 2z"
-              stroke="#C5A059"
-              strokeWidth="1.5"
-              fill="none"
-            />
-            <text
-              x="10"
-              y="21"
-              fontSize="14"
-              fontWeight="700"
-              fill="#C5A059"
-              fontFamily="Space Grotesk, sans-serif"
-            >
-              K
-            </text>
-          </svg>
+          <img
+            src="/assets/KitKart-LogoT1.png"
+            alt="KitKart Logo"
+            style={{ width: "40px", height: "40px", borderRadius: "6px", objectFit: "cover" }} />
           KITKART
         </Link>
 
