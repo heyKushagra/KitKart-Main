@@ -58,7 +58,8 @@ export default function Cart() {
         await initiateShiprocketCheckout(cart);
       } catch (err) {
         console.error("Shiprocket checkout failed", err);
-        alert("Shiprocket checkout is currently unavailable. Proceeding with standard checkout.");
+        const errMsg = err instanceof Error ? err.message : String(err);
+        alert(`Shiprocket checkout failed: ${errMsg}. Proceeding with standard checkout.`);
         router.push("/checkout");
       } finally {
         setIsCheckingOut(false);
