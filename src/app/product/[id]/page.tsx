@@ -400,7 +400,9 @@ function ProductContent() {
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                   </svg>
-                  <span>Note: If you want to change the size, you must bear the shipping costs for both sides.</span>
+                  <span>Note: If you want to change the size, you must bear the shipping costs for both sides.
+                    For return, refund amount will be processed after deducting outward and return shipping charges of product.
+                  </span>
                 </div>
               </div>
 
