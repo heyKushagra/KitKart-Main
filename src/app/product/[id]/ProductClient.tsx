@@ -412,7 +412,7 @@ function ProductContent() {
                     Want to get that product on special request? Do it right away
                   </p>
                   <Link
-                    href="https://wa.me/#"
+                    href="https://wa.me/918849376973"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-primary"
