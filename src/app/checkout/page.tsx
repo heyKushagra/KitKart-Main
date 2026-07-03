@@ -86,7 +86,7 @@ export default function Checkout() {
 
   // Totals calculations
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = subtotal >= 1500 || subtotal === 0 ? 0 : 99;
+  const shipping = subtotal >= 0 || subtotal === 0 ? 0 : 0;
   const total = subtotal + shipping;
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
@@ -158,8 +158,8 @@ export default function Checkout() {
           }
 
           const data = productDoc.data();
-          const currentStock = data.stockQuantity !== undefined 
-            ? Number(data.stockQuantity) 
+          const currentStock = data.stockQuantity !== undefined
+            ? Number(data.stockQuantity)
             : (data.stock !== undefined ? Number(data.stock) : 10);
 
           const newStock = currentStock - quantity;
@@ -458,7 +458,7 @@ export default function Checkout() {
           <div className="checkout-summary-column">
             <div className="sticky-summary-card">
               <h2 className="summary-card-title">Order Summary</h2>
-              
+
               <div className="summary-items-list">
                 {cart.map((item) => (
                   <div key={item.id} className="summary-item">
@@ -485,7 +485,7 @@ export default function Checkout() {
                   <span>Shipping</span>
                   <span>{shipping === 0 ? "FREE" : `₹${shipping}`}</span>
                 </div>
-                {subtotal >= 1500 && (
+                {subtotal >= 0 && (
                   <div className="calc-row discount-row">
                     <span>Discount (Free Shipping)</span>
                     <span>-₹99</span>
@@ -497,10 +497,10 @@ export default function Checkout() {
                 </div>
               </div>
 
-              <button 
-                type="button" 
-                onClick={handlePlaceOrder} 
-                disabled={loading} 
+              <button
+                type="button"
+                onClick={handlePlaceOrder}
+                disabled={loading}
                 className="btn-place-order desktop-only"
               >
                 {loading ? <div className="btn-spinner"></div> : <span>Place Order • ₹{total.toLocaleString("en-IN")}</span>}

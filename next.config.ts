@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
   },
   // Only apply basePath and assetPrefix during production build
   // This prevents it from breaking your local development (npm run dev)
-  basePath: isProd ? '/KitKart-Main' : '',
-  assetPrefix: isProd ? '/KitKart-Main/' : '',
+  basePath: isProd ? '/KitKart-Admin' : '',
+  assetPrefix: isProd ? '/KitKart-Admin /' : '',
 };
 
 export default nextConfig;
