@@ -296,12 +296,10 @@ export default function Checkout() {
           <h1 className="checkout-title">Secure Checkout</h1>
         </div>
 
-        <div className="checkout-grid">
-          {/* Left Column: Form & Payment */}
-          <div className="checkout-form-column">
-            <form onSubmit={handlePlaceOrder} className="checkout-form">
-              {/* Shipping Address */}
-              <div className="checkout-section-card">
+        <form onSubmit={handlePlaceOrder} className="checkout-grid">
+          {/* Shipping Address */}
+          <div className="checkout-shipping-column">
+            <div className="checkout-section-card">
                 <div className="section-card-header">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -406,8 +404,10 @@ export default function Checkout() {
 
                 </div>
               </div>
+            </div>
 
-              {/* Payment Methods */}
+            {/* Payment Methods */}
+            <div className="checkout-payment-column">
               <div className="checkout-section-card">
                 <div className="section-card-header">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -451,12 +451,11 @@ export default function Checkout() {
               <button type="submit" disabled={loading} className="btn-place-order mobile-only">
                 {loading ? <div className="btn-spinner"></div> : <span>Place Order</span>}
               </button>
-            </form>
-          </div>
+            </div>
 
-          {/* Right Column: Order Summary (Sticky) */}
-          <div className="checkout-summary-column">
-            <div className="sticky-summary-card">
+            {/* Right Column: Order Summary (Sticky) */}
+            <div className="checkout-summary-column">
+              <div className="sticky-summary-card">
               <h2 className="summary-card-title">Order Summary</h2>
 
               <div className="summary-items-list">
@@ -526,7 +525,7 @@ export default function Checkout() {
               </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
 
       <style jsx>{`
@@ -612,14 +611,26 @@ export default function Checkout() {
         .checkout-grid {
           display: grid;
           grid-template-columns: 1.5fr 1fr;
+          grid-template-areas: 
+            "shipping summary"
+            "payment summary";
           gap: var(--sp-8);
           animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        .checkout-form-column {
+        .checkout-shipping-column {
+          grid-area: shipping;
+        }
+
+        .checkout-payment-column {
+          grid-area: payment;
           display: flex;
           flex-direction: column;
           gap: var(--sp-8);
+        }
+
+        .checkout-summary-column {
+          grid-area: summary;
         }
 
         /* Section Cards */
@@ -889,6 +900,10 @@ export default function Checkout() {
         @media (max-width: 992px) {
           .checkout-grid {
             grid-template-columns: 1fr;
+            grid-template-areas:
+              "shipping"
+              "summary"
+              "payment";
             gap: var(--sp-8);
           }
           .sticky-summary-card {
