@@ -1,13 +1,19 @@
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
+import { hashStringToLong } from '@/lib/shiprocket/checkout';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { cart } = body;
 
-    const apiKey = process.env.SHIPROCKET_API_KEY || 'eifpUTzeesakx5cH';
-    const apiSecret = process.env.SHIPROCKET_API_SECRET || 'MvONXMzJ9YPnd4tgPi1vWCJn3KWU5vmL';
+    const apiKey = process.env.SHIPROCKET_API_KEY;
+    const apiSecret = process.env.SHIPROCKET_API_SECRET;
+
+    if (!apiKey || !apiSecret) {
+      console.error('Shiprocket API Key or Secret Key is not configured in environment variables');
+      return NextResponse.json({ error: 'Shiprocket environment variables are not configured' }, { status: 500 });
+    }
 
     // Construct the Shiprocket cart payload.
     // IMPORTANT: In a production scenario, `variant_id` must perfectly match 
@@ -16,7 +22,7 @@ export async function POST(req: Request) {
     const shiprocketPayload = {
       cart_data: {
         items: cart.map((item: any) => ({
-          variant_id: item.id.toString(), // Placeholder for Shiprocket synced variant ID
+          variant_id: hashStringToLong(item.id).toString(), // Align with Catalog Sync variant ID
           quantity: item.quantity || 1
         }))
       },

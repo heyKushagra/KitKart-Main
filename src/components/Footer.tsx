@@ -10,7 +10,7 @@ export default function Footer() {
               <img
                 src="/assets/KitKart-LogoT1.png"
                 alt="KitKart Logo"
-                style={{ width: "40px", height: "40px", borderRadius: "6px", objectFit: "cover" }} />
+                style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover" }} />
               KITKART
             </div>
             <p className="footer-desc">

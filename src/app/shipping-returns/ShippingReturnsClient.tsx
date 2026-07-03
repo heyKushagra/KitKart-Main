@@ -169,7 +169,7 @@ export default function ShippingReturnsClient() {
                 </div>
                 <div className="callout-content">
                   <strong>Shipping Fee Obligations</strong>
-                  <p>For standard size exchanges, the customer is responsible for shipping charges of both the return shipment and the replacement shipment (typically <strong>₹150 to ₹200</strong> total).</p>
+                  <p>For standard size exchanges, the customer is responsible for shipping charges of both the return shipment and the replacement shipment typically ₹150 to ₹200 total. </p>
                 </div>
               </div>
             </div>
