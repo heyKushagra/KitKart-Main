@@ -20,19 +20,6 @@ export default function Cart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [couponCode, setCouponCode] = useState("");
-  const [discountAmount, setDiscountAmount] = useState(0);
-
-  const applyCoupon = () => {
-    // Example: You can change "KITKART10" to any keyword, and adjust the discount math (e.g., subtotal * 0.1 for 10% off)
-    if (couponCode.toUpperCase() === "KITKART10") {
-      setDiscountAmount(subtotal * 0.1); 
-      alert("Coupon applied successfully!");
-    } else {
-      setDiscountAmount(0);
-      alert("Invalid coupon code");
-    }
-  };
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
@@ -88,7 +75,7 @@ export default function Cart() {
     0
   );
   const shipping = 0; // Set to always 0 for Free Shipping
-  const total = subtotal + shipping - discountAmount;
+  const total = subtotal + shipping;
 
   return (
     <div style={{ paddingTop: "80px" }}>
@@ -214,29 +201,6 @@ export default function Cart() {
                 <div className="summary-row">
                   <span>Estimated Shipping</span>
                   <span>{shipping === 0 ? <span style={{ color: "var(--clr-primary, #25D366)", fontWeight: "bold" }}>FREE</span> : `₹${shipping}`}</span>
-                </div>
-                {discountAmount > 0 && (
-                  <div className="summary-row discount-row" style={{ color: "var(--clr-primary, #25D366)" }}>
-                    <span>Discount ({couponCode})</span>
-                    <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
-                  </div>
-                )}
-                
-                {/* Coupon Code Section */}
-                <div style={{ margin: "16px 0", display: "flex", gap: "8px" }}>
-                  <input
-                    type="text"
-                    placeholder="Coupon Code"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid var(--clr-border)", background: "transparent", color: "var(--clr-text)" }}
-                  />
-                  <button
-                    onClick={applyCoupon}
-                    style={{ padding: "10px 16px", borderRadius: "8px", background: "var(--clr-primary, #25D366)", color: "#fff", fontWeight: "bold", border: "none", cursor: "pointer" }}
-                  >
-                    Apply
-                  </button>
                 </div>
 
                 <div className="summary-row total-row">

@@ -58,8 +58,8 @@ export default function Checkout() {
 
   const applyCoupon = () => {
     // Example: You can change "KITKART10" to any keyword, and adjust the discount math (e.g., subtotal * 0.1 for 10% off)
-    if (couponCode.toUpperCase() === "KITKART10") {
-      setDiscountAmount(subtotal * 0.1); 
+    if (couponCode.toUpperCase() === "NEW10") {
+      setDiscountAmount(100);
       showToast("success", "Coupon applied successfully!");
     } else {
       setDiscountAmount(0);
@@ -300,162 +300,162 @@ export default function Checkout() {
           {/* Shipping Address */}
           <div className="checkout-shipping-column">
             <div className="checkout-section-card">
-                <div className="section-card-header">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  <h2>Shipping Information</h2>
+              <div className="section-card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                <h2>Shipping Information</h2>
+              </div>
+              <div className="section-card-body">
+                <div className="form-row">
+                  <div className="input-group">
+                    <label htmlFor="fullName">Full Name</label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      value={shippingForm.fullName}
+                      onChange={handleInputChange}
+                      placeholder="John Doe"
+                      required
+                    />
+                  </div>
+                  <div className="input-group">
+                    <label htmlFor="email">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={shippingForm.email}
+                      onChange={handleInputChange}
+                      placeholder="john@example.com"
+                      required
+                    />
+                  </div>
                 </div>
-                <div className="section-card-body">
-                  <div className="form-row">
-                    <div className="input-group">
-                      <label htmlFor="fullName">Full Name</label>
-                      <input
-                        type="text"
-                        id="fullName"
-                        name="fullName"
-                        value={shippingForm.fullName}
-                        onChange={handleInputChange}
-                        placeholder="John Doe"
-                        required
-                      />
-                    </div>
-                    <div className="input-group">
-                      <label htmlFor="email">Email Address</label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={shippingForm.email}
-                        onChange={handleInputChange}
-                        placeholder="john@example.com"
-                        required
-                      />
-                    </div>
+
+                <div className="form-row">
+                  <div className="input-group">
+                    <label htmlFor="phone">Phone Number</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={shippingForm.phone}
+                      onChange={handleInputChange}
+                      placeholder="9876543210"
+                      required
+                    />
                   </div>
-
-                  <div className="form-row">
-                    <div className="input-group">
-                      <label htmlFor="phone">Phone Number</label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={shippingForm.phone}
-                        onChange={handleInputChange}
-                        placeholder="9876543210"
-                        required
-                      />
-                    </div>
-                    <div className="input-group">
-                      <label htmlFor="address">Address</label>
-                      <input
-                        type="text"
-                        id="address"
-                        name="address"
-                        value={shippingForm.address}
-                        onChange={handleInputChange}
-                        placeholder="Apartment, suite, street name"
-                        required
-                      />
-                    </div>
+                  <div className="input-group">
+                    <label htmlFor="address">Address</label>
+                    <input
+                      type="text"
+                      id="address"
+                      name="address"
+                      value={shippingForm.address}
+                      onChange={handleInputChange}
+                      placeholder="Apartment, suite, street name"
+                      required
+                    />
                   </div>
-
-                  <div className="form-row tripartite">
-                    <div className="input-group">
-                      <label htmlFor="city">City</label>
-                      <input
-                        type="text"
-                        id="city"
-                        name="city"
-                        value={shippingForm.city}
-                        onChange={handleInputChange}
-                        placeholder="Mumbai"
-                        required
-                      />
-                    </div>
-                    <div className="input-group">
-                      <label htmlFor="state">State</label>
-                      <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        value={shippingForm.state}
-                        onChange={handleInputChange}
-                        placeholder="Maharashtra"
-                        required
-                      />
-                    </div>
-                    <div className="input-group">
-                      <label htmlFor="pincode">Pincode</label>
-                      <input
-                        type="text"
-                        id="pincode"
-                        name="pincode"
-                        value={shippingForm.pincode}
-                        onChange={handleInputChange}
-                        placeholder="400001"
-                        required
-                      />
-                    </div>
-                  </div>
-
-
                 </div>
+
+                <div className="form-row tripartite">
+                  <div className="input-group">
+                    <label htmlFor="city">City</label>
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      value={shippingForm.city}
+                      onChange={handleInputChange}
+                      placeholder="Mumbai"
+                      required
+                    />
+                  </div>
+                  <div className="input-group">
+                    <label htmlFor="state">State</label>
+                    <input
+                      type="text"
+                      id="state"
+                      name="state"
+                      value={shippingForm.state}
+                      onChange={handleInputChange}
+                      placeholder="Maharashtra"
+                      required
+                    />
+                  </div>
+                  <div className="input-group">
+                    <label htmlFor="pincode">Pincode</label>
+                    <input
+                      type="text"
+                      id="pincode"
+                      name="pincode"
+                      value={shippingForm.pincode}
+                      onChange={handleInputChange}
+                      placeholder="400001"
+                      required
+                    />
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Methods */}
+          <div className="checkout-payment-column">
+            <div className="checkout-section-card">
+              <div className="section-card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                  <line x1="1" y1="10" x2="23" y2="10" />
+                </svg>
+                <h2>Payment Method</h2>
+              </div>
+              <div className="section-card-body payment-options">
+                <label className={`payment-option-label ${paymentMethod === "cod" ? "active" : ""}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === "cod"}
+                    onChange={() => setPaymentMethod("cod")}
+                  />
+                  <div className="option-info">
+                    <span className="option-title">Cash on Delivery (COD)</span>
+                    <span className="option-desc">Pay with cash when your package is delivered to your doorstep.</span>
+                  </div>
+                </label>
+
+                <label className={`payment-option-label disabled ${paymentMethod === "online" ? "active" : ""}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="online"
+                    checked={paymentMethod === "online"}
+                    disabled
+                  />
+                  <div className="option-info">
+                    <span className="option-title">Online Payment (UPI, Card, Netbanking)</span>
+                    <span className="option-desc text-gold-dim">Online heckout integration coming soon.</span>
+                  </div>
+                </label>
               </div>
             </div>
 
-            {/* Payment Methods */}
-            <div className="checkout-payment-column">
-              <div className="checkout-section-card">
-                <div className="section-card-header">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                    <line x1="1" y1="10" x2="23" y2="10" />
-                  </svg>
-                  <h2>Payment Method</h2>
-                </div>
-                <div className="section-card-body payment-options">
-                  <label className={`payment-option-label ${paymentMethod === "cod" ? "active" : ""}`}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cod"
-                      checked={paymentMethod === "cod"}
-                      onChange={() => setPaymentMethod("cod")}
-                    />
-                    <div className="option-info">
-                      <span className="option-title">Cash on Delivery (COD)</span>
-                      <span className="option-desc">Pay with cash when your package is delivered to your doorstep.</span>
-                    </div>
-                  </label>
+            {/* Submit Button (Hidden on desktop, visible on mobile to sit under form flow) */}
+            <button type="submit" disabled={loading} className="btn-place-order mobile-only">
+              {loading ? <div className="btn-spinner"></div> : <span>Place Order</span>}
+            </button>
+          </div>
 
-                  <label className={`payment-option-label disabled ${paymentMethod === "online" ? "active" : ""}`}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="online"
-                      checked={paymentMethod === "online"}
-                      disabled
-                    />
-                    <div className="option-info">
-                      <span className="option-title">Online Payment (UPI, Card, Netbanking)</span>
-                      <span className="option-desc text-gold-dim">Online heckout integration coming soon.</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              {/* Submit Button (Hidden on desktop, visible on mobile to sit under form flow) */}
-              <button type="submit" disabled={loading} className="btn-place-order mobile-only">
-                {loading ? <div className="btn-spinner"></div> : <span>Place Order</span>}
-              </button>
-            </div>
-
-            {/* Right Column: Order Summary (Sticky) */}
-            <div className="checkout-summary-column">
-              <div className="sticky-summary-card">
+          {/* Right Column: Order Summary (Sticky) */}
+          <div className="checkout-summary-column">
+            <div className="sticky-summary-card">
               <h2 className="summary-card-title">Order Summary</h2>
 
               <div className="summary-items-list">
@@ -490,7 +490,7 @@ export default function Checkout() {
                     <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
                   </div>
                 )}
-                
+
                 {/* Coupon Code Section */}
                 <div style={{ margin: "16px 0", display: "flex", gap: "8px" }}>
                   <input
