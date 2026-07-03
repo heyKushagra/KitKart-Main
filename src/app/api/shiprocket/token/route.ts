@@ -15,25 +15,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Shiprocket environment variables are not configured' }, { status: 500 });
     }
 
-    // Construct the Shiprocket cart payload.
-    // IMPORTANT: In a production scenario, `variant_id` must perfectly match 
-    // the synced product variants on Shiprocket's backend via the Catalog Sync API.
-    // Since this is a temporary testing integration, we map our existing IDs.
-    const shiprocketPayload = {
+    // Build the redirect URL based on environment
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+    // Shiprocket requires cart_data and redirect_url in the token payload.
+    // variant_id must match the IDs from the Catalog Sync API.
+    const payload: any = {
       cart_data: {
         items: cart.map((item: any) => ({
-          variant_id: hashStringToLong(item.id).toString(), // Align with Catalog Sync variant ID
+          variant_id: hashStringToLong(item.id), // Must be integer, not string
           quantity: item.quantity || 1
         }))
       },
-      // The redirect URL when checkout succeeds
-      redirect_url: process.env.NEXT_PUBLIC_BASE_URL
-        ? `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/success`
-        : 'http://localhost:3000/checkout/success',
+      redirect_url: `${baseUrl}/checkout/success`,
       timestamp: new Date().toISOString()
     };
 
-    const payloadString = JSON.stringify(shiprocketPayload);
+    const payloadString = JSON.stringify(payload);
 
     // Calculate HMAC-SHA256 signature encoded in Base64
     const hmac = crypto
@@ -41,38 +39,45 @@ export async function POST(req: Request) {
       .update(payloadString)
       .digest('base64');
 
+    console.log('[Shiprocket Debug] Payload:', payloadString);
+    console.log('[Shiprocket Debug] HMAC:', hmac);
+
     // Call Shiprocket Access Token API
     const response = await fetch('https://checkout-api.shiprocket.com/api/v1/access-token/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Api-Key': apiKey, // API Example uses exact key without "Bearer " prefix
+        'X-Api-Key': apiKey,
         'X-Api-HMAC-SHA256': hmac,
       },
       body: payloadString,
     });
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Shiprocket API Error generating token:', errorData);
+    const responseText = await response.text();
+    console.log('[Shiprocket Debug] Response Status:', response.status);
+    console.log('[Shiprocket Debug] Response Body:', responseText);
 
-      // If Shiprocket rejects the request (e.g. invalid keys during testing),
-      // we still return a 500 error so the frontend can catch it and fallback.
+    if (!response.ok) {
       return NextResponse.json(
-        { error: 'Failed to authenticate with Shiprocket API' },
+        { error: 'Failed to get Shiprocket checkout token', details: responseText },
         { status: 500 }
       );
     }
 
-    const data = await response.json();
+    const data = JSON.parse(responseText);
 
-    // Based on the Shiprocket documentation, the token lies in data.result.token
-    const token = data?.result?.token || data?.token;
+    // Based on Shiprocket docs, token is in data.result.token
+    const token = data?.result?.token || data?.token || data?.data?.token;
 
     if (!token) {
-      throw new Error('Token not found in Shiprocket response');
+      console.error('[Shiprocket Debug] No token in response:', responseText);
+      return NextResponse.json(
+        { error: 'Token not found in Shiprocket response', details: responseText },
+        { status: 500 }
+      );
     }
 
+    console.log('[Shiprocket Debug] Token obtained successfully!');
     return NextResponse.json({ token });
   } catch (error: any) {
     console.error('Shiprocket token API internal error:', error);
