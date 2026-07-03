@@ -1,12 +1,28 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { hashStringToLong } from '@/lib/shiprocket/checkout';
 
 export async function GET(req: Request) {
   try {
     const apiKeyHeader = req.headers.get('X-Api-Key');
     const expectedApiKey = process.env.SHIPROCKET_API_KEY;
+
+    // Log the incoming request to Firestore for diagnostics
+    try {
+      await addDoc(collection(db, 'shiprocket_api_logs'), {
+        endpoint: 'products-by-collection',
+        timestamp: new Date().toISOString(),
+        headers: {
+          'x-api-key': apiKeyHeader,
+          'host': req.headers.get('host'),
+          'user-agent': req.headers.get('user-agent'),
+        },
+        authorized: expectedApiKey ? apiKeyHeader === expectedApiKey : true,
+      });
+    } catch (logError) {
+      console.error('Failed to log to Firestore:', logError);
+    }
 
     // Secure the API: Validate API key if configured
     if (expectedApiKey && apiKeyHeader !== expectedApiKey) {
