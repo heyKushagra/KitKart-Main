@@ -53,6 +53,20 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
+  const [couponCode, setCouponCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+  const applyCoupon = () => {
+    // Example: You can change "KITKART10" to any keyword, and adjust the discount math (e.g., subtotal * 0.1 for 10% off)
+    if (couponCode.toUpperCase() === "KITKART10") {
+      setDiscountAmount(subtotal * 0.1); 
+      showToast("success", "Coupon applied successfully!");
+    } else {
+      setDiscountAmount(0);
+      showToast("error", "Invalid coupon code");
+    }
+  };
+
   // Prefill Name & Email from authenticated user
   useEffect(() => {
     if (user) {
@@ -86,8 +100,8 @@ export default function Checkout() {
 
   // Totals calculations
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = subtotal >= 0 || subtotal === 0 ? 0 : 0;
-  const total = subtotal + shipping;
+  const shipping = 0; // Set to always 0 for Free Shipping
+  const total = subtotal + shipping - discountAmount;
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -389,21 +403,7 @@ export default function Checkout() {
                     </div>
                   </div>
 
-                  <div className="input-group">
-                    <label htmlFor="country">Country</label>
-                    <select
-                      id="country"
-                      name="country"
-                      value={shippingForm.country}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="India">India</option>
-                      <option value="United States">United States</option>
-                      <option value="United Kingdom">United Kingdom</option>
-                      <option value="Australia">Australia</option>
-                    </select>
-                  </div>
+
                 </div>
               </div>
 
@@ -441,7 +441,7 @@ export default function Checkout() {
                     />
                     <div className="option-info">
                       <span className="option-title">Online Payment (UPI, Card, Netbanking)</span>
-                      <span className="option-desc text-gold-dim">Razorpay checkout integration coming soon.</span>
+                      <span className="option-desc text-gold-dim">Online heckout integration coming soon.</span>
                     </div>
                   </label>
                 </div>
@@ -483,14 +483,33 @@ export default function Checkout() {
                 </div>
                 <div className="calc-row">
                   <span>Shipping</span>
-                  <span>{shipping === 0 ? "FREE" : `₹${shipping}`}</span>
+                  <span>{shipping === 0 ? <span style={{ color: "var(--clr-primary, #25D366)", fontWeight: "bold" }}>FREE</span> : `₹${shipping}`}</span>
                 </div>
-                {subtotal >= 0 && (
-                  <div className="calc-row discount-row">
-                    <span>Discount (Free Shipping)</span>
-                    <span>-₹99</span>
+                {discountAmount > 0 && (
+                  <div className="calc-row discount-row" style={{ color: "var(--clr-primary, #25D366)" }}>
+                    <span>Discount ({couponCode})</span>
+                    <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
                   </div>
                 )}
+                
+                {/* Coupon Code Section */}
+                <div style={{ margin: "16px 0", display: "flex", gap: "8px" }}>
+                  <input
+                    type="text"
+                    placeholder="Coupon Code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid var(--clr-border)", background: "transparent", color: "var(--clr-text)" }}
+                  />
+                  <button
+                    onClick={applyCoupon}
+                    type="button"
+                    style={{ padding: "10px 16px", borderRadius: "8px", background: "var(--clr-primary, #25D366)", color: "#fff", fontWeight: "bold", border: "none", cursor: "pointer" }}
+                  >
+                    Apply
+                  </button>
+                </div>
+
                 <div className="calc-row total-row">
                   <span>Total</span>
                   <span className="total-val">₹{total.toLocaleString("en-IN")}</span>
