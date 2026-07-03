@@ -18,15 +18,6 @@ interface Product {
 }
 
 const LOCAL_PRODUCTS: Product[] = [
-
-
-  {
-    id: "training-top-2024",
-    name: "Training Top 2024",
-    price: 999,
-    image: "/assets/jersey-wp.jpg",
-    badge: "New"
-  }
 ];
 
 export default function Home() {
@@ -481,13 +472,13 @@ export default function Home() {
             </div>
             <div className="community-images">
               <div className="community-img-wrap">
-                <img src="/assets/jersey1.jpg" alt="Community" />
+                <img src="/assets/boots.png" alt="Community" />
               </div>
               <div className="community-img-wrap">
-                <img src="/assets/jersey2.jpg" alt="Community" />
+                <img src="/assets/jerseyBG.jpg" alt="Community" />
               </div>
               <div className="community-img-wrap">
-                <img src="/assets/jersey3.jpg" alt="Community" />
+                <img src="/assets/player.jpg" alt="Community" />
               </div>
 
             </div>
