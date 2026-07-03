@@ -388,8 +388,8 @@ function ProductContent() {
                     </svg>
                   </div>
                   <div className="delivery-info-content">
-                    <span className="delivery-info-title">Returns & Exchange</span>
-                    <span className="delivery-info-text">Refund will be processed after deducting outward and return shipping charges of product. Free exchange only if product is damaged or different.</span>
+                    <span className="delivery-info-title">Returns & Exchange Available</span>
+                    <span className="delivery-info-text">For Return Policies, please refer to <Link href="/shipping-returns"><strong>Shipping and Returns page</strong></Link>. Free exchange only if product is damaged or different.</span>
                   </div>
                 </div>
 
@@ -449,8 +449,8 @@ function ProductContent() {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 }
 
