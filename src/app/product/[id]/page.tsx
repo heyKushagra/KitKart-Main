@@ -389,7 +389,7 @@ function ProductContent() {
                   </div>
                   <div className="delivery-info-content">
                     <span className="delivery-info-title">Returns & Exchange</span>
-                    <span className="delivery-info-text">No Return, Free exchange only if product is damaged or different.</span>
+                    <span className="delivery-info-text">Refund will be processed after deducting outward and return shipping charges of product. Free exchange only if product is damaged or different.</span>
                   </div>
                 </div>
 
