@@ -99,6 +99,30 @@ export default function CategoriesClient() {
               </span>
             </div>
           </Link>
+
+          {/* CATEGORY CARD: COMPLETE FOOTBALL KIT */}
+          <Link href="/shop" className="category-item-card" id="category-complete-kit">
+            <div className="card-image-wrapper">
+              <img src="/assets/football_kit.png" alt="Complete Football Kit Package" />
+              <div className="card-image-overlay"></div>
+            </div>
+            <div className="card-content">
+              <div>
+                <span className="card-tag">All-In-One Bundle</span>
+                <h2 className="card-heading">Complete Football Kit</h2>
+                <p className="card-description">
+                  Get pitch-ready instantly. The complete ultimate football bundle featuring premium boots, a match jersey, and performance-grip socks.
+                </p>
+              </div>
+              <span className="card-cta">
+                Explore Kits
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
 
@@ -305,10 +329,17 @@ export default function CategoriesClient() {
 
         .reveal-stagger.active > *:nth-child(1) { transition-delay: 0.05s; }
         .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.15s; }
+        .reveal-stagger.active > *:nth-child(3) { transition-delay: 0.25s; }
 
         .reveal-stagger.active > * {
           opacity: 1;
           transform: translateY(0);
+        }
+
+        @media (min-width: 769px) {
+          #category-complete-kit {
+            grid-column: span 2;
+          }
         }
 
         /* Responsive Layouts */
