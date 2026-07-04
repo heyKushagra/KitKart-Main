@@ -25,6 +25,7 @@ export default function Login() {
   // Form State
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -57,6 +58,7 @@ export default function Login() {
     setIsLogin((prev) => !prev);
     // Reset validation fields
     setFullName("");
+    setPhone("");
     setPassword("");
     setConfirmPassword("");
   };
@@ -87,6 +89,10 @@ export default function Login() {
         showToast("error", "Please enter your full name.");
         return;
       }
+      if (!phone.trim() || phone.trim().length < 10) {
+        showToast("error", "Please enter a valid 10-digit phone number.");
+        return;
+      }
       if (password !== confirmPassword) {
         showToast("error", "Passwords do not match.");
         return;
@@ -105,6 +111,7 @@ export default function Login() {
         }, 1500);
       } else {
         await signUp(email, password, fullName);
+        localStorage.setItem("kitkart_phone", phone);
         setIsRedirecting(true);
         showToast("success", "Account created successfully! Redirecting...");
         const redirectPath = getRedirectPath();
@@ -228,18 +235,33 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="auth-form">
             {!isLogin && (
-              <div className="input-group">
-                <label htmlFor="fullName">Full Name</label>
-                <input
-                  type="text"
-                  id="fullName"
-                  placeholder="John Doe"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="auth-input"
-                  required
-                />
-              </div>
+              <>
+                <div className="input-group">
+                  <label htmlFor="fullName">Full Name</label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="auth-input"
+                    required
+                  />
+                </div>
+                
+                <div className="input-group">
+                  <label htmlFor="phone">Phone Number</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    placeholder="9876543210"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="auth-input"
+                    required
+                  />
+                </div>
+              </>
             )}
 
             <div className="input-group">

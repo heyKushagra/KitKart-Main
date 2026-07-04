@@ -67,13 +67,15 @@ export default function Checkout() {
     }
   };
 
-  // Prefill Name & Email from authenticated user
+  // Prefill Name, Email, & Phone from authenticated user
   useEffect(() => {
     if (user) {
+      const savedPhone = localStorage.getItem("kitkart_phone") || "";
       setShippingForm((prev) => ({
         ...prev,
         fullName: user.displayName || "",
         email: user.email || "",
+        phone: savedPhone,
       }));
     }
   }, [user]);

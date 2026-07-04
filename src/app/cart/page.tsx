@@ -52,21 +52,7 @@ export default function Cart() {
   };
 
   const handleCheckout = async () => {
-    if (process.env.NEXT_PUBLIC_USE_SHIPROCKET_CHECKOUT === "true") {
-      setIsCheckingOut(true);
-      try {
-        await initiateShiprocketCheckout(cart);
-      } catch (err) {
-        console.error("Shiprocket checkout failed", err);
-        const errMsg = err instanceof Error ? err.message : String(err);
-        alert(`Shiprocket checkout failed: ${errMsg}. Proceeding with standard checkout.`);
-        router.push("/checkout");
-      } finally {
-        setIsCheckingOut(false);
-      }
-    } else {
-      router.push("/checkout");
-    }
+    router.push("/checkout");
   };
 
   if (!loaded) return null; // Wait until local storage is loaded to avoid hydration mismatch
