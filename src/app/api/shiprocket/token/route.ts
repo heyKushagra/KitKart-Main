@@ -1,8 +1,8 @@
 import crypto from 'crypto';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { hashStringToLong } from '@/lib/shiprocket/checkout';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { cart } = body;
@@ -15,8 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Shiprocket environment variables are not configured' }, { status: 500 });
     }
 
-    // Extract cart from request body
-    const { cart } = body;
+    // Extract cart from request body is already done above.
 
     // Determine the base URL dynamically from the request origin
     // This ensures the redirect_url matches the environment (localhost vs live Vercel site)

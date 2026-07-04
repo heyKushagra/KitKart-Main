@@ -115,7 +115,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2024 KitKart. All Rights Reserved. | Designed & Developed by <a href="https://kushworks.vercel.app" target="_blank" rel="noopener noreferrer"><strong>Kushagra Srivastava</strong></a></p>
+          <p>&copy; 2026 KitKart. All Rights Reserved. | Designed & Developed by <a href="https://kushworks.vercel.app" target="_blank" rel="noopener noreferrer"><strong>Kushagra Srivastava</strong></a></p>
         </div>
       </div>
     </footer>

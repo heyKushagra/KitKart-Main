@@ -17,6 +17,7 @@ interface Product {
   category?: string;
   createdAt?: any;
   stock?: number;
+  contactForPrice?: boolean;
 }
 
 const getTimestamp = (createdAt: any): number => {
@@ -96,6 +97,14 @@ export default function ShopClient() {
     }
   }, [categoryParam]);
 
+  // Sync search query parameter on mount/load
+  useEffect(() => {
+    const searchParam = searchParams.get("search");
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -117,13 +126,15 @@ export default function ShopClient() {
               category: fp.category || lp.category,
               createdAt: fp.createdAt || lp.createdAt || Date.now(),
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
-              status: fp.status || "In Stock"
+              status: fp.status || "In Stock",
+              contactForPrice: fp.contactForPrice === true
             };
           }
           return {
             ...lp,
             stock: 10,
-            status: "In Stock"
+            status: "In Stock",
+            contactForPrice: false
           };
         });
 
@@ -139,7 +150,8 @@ export default function ShopClient() {
               category: fp.category || "Uncategorized",
               createdAt: fp.createdAt || Date.now(),
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
-              status: fp.status || "In Stock"
+              status: fp.status || "In Stock",
+              contactForPrice: fp.contactForPrice === true
             });
           }
         });
@@ -379,6 +391,10 @@ export default function ShopClient() {
           <div className="products-grid">
             {visibleProducts.map((product) => {
               const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
+              const isContactForPrice = product.contactForPrice === true || 
+                product.category?.toLowerCase() === "boots" || 
+                product.category?.toLowerCase() === "football boots" ||
+                product.category?.toLowerCase().includes("boot");
               return (
                 <Link href={`/product/${product.id}`} className="product-card" key={product.id}>
                   <div className="product-img-wrapper">
@@ -401,34 +417,40 @@ export default function ShopClient() {
                       <p className="product-category" style={{ fontSize: '0.8rem', color: 'var(--clr-text-secondary)', marginBottom: '4px' }}>
                         {product.category || "Uncategorized"}
                       </p>
-                      <div className="product-price">₹{product.price.toLocaleString("en-IN")}</div>
+                      {isContactForPrice ? (
+                        <div className="product-price" style={{ color: "var(--clr-gold)", fontSize: "0.9rem", fontWeight: "600" }}>Contact for Price</div>
+                      ) : (
+                        <div className="product-price">₹{product.price.toLocaleString("en-IN")}</div>
+                      )}
                     </div>
-                    <button
-                      className="quick-add-btn"
-                      style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
-                      onClick={(e) => {
-                        if (isOutOfStock) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          return;
-                        }
-                        handleQuickAdd(e, product);
-                      }}
-                      disabled={isOutOfStock}
-                      aria-label="Quick Add to Cart"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    {!isContactForPrice && (
+                      <button
+                        className="quick-add-btn"
+                        style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                        onClick={(e) => {
+                          if (isOutOfStock) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return;
+                          }
+                          handleQuickAdd(e, product);
+                        }}
+                        disabled={isOutOfStock}
+                        aria-label="Quick Add to Cart"
                       >
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                      </svg>
-                    </button>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                      </button>
+                    )}
                   </div>
                 </Link>
               );

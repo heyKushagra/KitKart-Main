@@ -58,7 +58,8 @@ export const initiateShiprocketCheckout = async (cart: any[]) => {
     } catch (checkoutErr) {
       console.error('[Shiprocket Client] HeadlessCheckout.addToCart threw an error:', checkoutErr);
       // Removed automatic redirect to let the error display on screen
-      alert("Shiprocket checkout error: " + checkoutErr.message);
+      const errorMessage = checkoutErr instanceof Error ? checkoutErr.message : String(checkoutErr);
+      alert("Shiprocket checkout error: " + errorMessage);
     }
   } else {
     throw new Error('Shiprocket HeadlessCheckout script not found');

@@ -2,6 +2,8 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import ProductClient from "./ProductClient";
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   try {
     const querySnapshot = await getDocs(collection(db, "products"));
@@ -31,6 +33,8 @@ export async function generateStaticParams() {
   }
 }
 
-export default function ProductPage() {
+export default async function ProductPage(props: { params: Promise<{ id: string }> }) {
+  // Await the params as required by Next.js 15
+  await props.params;
   return <ProductClient />;
 }

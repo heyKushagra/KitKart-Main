@@ -15,6 +15,8 @@ interface Product {
   status?: string;
   stock?: number;
   createdAt?: string;
+  category?: string;
+  contactForPrice?: boolean;
 }
 
 const LOCAL_PRODUCTS: Product[] = [
@@ -45,14 +47,18 @@ export default function Home() {
               badge: fp.badge || fp.tag || lp.badge || "",
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
               status: fp.status || "In Stock",
-              createdAt: fp.createdAt || "2024-01-01"
+              createdAt: fp.createdAt || "2024-01-01",
+              category: fp.category || lp.category || "",
+              contactForPrice: fp.contactForPrice === true
             };
           }
           return {
             ...lp,
             stock: 10,
             status: "In Stock",
-            createdAt: "2024-01-01"
+            createdAt: "2024-01-01",
+            category: "",
+            contactForPrice: false
           };
         });
 
@@ -67,7 +73,9 @@ export default function Home() {
               badge: fp.badge || fp.tag || "",
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
               status: fp.status || "In Stock",
-              createdAt: fp.createdAt || "2024-01-01"
+              createdAt: fp.createdAt || "2024-01-01",
+              category: fp.category || "",
+              contactForPrice: fp.contactForPrice === true
             });
           }
         });
@@ -155,7 +163,7 @@ export default function Home() {
       {/* ===== HERO ===== */}
       <header className="hero">
         <div className="hero-bg-image">
-          <img src="/assets/hero_bg.png" alt="" />
+          <img src="/assets/FootBall-BG.png" alt="" />
         </div>
         <div className="hero-overlay"></div>
         <div className="hero-inner">
@@ -189,6 +197,99 @@ export default function Home() {
           </div>
         </div>
       </header>
+      {/* ===== NEW ARRIVALS ===== */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header reveal">
+            <div>
+              <p className="section-label">New Arrivals</p>
+              <h2 className="section-title">Fresh Drops</h2>
+            </div>
+            <Link href="/shop" className="section-link">
+              View All Products
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </Link>
+          </div>
+          <div className="products-grid reveal reveal-stagger">
+            {products.slice(0, 8).map((product) => {
+              const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
+              const isContactForPrice = product.contactForPrice === true ||
+                product.category?.toLowerCase() === "boots" ||
+                product.category?.toLowerCase() === "football boots" ||
+                product.category?.toLowerCase().includes("boot");
+              return (
+                <Link
+                  key={product.id}
+                  href={`/product/${product.id}?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}${product.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(product.image)}`}${isContactForPrice ? '&contactForPrice=true' : ''}`}
+                  className="product-card"
+                >
+                  <div className="product-img-wrapper">
+                    {isOutOfStock ? (
+                      <span className="product-badge" style={{ backgroundColor: '#ff4757', color: '#fff' }}>Out of Stock</span>
+                    ) : (
+                      product.badge && <span className="product-badge">{product.badge}</span>
+                    )}
+                    <img src={product.image} alt={product.name} className="product-img" />
+                  </div>
+                  <div className="product-meta">
+                    <div>
+                      <h3 className="product-title">{product.name}</h3>
+                      {isContactForPrice ? (
+                        <span className="product-price" style={{ color: "var(--clr-gold)", fontSize: "0.95rem", fontWeight: "600" }}>Contact for Price</span>
+                      ) : (
+                        <span className="product-price">₹{product.price}</span>
+                      )}
+                    </div>
+                    {!isContactForPrice && (
+                      <div
+                        className="btn-icon"
+                        aria-label="Add to cart"
+                        style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                        onClick={(e) => {
+                          if (isOutOfStock) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return;
+                          }
+                          handleQuickAdd(e, {
+                            id: `${product.id}-M`,
+                            name: product.name,
+                            price: product.price,
+                            image: product.image,
+                            size: "M"
+                          });
+                        }}
+                      >
+                        <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                          <line x1="3" y1="6" x2="21" y2="6" />
+                          <path d="M16 10a4 4 0 01-8 0" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="view-all-wrapper" style={{ display: "flex", justifyContent: "center", marginTop: "var(--sp-10)" }}>
+            <Link href="/shop" className="btn btn-outline" style={{ borderRadius: "var(--r-full)", padding: "12px 36px", fontSize: "0.95rem" }}>
+              View All Products
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ===== DIVIDER ===== */}
       <hr className="divider" />
@@ -296,89 +397,7 @@ export default function Home() {
       {/* ===== DIVIDER ===== */}
       <hr className="divider" />
 
-      {/* ===== NEW ARRIVALS ===== */}
-      <section className="section">
-        <div className="container">
-          <div className="section-header reveal">
-            <div>
-              <p className="section-label">New Arrivals</p>
-              <h2 className="section-title">Fresh Drops</h2>
-            </div>
-            <Link href="/shop" className="section-link">
-              View All Products
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </Link>
-          </div>
-          <div className="products-grid reveal reveal-stagger">
-            {products.slice(0, 8).map((product) => {
-              const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
-              return (
-                <Link
-                  key={product.id}
-                  href={`/product/${product.id}?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}${product.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(product.image)}`}`}
-                  className="product-card"
-                >
-                  <div className="product-img-wrapper">
-                    {isOutOfStock ? (
-                      <span className="product-badge" style={{ backgroundColor: '#ff4757', color: '#fff' }}>Out of Stock</span>
-                    ) : (
-                      product.badge && <span className="product-badge">{product.badge}</span>
-                    )}
-                    <img src={product.image} alt={product.name} className="product-img" />
-                  </div>
-                  <div className="product-meta">
-                    <div>
-                      <h3 className="product-title">{product.name}</h3>
-                      <span className="product-price">₹{product.price}</span>
-                    </div>
-                    <div
-                      className="btn-icon"
-                      aria-label="Add to cart"
-                      style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
-                      onClick={(e) => {
-                        if (isOutOfStock) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          return;
-                        }
-                        handleQuickAdd(e, {
-                          id: `${product.id}-M`,
-                          name: product.name,
-                          price: product.price,
-                          image: product.image,
-                          size: "M"
-                        });
-                      }}
-                    >
-                      <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <path d="M16 10a4 4 0 01-8 0" />
-                      </svg>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
 
-          <div className="view-all-wrapper" style={{ display: "flex", justifyContent: "center", marginTop: "var(--sp-10)" }}>
-            <Link href="/shop" className="btn btn-outline" style={{ borderRadius: "var(--r-full)", padding: "12px 36px", fontSize: "0.95rem" }}>
-              View All Products
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* ===== WHY CHOOSE KITKART ===== */}
       <section className="section features-section">
