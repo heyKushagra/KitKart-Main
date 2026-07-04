@@ -41,8 +41,7 @@ export const initiateShiprocketCheckout = async (cart: any[]) => {
   console.log('[Shiprocket Client] Assets loaded successfully.');
 
   // 3. Trigger the checkout iframe
-  const fallbackUrl = window.location.origin + '/checkout';
-  console.log('[Shiprocket Client] Triggering HeadlessCheckout with fallback:', fallbackUrl);
+  console.log('[Shiprocket Client] Triggering HeadlessCheckout...');
   
   if (typeof window !== 'undefined' && (window as any).HeadlessCheckout) {
     try {
@@ -50,7 +49,7 @@ export const initiateShiprocketCheckout = async (cart: any[]) => {
       (window as any).HeadlessCheckout.addToCart(
         new Event('click'),
         token, 
-        { fallbackUrl },
+        { }, // Removed fallbackUrl to debug live redirect issue
         (callbackEvent: any) => {
           console.log('[Shiprocket Client] Checkout Callback received:', callbackEvent);
         }
@@ -58,7 +57,8 @@ export const initiateShiprocketCheckout = async (cart: any[]) => {
       console.log('[Shiprocket Client] HeadlessCheckout.addToCart called successfully.');
     } catch (checkoutErr) {
       console.error('[Shiprocket Client] HeadlessCheckout.addToCart threw an error:', checkoutErr);
-      throw checkoutErr;
+      // Removed automatic redirect to let the error display on screen
+      alert("Shiprocket checkout error: " + checkoutErr.message);
     }
   } else {
     throw new Error('Shiprocket HeadlessCheckout script not found');

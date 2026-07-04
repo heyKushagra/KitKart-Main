@@ -73,6 +73,20 @@ export async function POST(req: Request) {
     console.log('[Shiprocket Debug] Response Status:', response.status);
     console.log('[Shiprocket Debug] Response Body:', responseText);
 
+    try {
+      const { db } = await import('@/lib/firebase');
+      const { addDoc, collection } = await import('firebase/firestore');
+      await addDoc(collection(db, 'shiprocket_api_logs'), {
+        endpoint: 'token',
+        timestamp: new Date().toISOString(),
+        status: response.status,
+        payload: payloadString,
+        response: responseText
+      });
+    } catch (logErr) {
+      console.error('Failed to log token response to firestore', logErr);
+    }
+
     if (!response.ok) {
       return NextResponse.json(
         { error: 'Failed to get Shiprocket checkout token', details: responseText },
