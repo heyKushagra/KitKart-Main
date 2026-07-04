@@ -42,9 +42,9 @@ export default function Footer() {
             <h4 className="footer-title">Help</h4>
             <div className="footer-links">
               <Link href="/contact" className="footer-link">Contact Us</Link>
-              {/* <Link href="#" className="footer-link">Track Order</Link> */}
-              {/* <Link href="#" className="footer-link">Privacy Policy</Link> */}
-              <Link href="#" className="footer-link">Terms & Conditions</Link>
+              <Link href="/terms-of-service" className="footer-link">Terms of Service</Link>
+              <Link href="/privacy-policy" className="footer-link">Privacy Policy</Link>
+              {/* <Link href="#" className="footer-link">Terms & Conditions</Link> */}
             </div>
           </div>
           <div>

@@ -15,8 +15,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Shiprocket environment variables are not configured' }, { status: 500 });
     }
 
-    // Build the redirect URL based on environment
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    // Extract cart from request body
+    const { cart } = body;
+
+    // Determine the base URL dynamically from the request origin
+    // This ensures the redirect_url matches the environment (localhost vs live Vercel site)
+    const baseUrl = req.nextUrl.origin || 'https://kitkarttest.vercel.app';
 
     // Shiprocket requires cart_data and redirect_url in the token payload.
     // We pass rich metadata (name, price, sku, image) to bypass catalog sync limitations.
