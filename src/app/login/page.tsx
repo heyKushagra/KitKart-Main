@@ -210,24 +210,10 @@ export default function Login() {
       <div className="auth-container">
         {/* KitKart Branding */}
         <div className="auth-brand">
-          <svg viewBox="0 0 32 32" fill="none" className="brand-logo">
-            <path
-              d="M16 2L4 8v8c0 7.5 5.3 14.5 12 16 6.7-1.5 12-8.5 12-16V8L16 2z"
-              stroke="var(--clr-gold)"
-              strokeWidth="1.5"
-              fill="none"
-            />
-            <text
-              x="10"
-              y="21"
-              fontSize="14"
-              fontWeight="700"
-              fill="var(--clr-gold)"
-              fontFamily="Space Grotesk, sans-serif"
-            >
-              K
-            </text>
-          </svg>
+          <img
+            src="/assets/KitKart-LogoT1.png"
+            alt="KitKart Logo"
+            style={{ width: "34px", height: "34px", borderRadius: "4px", objectFit: "cover" }} />
           <h2 className="brand-name">KITKART</h2>
         </div>
 
@@ -359,10 +345,10 @@ export default function Login() {
           </div>
 
           {/* Google Sign In Button */}
-          <button 
-            type="button" 
-            onClick={handleGoogleLogin} 
-            disabled={loading} 
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={loading}
             className="google-signin-btn"
           >
             <svg viewBox="0 0 24 24" className="google-icon" width="18" height="18">
@@ -405,7 +391,7 @@ export default function Login() {
           justify-content: center;
           min-height: 100vh;
           background: radial-gradient(circle at center, #161616 0%, #0b0b0b 100%);
-          padding: var(--sp-10) var(--sp-4);
+          padding: 90px var(--sp-4) var(--sp-10) var(--sp-4);
           position: relative;
           overflow: hidden;
           font-family: var(--ff-body);
