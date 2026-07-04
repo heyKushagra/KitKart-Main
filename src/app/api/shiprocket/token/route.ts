@@ -19,13 +19,29 @@ export async function POST(req: Request) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     // Shiprocket requires cart_data and redirect_url in the token payload.
-    // variant_id must match the IDs from the Catalog Sync API.
+    // We pass rich metadata (name, price, sku, image) to bypass catalog sync limitations.
     const payload: any = {
       cart_data: {
-        items: cart.map((item: any) => ({
-          variant_id: hashStringToLong(item.id), // Must be integer, not string
-          quantity: item.quantity || 1
-        }))
+        items: cart.map((item: any) => {
+          const longId = hashStringToLong(item.id);
+          const priceVal = typeof item.price === 'string' ? parseFloat(item.price) : (item.price || 0);
+          
+          // Clean base64 image data URIs to avoid payload size errors
+          let imageUrl = item.image || '';
+          if (imageUrl.startsWith('data:image/')) {
+            imageUrl = 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500';
+          }
+
+          return {
+            variant_id: longId,
+            quantity: item.quantity || 1,
+            name: item.name || 'Premium Product',
+            price: priceVal,
+            selling_price: priceVal,
+            sku: item.sku || `KK-${longId}`,
+            image_url: imageUrl
+          };
+        })
       },
       redirect_url: `${baseUrl}/checkout/success`,
       timestamp: new Date().toISOString()
