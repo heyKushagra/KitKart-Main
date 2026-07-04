@@ -280,7 +280,7 @@ export default function MyOrders() {
                                   <h5>{product.name}</h5>
                                   <div className="product-meta">
                                     <span>Size: {product.size}</span>
-                                    <span>Qty: {product.quantity}</span>
+                                    <span>Qty: {product.quantity} × ₹{product.price.toLocaleString("en-IN")}</span>
                                   </div>
                                 </div>
                                 <div className="product-price">
@@ -290,20 +290,32 @@ export default function MyOrders() {
                             ))}
                           </div>
                           
-                          <div className="order-totals">
-                            <div className="total-row">
-                              <span>Subtotal</span>
-                              <span>₹{order.products?.reduce((acc, item) => acc + (item.price * item.quantity), 0).toLocaleString("en-IN")}</span>
-                            </div>
-                            <div className="total-row">
-                              <span>Shipping</span>
-                              <span>{order.totalAmount < 1500 && order.totalAmount > 0 ? '₹99' : 'FREE'}</span>
-                            </div>
-                            <div className="total-row grand-total">
-                              <span>Grand Total</span>
-                              <span>₹{order.totalAmount.toLocaleString("en-IN")}</span>
-                            </div>
-                          </div>
+                          {(() => {
+                            const subtotal = order.products?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0;
+                            const discount = Math.max(0, subtotal - order.totalAmount);
+                            return (
+                              <div className="order-totals">
+                                <div className="total-row">
+                                  <span>Subtotal</span>
+                                  <span>₹{subtotal.toLocaleString("en-IN")}</span>
+                                </div>
+                                {discount > 0 && (
+                                  <div className="total-row discount-row" style={{ color: "var(--clr-primary, #25D366)" }}>
+                                    <span>Discount Applied</span>
+                                    <span>- ₹{discount.toLocaleString("en-IN")}</span>
+                                  </div>
+                                )}
+                                <div className="total-row">
+                                  <span>Shipping</span>
+                                  <span style={{ color: "var(--clr-primary, #25D366)", fontWeight: "bold" }}>FREE</span>
+                                </div>
+                                <div className="total-row grand-total">
+                                  <span>Grand Total</span>
+                                  <span>₹{order.totalAmount.toLocaleString("en-IN")}</span>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>
