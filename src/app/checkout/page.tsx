@@ -67,15 +67,27 @@ export default function Checkout() {
     }
   };
 
-  // Prefill Name, Email, & Phone from authenticated user
+  // Prefill Address, Name, Email, & Phone from authenticated user and local storage
   useEffect(() => {
     if (user) {
       const savedPhone = localStorage.getItem("kitkart_phone") || "";
+      const savedAddressStr = localStorage.getItem("kitkart_saved_address");
+      
+      let savedAddress = {};
+      if (savedAddressStr) {
+        try {
+          savedAddress = JSON.parse(savedAddressStr);
+        } catch (e) {
+          console.error("Could not parse saved address", e);
+        }
+      }
+
       setShippingForm((prev) => ({
         ...prev,
-        fullName: user.displayName || "",
-        email: user.email || "",
-        phone: savedPhone,
+        ...savedAddress,
+        fullName: user.displayName || (savedAddress as any).fullName || "",
+        email: user.email || (savedAddress as any).email || "",
+        phone: savedPhone || (savedAddress as any).phone || "",
       }));
     }
   }, [user]);
@@ -218,6 +230,9 @@ export default function Checkout() {
 
         transaction.set(orderRef, orderData);
       });
+
+      // Save address for future pre-filling
+      localStorage.setItem("kitkart_saved_address", JSON.stringify(shippingForm));
 
       // Clear the local cart
       localStorage.setItem("kitkart_cart", "[]");
