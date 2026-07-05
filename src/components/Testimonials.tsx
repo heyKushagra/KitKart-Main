@@ -26,7 +26,7 @@ const TESTIMONIALS_PAIRS: Testimonial[][] = [
       name: "Kshitiz Pandey",
       city: "Lucknow, India",
       rating: 5,
-      text: "I ordered a Manchester United jersey and it exceeded my expectations. Perfect fit and excellent quality. Will definitely order again!",
+      text: "I ordered Spain jersey and it exceeded my expectations. Perfect fit and excellent quality. Will definitely order again!",
     }
   ],
   [
@@ -92,14 +92,14 @@ const SHOWCASE_PHOTOS: ShowcasePhoto[] = [
     id: "photo-1",
     url: "/assets/SaimJ.jpg",
     caption: "Real Fans. Real Passion.",
-    subcaption: "Thanks for being a part of the KitKart family!",
+    subcaption: "Thanks for being a part of the KitKart family! (Saim)",
     tagline: "Worn by KitKart Community"
   },
   {
     id: "photo-2",
     url: "/assets/KshitizJ.jpg",
     caption: "Premium Wear. Professional Quality.",
-    subcaption: "Jerseys designed for fans who expect more.",
+    subcaption: "Jerseys designed for fans who expect more. (Kshitiz)",
     tagline: "Worn by KitKart Community"
   }
 ];
@@ -117,7 +117,7 @@ export default function Testimonials() {
       setActiveShowcaseIndex((prevIndex) =>
         prevIndex === SHOWCASE_PHOTOS.length - 1 ? 0 : prevIndex + 1
       );
-    }, 4000); // 6000 milliseconds = 6 seconds (Change this value to adjust duration)
+    }, 5000); // 6000 milliseconds = 6 seconds (Change this value to adjust duration)
 
     return () => clearInterval(timer);
   }, []);
