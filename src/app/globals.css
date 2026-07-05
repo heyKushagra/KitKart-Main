@@ -2093,7 +2093,7 @@ h6 {
 /* Main Section Layout */
 .testimonials-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: var(--sp-12);
   align-items: stretch;
 }
@@ -2103,12 +2103,14 @@ h6 {
   flex-direction: column;
   justify-content: center;
   position: relative;
+  min-width: 0;
 }
 
 .testimonials-right {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 /* Outer Border Carousel Wrapper */
@@ -2397,7 +2399,7 @@ h6 {
    ========================================================================== */
 @media (max-width: 1024px) {
   .testimonials-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--sp-16);
   }
 
