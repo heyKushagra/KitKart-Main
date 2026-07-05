@@ -9,7 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 function SuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
-  
+
   const [orderDetails, setOrderDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,25 +35,25 @@ function SuccessContent() {
     fetchOrder();
   }, [orderId]);
 
-  const orderDate = orderDetails?.createdAt?.toDate 
+  const orderDate = orderDetails?.createdAt?.toDate
     ? orderDetails.createdAt.toDate().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
     : new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-      
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
   const estimatedDelivery = new Date();
   estimatedDelivery.setDate(estimatedDelivery.getDate() + 5);
   const estimatedDeliveryString = estimatedDelivery.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
   const paymentMethod = orderDetails?.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment';
 
@@ -92,7 +92,7 @@ function SuccessContent() {
         </div>
 
         <p className="success-subtext">
-          A confirmation email has been sent to your registered address with tracking information.
+          Details of product will be shortly updated on website. Please check Order Status by clicking on <Link href="/account/orders">View My Orders</Link> button.
         </p>
 
         <div className="action-buttons">

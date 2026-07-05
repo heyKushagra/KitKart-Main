@@ -210,7 +210,6 @@ export default function Checkout() {
           transaction.update(productRef, updateData);
         }
 
-        // Save order document within the same transaction
         const orderData = {
           userId: user?.uid || "guest",
           customerDetails: shippingForm,
@@ -222,6 +221,13 @@ export default function Checkout() {
             size: item.size,
             quantity: item.quantity
           })),
+          subtotal: subtotal,
+          shipping: shipping,
+          discount: discountAmount,
+          discountName: discountAmount > 0 ? couponCode : "",
+          discountValue: discountAmount,
+          discountAmount: discountAmount,
+          couponCode: discountAmount > 0 ? couponCode : "",
           totalAmount: total,
           paymentMethod: paymentMethod,
           status: "Pending",

@@ -24,6 +24,12 @@ interface Order {
   paymentMethod: string;
   createdAt: Timestamp;
   products: OrderProduct[];
+  subtotal?: number;
+  discount?: string | number;
+  discountName?: string;
+  discountValue?: number;
+  discountAmount?: number;
+  couponCode?: string;
 }
 
 export default function MyOrders() {
@@ -291,8 +297,9 @@ export default function MyOrders() {
                           </div>
                           
                           {(() => {
-                            const subtotal = order.products?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0;
-                            const discount = Math.max(0, subtotal - order.totalAmount);
+                            const subtotal = order.subtotal !== undefined ? order.subtotal : (order.products?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0);
+                            const discountName = order.discountName || order.couponCode || (typeof order.discount === "string" ? order.discount : "");
+                            const discount = order.discountValue !== undefined ? order.discountValue : (order.discountAmount !== undefined ? order.discountAmount : (typeof order.discount === "number" ? order.discount : Math.max(0, subtotal - order.totalAmount)));
                             return (
                               <div className="order-totals">
                                 <div className="total-row">
@@ -301,7 +308,7 @@ export default function MyOrders() {
                                 </div>
                                 {discount > 0 && (
                                   <div className="total-row discount-row" style={{ color: "var(--clr-primary, #25D366)" }}>
-                                    <span>Discount Applied</span>
+                                    <span>Discount Applied {discountName ? `(${discountName})` : ""}</span>
                                     <span>- ₹{discount.toLocaleString("en-IN")}</span>
                                   </div>
                                 )}
