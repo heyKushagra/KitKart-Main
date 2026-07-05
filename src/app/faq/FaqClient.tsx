@@ -57,7 +57,7 @@ const FAQS: FaqItem[] = [
     question: "How can I contact KitKart?",
     answer: (
       <span>
-        If you need any assistance, simply visit our <Link href="/contact" className="faq-inline-link">Contact Us</Link> page and our team will help you.
+        If you need any assistance, simply visit our <Link href="/contact" className="faq-inline-link"><strong>Contact Us</strong></Link> page and our team will help you.
       </span>
     )
   }
