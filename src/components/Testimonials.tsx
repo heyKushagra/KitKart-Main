@@ -94,6 +94,13 @@ const SHOWCASE_PHOTOS: ShowcasePhoto[] = [
     caption: "Real Fans. Real Passion.",
     subcaption: "Thanks for being a part of the KitKart family!",
     tagline: "Worn by KitKart Community"
+  },
+  {
+    id: "photo-2",
+    url: "/assets/KshitizJ.jpg",
+    caption: "Premium Wear. Professional Quality.",
+    subcaption: "Jerseys designed for fans who expect more.",
+    tagline: "Worn by KitKart Community"
   }
 ];
 
@@ -101,6 +108,19 @@ export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const autoplayTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Showcase state & autoplay functionality (Cycles every 6 seconds)
+  const [activeShowcaseIndex, setActiveShowcaseIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveShowcaseIndex((prevIndex) =>
+        prevIndex === SHOWCASE_PHOTOS.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 4000); // 6000 milliseconds = 6 seconds (Change this value to adjust duration)
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Autoplay functionality
   useEffect(() => {
@@ -184,7 +204,7 @@ export default function Testimonials() {
     ));
   };
 
-  const primaryShowcase = SHOWCASE_PHOTOS[0];
+  const currentShowcase = SHOWCASE_PHOTOS[activeShowcaseIndex];
 
   return (
     <section className="section testimonials-section">
@@ -298,12 +318,15 @@ export default function Testimonials() {
           <div className="testimonials-right reveal">
             <div className="showcase-card">
               <div className="showcase-image-container">
-                <img
-                  src={primaryShowcase.url}
-                  alt={primaryShowcase.caption}
-                  className="showcase-image"
-                  loading="lazy"
-                />
+                {SHOWCASE_PHOTOS.map((photo, index) => (
+                  <img
+                    key={photo.id}
+                    src={photo.url}
+                    alt={photo.caption}
+                    className={`showcase-image ${index === activeShowcaseIndex ? "active" : ""}`}
+                    loading="lazy"
+                  />
+                ))}
               </div>
               <div className="showcase-footer-bar">
                 <div className="showcase-camera-icon-wrap">
@@ -321,10 +344,10 @@ export default function Testimonials() {
                 </div>
                 <div className="showcase-meta-content">
                   <h3 className="showcase-caption-text">
-                    {primaryShowcase.caption}
+                    {currentShowcase.caption}
                   </h3>
                   <p className="showcase-subcaption-text">
-                    {primaryShowcase.subcaption}
+                    {currentShowcase.subcaption}
                   </p>
                 </div>
               </div>
