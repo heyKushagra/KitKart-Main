@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
+import Testimonials from "@/components/Testimonials";
 
 interface Product {
   id: string;
@@ -453,6 +454,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ===== TESTIMONIALS ===== */}
+      <Testimonials />
 
       {/* ===== COMMUNITY ===== */}
       <section className="section community-section">
