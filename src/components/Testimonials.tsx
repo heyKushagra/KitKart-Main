@@ -32,13 +32,45 @@ const TESTIMONIALS_PAIRS: Testimonial[][] = [
   [
     {
       id: "t-3",
+      name: "Prakharsh ",
+      city: "Lucknow, India",
+      rating: 5,
+      text: "Got 2 jerseys from Kitkart. The Quality was too good for price and I wear it everyday.",
+    },
+    {
+      id: "t-4",
+      name: "Ansh Singh",
+      city: "Chandigarh, India",
+      rating: 5,
+      text: "I'm super happy with this Real Madrid jersey and Adidas grip socks set! The fabric is soft, lightweight, and breathable, making it really comfortable to wear, whether I'm playing or just chilling.The socks are also great",
+    }
+  ],
+  [
+    {
+      id: "t-5",
+      name: "Virat Gautam ",
+      city: "Azamgarh, India",
+      rating: 5,
+      text: "The boots are amazing. Fitting is perfect and it's comfortable too. It is looking attractive. Loved it!",
+    },
+    {
+      id: "t-6",
+      name: "Nikhil",
+      city: "Gorakhpur, India",
+      rating: 5,
+      text: "The quality of Jersey is too good. Thankyou Kitkart for giving it in affordable price.",
+    }
+  ],
+  [
+    {
+      id: "t-7",
       name: "Kushagra Srivastava",
       city: "Lucknow, India",
       rating: 5,
       text: "Got my cricket jersey yesterday. The fit is perfect and the gold detailing looks extremely premium. Will definitely order again for my next match.",
     },
     {
-      id: "t-4",
+      id: "t-8",
       name: "Ayansh Srivastava",
       city: "Kanpur, India",
       rating: 5,
@@ -58,7 +90,7 @@ interface ShowcasePhoto {
 const SHOWCASE_PHOTOS: ShowcasePhoto[] = [
   {
     id: "photo-1",
-    url: "/assets/customer-fan-1.png",
+    url: "/assets/SaimJ.jpg",
     caption: "Real Fans. Real Passion.",
     subcaption: "Thanks for being a part of the KitKart family!",
     tagline: "Worn by KitKart Community"
