@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
+import SplashScreen from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
   title: "KitKart – Premium Sports Jerseys | Wear The Game",
@@ -16,12 +17,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (!sessionStorage.getItem('kitkart_splash_shown')) {
+                  document.documentElement.style.setProperty('--content-opacity', '0');
+                  document.documentElement.classList.add('splash-active');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body>
-        <AuthProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </AuthProvider>
+        <SplashScreen />
+        <div id="main-content" style={{ opacity: "var(--content-opacity, 1)", transition: "opacity 0.6s ease-in" }}>
+          <AuthProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </AuthProvider>
+        </div>
       </body>
     </html>
   );
