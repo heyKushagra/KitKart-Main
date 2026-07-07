@@ -117,7 +117,7 @@ export default function Testimonials() {
       setActiveShowcaseIndex((prevIndex) =>
         prevIndex === SHOWCASE_PHOTOS.length - 1 ? 0 : prevIndex + 1
       );
-    }, 5000); // 6000 milliseconds = 6 seconds (Change this value to adjust duration)
+    }, 3500); // 6000 milliseconds = 6 seconds (Change this value to adjust duration)
 
     return () => clearInterval(timer);
   }, []);
