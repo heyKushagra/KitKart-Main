@@ -45,7 +45,9 @@ const CATEGORIES = [
   "Fan Version",
   "Retro Version",
   "Master Version",
-  "Football Boots"
+  "Football Boots",
+  "Oversized Tee",
+  "Oversized T Shirt"
 ];
 
 const SORT_OPTIONS = [
@@ -391,8 +393,8 @@ export default function ShopClient() {
           <div className="products-grid">
             {visibleProducts.map((product) => {
               const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
-              const isContactForPrice = product.contactForPrice === true || 
-                product.category?.toLowerCase() === "boots" || 
+              const isContactForPrice = product.contactForPrice === true ||
+                product.category?.toLowerCase() === "boots" ||
                 product.category?.toLowerCase() === "football boots" ||
                 product.category?.toLowerCase().includes("boot");
               return (

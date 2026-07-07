@@ -339,7 +339,7 @@ export default function Home() {
             </Link>
             <Link href="/shop?category=Cricket%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jersey2.jpg" alt="Cricket Jerseys" />
+                <img src="/assets/IndJersey.jpg" alt="Cricket Jerseys" />
               </div>
               <h3 className="category-name">Cricket</h3>
               <span className="category-explore">
