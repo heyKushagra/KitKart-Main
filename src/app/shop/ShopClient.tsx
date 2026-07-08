@@ -40,13 +40,12 @@ const LOCAL_PRODUCTS: Product[] = [
 const CATEGORIES = [
   "All Products",
   "Football",
-  "Cricket",
   "Player Version",
   "Fan Version",
   "Retro Version",
   "Master Version",
   "Football Boots",
-  "Oversized Tee",
+  "Cricket",
   "Oversized T Shirt"
 ];
 
@@ -307,7 +306,7 @@ export default function ShopClient() {
         </div>
         <h1 className="shop-title">Premium Sports Jerseys & Fan Merchandise</h1>
         <p className="shop-subtitle">
-          Explore authentic cricket, football, basketball, volleyball, badminton, esports, and custom team jerseys. Shop premium-quality sports apparel with fast delivery across India.
+          Explore authentic football, cricket and custom team jerseys. Shop premium-quality sports apparel with fast delivery across whole India with Free Shipping.
         </p>
       </section>
 
