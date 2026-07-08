@@ -400,11 +400,7 @@ export default function ShopClient() {
               return (
                 <Link href={`/product/${product.id}`} className="product-card" key={product.id}>
                   <div className="product-img-wrapper">
-                    {isOutOfStock ? (
-                      <span className="product-badge" style={{ backgroundColor: '#ff4757', color: '#fff' }}>Out of Stock</span>
-                    ) : (
-                      product.badge && <span className="product-badge">{product.badge}</span>
-                    )}
+                    {product.badge && <span className="product-badge">{product.badge}</span>}
                     <Image
                       src={product.image || "/assets/jersey1.jpg"}
                       alt={product.name}
@@ -428,16 +424,15 @@ export default function ShopClient() {
                     {!isContactForPrice && (
                       <button
                         className="quick-add-btn"
-                        style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
                         onClick={(e) => {
                           if (isOutOfStock) {
-                            e.preventDefault();
-                            e.stopPropagation();
+                            // Let the click propagate to the card Link, taking them to the product detail page!
                             return;
                           }
+                          e.preventDefault();
+                          e.stopPropagation();
                           handleQuickAdd(e, product);
                         }}
-                        disabled={isOutOfStock}
                         aria-label="Quick Add to Cart"
                       >
                         <svg

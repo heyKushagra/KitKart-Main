@@ -293,11 +293,7 @@ export default function Home() {
                   className="product-card"
                 >
                   <div className="product-img-wrapper">
-                    {isOutOfStock ? (
-                      <span className="product-badge" style={{ backgroundColor: '#ff4757', color: '#fff' }}>Out of Stock</span>
-                    ) : (
-                      product.badge && <span className="product-badge">{product.badge}</span>
-                    )}
+                    {product.badge && <span className="product-badge">{product.badge}</span>}
                     <img src={product.image} alt={product.name} className="product-img" />
                   </div>
                   <div className="product-meta">
@@ -313,13 +309,13 @@ export default function Home() {
                       <div
                         className="btn-icon"
                         aria-label="Add to cart"
-                        style={isOutOfStock ? { opacity: 0.5, cursor: "not-allowed" } : {}}
                         onClick={(e) => {
                           if (isOutOfStock) {
-                            e.preventDefault();
-                            e.stopPropagation();
+                            // Let the click propagate to the card Link, taking them to the product detail page!
                             return;
                           }
+                          e.preventDefault();
+                          e.stopPropagation();
                           handleQuickAdd(e, {
                             id: `${product.id}-M`,
                             name: product.name,
