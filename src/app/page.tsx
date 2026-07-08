@@ -201,7 +201,7 @@ export default function Home() {
       {/* ===== WHY CHOOSE KITKART ===== */}
       <section className="section features-section">
         <div className="container">
-          <p className="section-label reveal" style={{ textAlign: "center", marginBottom: "var(--sp-8)" }}>
+          <p className="section-label reveal" style={{ textAlign: "center", marginBottom: "var(--sp-5)" }}>
             Why Choose KitKart
           </p>
           <div className="features-grid reveal reveal-stagger">
@@ -216,7 +216,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="feature-title">Free Shipping</h3>
-              <p className="feature-desc">Free shipping on all prepaid orders across India.</p>
+              <p className="feature-desc">Free shipping on all kind of orders across whole India.</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon-wrap">
