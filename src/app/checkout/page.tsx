@@ -58,19 +58,14 @@ export default function Checkout() {
 
   const applyCoupon = () => {
     // Example: You can change "KITKART10" to any keyword, and adjust the discount math (e.g., subtotal * 0.1 for 10% off)
-    if (couponCode.toUpperCase() === "SOCKS50") {
+    const code = couponCode.trim().toUpperCase();
+    if (code === "SOCKS50") {
       setDiscountAmount(150);
       showToast("success", "Coupon applied successfully!");
-    }
-    else {
-      setDiscountAmount(0);
-      showToast("error", "Invalid coupon code");
-    }
-    if (couponCode.toUpperCase() === "NEW10") {
+    } else if (code === "NEW10") {
       setDiscountAmount(subtotal * 0.05);
       showToast("success", "Coupon applied successfully!");
-    }
-    else {
+    } else {
       setDiscountAmount(0);
       showToast("error", "Invalid coupon code");
     }

@@ -101,6 +101,13 @@ const SHOWCASE_PHOTOS: ShowcasePhoto[] = [
     caption: "Premium Wear. Professional Quality.",
     subcaption: "Jerseys designed for fans who expect more. (Kshitiz)",
     tagline: "Worn by KitKart Community"
+  },
+  {
+    id: "photo-3",
+    url: "/assets/KishanJ.jpg",
+    caption: "Unbeatable Quality.",
+    subcaption: "Jerseys designed for fans who expect more. (Kishan)",
+    tagline: "Worn by KitKart Community"
   }
 ];
 
