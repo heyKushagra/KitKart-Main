@@ -418,7 +418,7 @@ h6 {
    Hero Section – Split Layout
    ========================================================================== */
 .hero {
-  min-height: 100vh;
+  min-height: 70vh;
   position: relative;
   display: flex;
   align-items: stretch;
@@ -467,7 +467,7 @@ h6 {
   width: 100%;
   max-width: 1320px;
   margin: 0 auto;
-  padding: var(--sp-32) var(--sp-8) var(--sp-20);
+  padding: 120px var(--sp-8) var(--sp-8);
   gap: var(--sp-16);
 }
 
@@ -490,7 +490,7 @@ h6 {
 }
 
 .hero-title {
-  font-size: clamp(3.2rem, 6.5vw, 5.5rem);
+  font-size: clamp(2.5rem, 5.5vw, 4.3rem);
   font-weight: 700;
   line-height: 1.05;
   margin-bottom: var(--sp-8);
@@ -499,10 +499,10 @@ h6 {
 }
 
 .hero-text {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   color: var(--clr-text-secondary);
   margin-bottom: var(--sp-12);
-  max-width: 420px;
+  max-width: 380px;
   line-height: 1.7;
   opacity: 0;
   animation: fadeUp 0.8s ease 0.5s forwards;
@@ -691,12 +691,14 @@ h6 {
 .features-section {
   border-top: 1px solid var(--clr-border);
   border-bottom: 1px solid var(--clr-border);
+  padding-top: var(--sp-4) !important;
+  padding-bottom: var(--sp-12) !important;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--sp-8);
+  gap: var(--sp-6);
   text-align: center;
 }
 
@@ -704,37 +706,61 @@ h6 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--sp-8) var(--sp-4);
+  padding: var(--sp-6) var(--sp-4);
+  background: rgba(197, 160, 89, 0.04);
+  border: 1px solid rgba(197, 160, 89, 0.15);
+  border-radius: var(--r-lg);
+  transition: all var(--t-med);
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+  background: rgba(197, 160, 89, 0.08);
+  border-color: rgba(197, 160, 89, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(197, 160, 89, 0.1);
 }
 
 .feature-icon-wrap {
-  width: 48px;
-  height: 48px;
-  margin-bottom: var(--sp-5);
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--sp-4);
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(197, 160, 89, 0.12);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  border-radius: 50%;
+  transition: all var(--t-med);
+}
+
+.feature-item:hover .feature-icon-wrap {
+  transform: scale(1.1);
+  background: rgba(197, 160, 89, 0.2);
+  border-color: var(--clr-gold);
+  box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
 }
 
 .feature-icon-wrap svg {
-  width: 40px;
-  height: 40px;
-  stroke: var(--clr-text-secondary);
+  width: 28px;
+  height: 28px;
+  stroke: var(--clr-gold);
   fill: none;
-  stroke-width: 1.5;
+  stroke-width: 1.75;
 }
 
 .feature-title {
   font-family: var(--ff-heading);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--clr-text);
   margin-bottom: var(--sp-2);
+  letter-spacing: 0.02em;
 }
 
 .feature-desc {
-  font-size: 0.82rem;
-  color: var(--clr-text-muted);
-  line-height: 1.6;
+  font-size: 0.8rem;
+  color: var(--clr-text-secondary);
+  line-height: 1.5;
 }
 
 /* ==========================================================================
@@ -1329,7 +1355,7 @@ h6 {
   .hero-inner {
     grid-template-columns: 1fr;
     text-align: center;
-    padding-top: var(--sp-32);
+    padding-top: 110px;
   }
 
   .hero-content {
@@ -1360,6 +1386,7 @@ h6 {
   .community-inner {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: var(--sp-6) !important;
   }
 
   .community-text {
@@ -1367,6 +1394,22 @@ h6 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+  }
+
+  .community-text .section-label {
+    margin-bottom: var(--sp-2) !important;
+  }
+
+  .community-text .section-title {
+    margin-bottom: var(--sp-3) !important;
+    text-align: center !important;
+  }
+
+  .community-text p {
+    margin-bottom: var(--sp-5) !important;
+    text-align: center !important;
+    max-width: 480px;
   }
 
   .footer-grid {
@@ -1428,7 +1471,7 @@ h6 {
   }
 
   .community-images {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .newsletter-inner {

@@ -164,7 +164,7 @@ export default function Home() {
       {/* ===== HERO ===== */}
       <header className="hero">
         <div className="hero-bg-image">
-          <img src="/assets/FootBall-BG.png" alt="" />
+          <img src="/assets/FootBall-BG1.png" alt="" />
         </div>
         <div className="hero-overlay"></div>
         <div className="hero-inner">
@@ -198,6 +198,64 @@ export default function Home() {
           </div>
         </div>
       </header>
+      {/* ===== WHY CHOOSE KITKART ===== */}
+      <section className="section features-section">
+        <div className="container">
+          <p className="section-label reveal" style={{ textAlign: "center", marginBottom: "var(--sp-8)" }}>
+            Why Choose KitKart
+          </p>
+          <div className="features-grid reveal reveal-stagger">
+            <div className="feature-item">
+              <div className="feature-icon-wrap">
+                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="16.5 9.4 7.5 4.21 12 1.67 16.5 4.21 12 6.75 7.5 4.21" />
+                  <polyline points="12 22.08 12 12.3 7.5 9.7 7.5 19.5" />
+                  <polyline points="12 12.3 16.5 9.7 16.5 19.5" />
+                  <line x1="2" y1="9.5" x2="7.5" y2="12.5" />
+                  <line x1="22" y1="9.5" x2="16.5" y2="12.5" />
+                </svg>
+              </div>
+              <h3 className="feature-title">Free Shipping</h3>
+              <p className="feature-desc">Free shipping on all prepaid orders across India.</p>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon-wrap">
+                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <h3 className="feature-title">Premium Quality</h3>
+              <p className="feature-desc">High-grade fabric and premium finishes for long-lasting comfort.</p>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon-wrap">
+                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="1" y="3" width="15" height="13" rx="2" />
+                  <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-1" />
+                  <circle cx="5.5" cy="18.5" r="2.5" />
+                  <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+              </div>
+              <h3 className="feature-title">All India Delivery</h3>
+              <p className="feature-desc">Fast and reliable delivery to every corner of India.</p>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon-wrap">
+                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                  <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg>
+              </div>
+              <h3 className="feature-title">Trusted by Fans</h3>
+              <p className="feature-desc">Loved by thousands of fans across the country.</p>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* ===== NEW ARRIVALS ===== */}
       <section className="section">
         <div className="container">
@@ -398,63 +456,6 @@ export default function Home() {
       {/* ===== DIVIDER ===== */}
       <hr className="divider" />
 
-
-
-      {/* ===== WHY CHOOSE KITKART ===== */}
-      <section className="section features-section">
-        <div className="container">
-          <p className="section-label reveal" style={{ textAlign: "center", marginBottom: "var(--sp-12)" }}>
-            Why Choose KitKart
-          </p>
-          <div className="features-grid reveal reveal-stagger">
-            <div className="feature-item">
-              <div className="feature-icon-wrap">
-                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
-              </div>
-              <h3 className="feature-title">Premium Quality</h3>
-              <p className="feature-desc">High-grade fabric and premium finishes for long-lasting comfort.</p>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon-wrap">
-                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="1" y="3" width="15" height="13" rx="2" />
-                  <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-1" />
-                  <circle cx="5.5" cy="18.5" r="2.5" />
-                  <circle cx="18.5" cy="18.5" r="2.5" />
-                </svg>
-              </div>
-              <h3 className="feature-title">All India Delivery</h3>
-              <p className="feature-desc">Fast and reliable delivery to every corner of India.</p>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon-wrap">
-                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              </div>
-              <h3 className="feature-title">Secure Shopping</h3>
-              <p className="feature-desc">Your payments and personal data are always protected.</p>
-            </div>
-            <div className="feature-item">
-              <div className="feature-icon-wrap">
-                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 00-3-3.87" />
-                  <path d="M16 3.13a4 4 0 010 7.75" />
-                </svg>
-              </div>
-              <h3 className="feature-title">Trusted by Fans</h3>
-              <p className="feature-desc">Loved by thousands of fans across the country.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ===== TESTIMONIALS ===== */}
       <Testimonials />
 
@@ -464,7 +465,7 @@ export default function Home() {
           <div className="community-inner reveal">
             <div className="community-text">
               <p className="section-label">Join Our Community</p>
-              <h2 className="section-title" style={{ textAlign: "left" }}>
+              <h2 className="section-title">
                 Join the KitKart Community
               </h2>
               <p>

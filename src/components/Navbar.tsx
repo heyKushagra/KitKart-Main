@@ -131,111 +131,216 @@ export default function Navbar() {
     };
   }, []);
 
+  const isHomePage = pathname === "/";
+
   return (
-    <nav className={`navbar ${scrolled ? "scrolled" : ""}`} id="navbar">
-      <div className="container">
-        {/* Brand */}
-        <Link href="/" className="navbar-brand">
-          <img
-            src="/assets/KitKart-LogoT1.png"
-            alt="KitKart Logo"
-            style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover" }} />
-          KITKART
-        </Link>
+    <>
+      {isHomePage && (
+        <div className={`promo-ribbon ${scrolled ? "hidden" : ""}`}>
+          <div className="promo-ticker">
+            <div className="promo-ticker-track">
+              <span className="promo-ticker-item">
+                Shop Jerseys worth <span className="highlight">Rs. 1500</span>, Get one pair of Socks worth <span className="highlight">Rs. 200</span> @ <span className="highlight-gold">Rs. 50 Only</span>
+                <span className="highlight">Use Code- SOCKS50</span>
+                <span className="bullet">&bull;</span>
+              </span>
+              <span className="promo-ticker-item">
+                Shop Jerseys worth <span className="highlight">Rs. 1500</span>, Get one pair of Socks worth <span className="highlight">Rs. 200</span> @ <span className="highlight-gold">Rs. 50 Only</span>
+                <span className="highlight">Use Code- SOCKS50</span>
+                <span className="bullet">&bull;</span>
+              </span>
+              <span className="promo-ticker-item">
+                Shop Jerseys worth <span className="highlight">Rs. 1500</span>, Get one pair of Socks worth <span className="highlight">Rs. 200</span> @ <span className="highlight-gold">Rs. 50 Only</span>
+                <span className="highlight">Use Code- SOCKS50</span>
+                <span className="bullet">&bull;</span>
+              </span>
+              <span className="promo-ticker-item">
+                Shop Jerseys worth <span className="highlight">Rs. 1500</span>, Get one pair of Socks worth <span className="highlight">Rs. 200</span> @ <span className="highlight-gold">Rs. 50 Only</span>
+                <span className="highlight">Use Code- SOCKS50</span>
+                <span className="bullet">&bull;</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+      <nav className={`navbar ${scrolled ? "scrolled" : ""} ${isHomePage && !scrolled ? "has-ribbon" : ""}`} id="navbar">
+        <div className="container">
+          {/* Brand */}
+          <Link href="/" className="navbar-brand">
+            <img
+              src="/assets/KitKart-LogoT1.png"
+              alt="KitKart Logo"
+              style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover" }} />
+            KITKART
+          </Link>
 
-        {/* Center Nav */}
-        <ul className="navbar-nav">
-          <li>
-            <Link href="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="/shop" className={`nav-link ${isActive("/shop") ? "active" : ""}`}>
-              Shop
-            </Link>
-          </li>
-          <li>
-            <Link href="/categories" className={`nav-link ${isActive("/categories") ? "active" : ""}`}>
-              Categories
-            </Link>
-          </li>
-          <li>
-            <Link href="/" className="nav-link">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className={`nav-link ${isActive("/contact") ? "active" : ""}`}>
-              Contact
-            </Link>
-          </li>
-        </ul>
+          {/* Center Nav */}
+          <ul className="navbar-nav">
+            <li>
+              <Link href="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop" className={`nav-link ${isActive("/shop") ? "active" : ""}`}>
+                Shop
+              </Link>
+            </li>
+            <li>
+              <Link href="/categories" className={`nav-link ${isActive("/categories") ? "active" : ""}`}>
+                Categories
+              </Link>
+            </li>
+            <li>
+              <Link href="/" className="nav-link">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className={`nav-link ${isActive("/contact") ? "active" : ""}`}>
+                Contact
+              </Link>
+            </li>
+          </ul>
 
-        <div className="nav-icons">
-          <button 
-            className="nav-icon-btn" 
-            aria-label="Search"
-            onClick={() => setSearchOpen(true)}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </button>
-
-          {/* User Account / Auth Status Dropdown */}
-          <div
-            className="nav-user-dropdown-container"
-            onMouseEnter={() => setDropdownOpen(true)}
-            onMouseLeave={() => setDropdownOpen(false)}
-          >
+          <div className="nav-icons">
             <button
               className="nav-icon-btn"
-              aria-label="Account"
-              onClick={() => setDropdownOpen(prev => !prev)}
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
             >
-              <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" style={{ width: "20px", height: "20px" }}>
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
+              <svg
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </button>
 
-            <div className={`nav-user-dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
-              {user ? (
-                <>
-                  <div className="dropdown-user-info">
-                    <span className="dropdown-user-name">Hi, {user.displayName?.split(' ')[0] || "Fan"}</span>
-                  </div>
-                  <Link href="/account" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
-                    My Account
-                  </Link>
-                  <Link href="/account/orders" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
-                    My Orders
-                  </Link>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setDropdownOpen(false);
-                    }}
-                    className="dropdown-item logout-item"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link href="/login" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
-                  Login / Sign Up
-                </Link>
-              )}
-            </div>
-          </div>
+            {/* User Account / Auth Status Dropdown */}
+            <div
+              className="nav-user-dropdown-container"
+              onMouseEnter={() => setDropdownOpen(true)}
+              onMouseLeave={() => setDropdownOpen(false)}
+            >
+              <button
+                className="nav-icon-btn"
+                aria-label="Account"
+                onClick={() => setDropdownOpen(prev => !prev)}
+              >
+                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" style={{ width: "20px", height: "20px" }}>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </button>
 
-          <style>{`
+              <div className={`nav-user-dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
+                {user ? (
+                  <>
+                    <div className="dropdown-user-info">
+                      <span className="dropdown-user-name">Hi, {user.displayName?.split(' ')[0] || "Fan"}</span>
+                    </div>
+                    <Link href="/account" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      My Account
+                    </Link>
+                    <Link href="/account/orders" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      My Orders
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setDropdownOpen(false);
+                      }}
+                      className="dropdown-item logout-item"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link href="/login" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    Login / Sign Up
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            <style>{`
+            /* Promo Ribbon Styles */
+            .promo-ribbon {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 40px;
+              background: linear-gradient(90deg, #0b0b0b 0%, #1a150c 50%, #0b0b0b 100%);
+              border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+              z-index: 999;
+              display: flex;
+              align-items: center;
+              overflow: hidden;
+              transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            .promo-ribbon.hidden {
+              transform: translateY(-100%);
+              opacity: 0;
+              pointer-events: none;
+            }
+            .promo-ticker {
+              width: 100%;
+              overflow: hidden;
+              white-space: nowrap;
+              display: flex;
+              align-items: center;
+            }
+            .promo-ticker-track {
+              display: flex;
+              width: max-content;
+              animation: marquee 35s linear infinite;
+            }
+            .promo-ticker-track:hover {
+              animation-play-state: paused;
+            }
+            .promo-ticker-item {
+              display: flex;
+              align-items: center;
+              font-family: var(--ff-heading);
+              font-size: 0.82rem;
+              letter-spacing: 0.05em;
+              font-weight: 500;
+              color: var(--clr-text-secondary);
+              padding-right: 4rem;
+              text-transform: uppercase;
+            }
+            .promo-ticker-item .highlight {
+              color: var(--clr-text);
+              font-weight: 700;
+              margin: 0 4px;
+            }
+            .promo-ticker-item .highlight-gold {
+              color: var(--clr-gold);
+              font-weight: 700;
+              margin: 0 4px;
+              text-shadow: 0 0 8px rgba(197, 160, 89, 0.3);
+            }
+            .promo-ticker-item .bullet {
+              color: var(--clr-gold);
+              margin-left: 4rem;
+              opacity: 0.6;
+            }
+            @keyframes marquee {
+              0% {
+                transform: translate3d(0, 0, 0);
+              }
+              100% {
+                transform: translate3d(-50%, 0, 0);
+              }
+            }
+            .navbar.has-ribbon {
+              top: 40px;
+            }
+
             /* Search Overlay Styles */
             .search-overlay {
               position: fixed;
@@ -678,267 +783,254 @@ export default function Navbar() {
             }
           `}</style>
 
-          <Link href="/cart" className="nav-icon-btn" aria-label="Cart">
-            <svg
-              viewBox="0 0 24 24"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 01-8 0" />
-            </svg>
-            <span className="cart-badge" id="cart-count">
-              {cartCount}
-            </span>
-          </Link>
-          <button
-            className="mobile-menu-btn"
-            aria-label="Menu"
-            onClick={() => setMobileOpen(true)}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Nav Drawer */}
-      <div className={`mobile-nav-drawer ${mobileOpen ? "open" : ""}`}>
-        <div className="mobile-nav-backdrop" onClick={() => setMobileOpen(false)} />
-        <div className="mobile-nav-content">
-          <div className="mobile-nav-header">
-            <Link href="/" className="navbar-brand" onClick={() => setMobileOpen(false)}>
-              <svg viewBox="0 0 32 32" fill="none">
-                <path
-                  d="M16 2L4 8v8c0 7.5 5.3 14.5 12 16 6.7-1.5 12-8.5 12-16V8L16 2z"
-                  stroke="#C5A059"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-                <text
-                  x="10"
-                  y="21"
-                  fontSize="14"
-                  fontWeight="700"
-                  fill="#C5A059"
-                  fontFamily="Space Grotesk, sans-serif"
-                >
-                  K
-                </text>
+            <Link href="/cart" className="nav-icon-btn" aria-label="Cart">
+              <svg
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 01-8 0" />
               </svg>
-              KITKART
+              <span className="cart-badge" id="cart-count">
+                {cartCount}
+              </span>
             </Link>
             <button
-              className="mobile-nav-close"
-              onClick={() => setMobileOpen(false)}
-              aria-label="Close menu"
+              className="mobile-menu-btn"
+              aria-label="Menu"
+              onClick={() => setMobileOpen(true)}
             >
-              <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
+              <svg
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
             </button>
           </div>
-
-          <ul className="mobile-nav-links">
-            <li>
-              <Link
-                href="/"
-                className={`mobile-nav-link ${isActive("/") ? "active" : ""}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/shop"
-                className={`mobile-nav-link ${isActive("/shop") ? "active" : ""}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                Shop
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/categories"
-                className={`mobile-nav-link ${isActive("/categories") ? "active" : ""}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                Categories
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/"
-                className="mobile-nav-link"
-                onClick={() => setMobileOpen(false)}
-              >
-                About
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/contact"
-                className={`mobile-nav-link ${isActive("/contact") ? "active" : ""}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                Contact
-              </Link>
-            </li>
-          </ul>
-
-          <div className="mobile-nav-footer">
-            {user ? (
-              <div className="mobile-nav-user">
-                <div className="mobile-nav-user-info">
-                  <span className="mobile-nav-user-title">Logged In As</span>
-                  <span className="mobile-nav-user-name">
-                    {user.displayName || "Sports Fan"}
-                  </span>
-                  <span className="mobile-nav-user-email">{user.email}</span>
-                </div>
-                <Link
-                  href="/account"
-                  className="mobile-btn-outline"
-                  onClick={() => setMobileOpen(false)}
-                  style={{ display: "block", textAlign: "center", textDecoration: "none" }}
-                >
-                  My Account
-                </Link>
-                <button
-                  onClick={() => {
-                    logout();
-                    setMobileOpen(false);
-                  }}
-                  className="mobile-btn-outline"
-                  style={{ width: "100%" }}
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className="mobile-btn-primary"
-                onClick={() => setMobileOpen(false)}
-              >
-                Login / Sign Up
-              </Link>
-            )}
-          </div>
         </div>
-      </div>
 
-      {/* Search Overlay */}
-      {searchOpen && (
-        <div className="search-overlay">
-          <div className="search-overlay-backdrop" onClick={() => setSearchOpen(false)} />
-          <div className="search-overlay-container">
-            <div className="search-overlay-header">
-              <div className="search-input-wrapper">
-                <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        {/* Mobile Nav Drawer */}
+        <div className={`mobile-nav-drawer ${mobileOpen ? "open" : ""}`}>
+          <div className="mobile-nav-backdrop" onClick={() => setMobileOpen(false)} />
+          <div className="mobile-nav-content">
+            <div className="mobile-nav-header">
+              <Link href="/" className="navbar-brand" onClick={() => setMobileOpen(false)}>
+                <img
+                  src="/assets/KitKart-LogoT1.png"
+                  alt="KitKart Logo"
+                  style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover" }} />
+                KITKART
+              </Link>
+              <button
+                className="mobile-nav-close"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
+              >
+                <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
-                <input
-                  type="text"
-                  placeholder="Search premium jerseys, boots..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-overlay-input"
-                  autoFocus
-                />
-                {searchQuery && (
-                  <button className="search-clear-btn" onClick={() => setSearchQuery("")} aria-label="Clear search">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </button>
-                )}
-              </div>
-              <button className="search-close-btn" onClick={() => setSearchOpen(false)}>
-                Close
               </button>
             </div>
 
-            <div className="search-results-container">
-              {loadingProducts ? (
-                <div className="search-status">Searching catalog...</div>
-              ) : searchQuery.trim() === "" ? (
-                <div className="search-suggestions">
-                  <h4>Popular Categories</h4>
-                  <div className="suggestion-pills">
-                    <Link href="/shop?category=Football%20Jerseys" onClick={() => setSearchOpen(false)} className="suggestion-pill">Football Jerseys</Link>
-                    <Link href="/shop?category=Cricket%20Jerseys" onClick={() => setSearchOpen(false)} className="suggestion-pill">Cricket Jerseys</Link>
-                    <Link href="/shop?category=Boots" onClick={() => setSearchOpen(false)} className="suggestion-pill">Football Boots</Link>
-                    <Link href="/shop?category=Player%20Jerseys" onClick={() => setSearchOpen(false)} className="suggestion-pill">Player Jerseys</Link>
+            <ul className="mobile-nav-links">
+              <li>
+                <Link
+                  href="/"
+                  className={`mobile-nav-link ${isActive("/") ? "active" : ""}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/shop"
+                  className={`mobile-nav-link ${isActive("/shop") ? "active" : ""}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/categories"
+                  className={`mobile-nav-link ${isActive("/categories") ? "active" : ""}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Categories
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="mobile-nav-link"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className={`mobile-nav-link ${isActive("/contact") ? "active" : ""}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+
+            <div className="mobile-nav-footer">
+              {user ? (
+                <div className="mobile-nav-user">
+                  <div className="mobile-nav-user-info">
+                    <span className="mobile-nav-user-title">Logged In As</span>
+                    <span className="mobile-nav-user-name">
+                      {user.displayName || "Sports Fan"}
+                    </span>
+                    <span className="mobile-nav-user-email">{user.email}</span>
                   </div>
-                </div>
-              ) : productsList.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).length > 0 ? (
-                <div className="search-results-list">
-                  {productsList
-                    .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                    .slice(0, 5)
-                    .map((prod) => {
-                      const isContact = prod.contactForPrice === true || 
-                        prod.category?.toLowerCase() === "boots" || 
-                        prod.category?.toLowerCase() === "football boots" ||
-                        prod.category?.toLowerCase().includes("boot");
-                      return (
-                        <Link 
-                          href={`/product/${prod.id}?id=${prod.id}&name=${encodeURIComponent(prod.name)}&price=${prod.price}${prod.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(prod.image)}`}${isContact ? '&contactForPrice=true' : ''}`}
-                          key={prod.id}
-                          className="search-result-item"
-                          onClick={() => {
-                            setSearchOpen(false);
-                            setSearchQuery("");
-                          }}
-                        >
-                          <img src={prod.image || "/assets/jersey1.jpg"} alt={prod.name} className="search-result-img" />
-                          <div className="search-result-info">
-                            <span className="search-result-name">{prod.name}</span>
-                            <span className="search-result-category">{prod.category || "Uncategorized"}</span>
-                          </div>
-                          <div className="search-result-price">
-                            {isContact ? (
-                              <span style={{ color: "var(--clr-gold)", fontWeight: 600, fontSize: "0.85rem" }}>Contact for Price</span>
-                            ) : (
-                              <span>₹{prod.price.toLocaleString("en-IN")}</span>
-                            )}
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  <div className="search-see-all">
-                    <Link 
-                      href={`/shop?search=${encodeURIComponent(searchQuery)}`}
-                      onClick={() => {
-                        setSearchOpen(false);
-                        setSearchQuery("");
-                      }}
-                      className="see-all-link"
-                    >
-                      See all results for "{searchQuery}" →
-                    </Link>
-                  </div>
+                  <Link
+                    href="/account"
+                    className="mobile-btn-outline"
+                    onClick={() => setMobileOpen(false)}
+                    style={{ display: "block", textAlign: "center", textDecoration: "none" }}
+                  >
+                    My Account
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileOpen(false);
+                    }}
+                    className="mobile-btn-outline"
+                    style={{ width: "100%" }}
+                  >
+                    Logout
+                  </button>
                 </div>
               ) : (
-                <div className="search-status">No matches found for "{searchQuery}"</div>
+                <Link
+                  href="/login"
+                  className="mobile-btn-primary"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Login / Sign Up
+                </Link>
               )}
             </div>
           </div>
         </div>
-      )}
-    </nav>
+
+        {/* Search Overlay */}
+        {searchOpen && (
+          <div className="search-overlay">
+            <div className="search-overlay-backdrop" onClick={() => setSearchOpen(false)} />
+            <div className="search-overlay-container">
+              <div className="search-overlay-header">
+                <div className="search-input-wrapper">
+                  <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Search premium jerseys, boots..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-overlay-input"
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <button className="search-clear-btn" onClick={() => setSearchQuery("")} aria-label="Clear search">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+                <button className="search-close-btn" onClick={() => setSearchOpen(false)}>
+                  Close
+                </button>
+              </div>
+
+              <div className="search-results-container">
+                {loadingProducts ? (
+                  <div className="search-status">Searching catalog...</div>
+                ) : searchQuery.trim() === "" ? (
+                  <div className="search-suggestions">
+                    <h4>Popular Categories</h4>
+                    <div className="suggestion-pills">
+                      <Link href="/shop?category=Football%20Jerseys" onClick={() => setSearchOpen(false)} className="suggestion-pill">Football Jerseys</Link>
+                      <Link href="/shop?category=Cricket%20Jerseys" onClick={() => setSearchOpen(false)} className="suggestion-pill">Cricket Jerseys</Link>
+                      <Link href="/shop?category=Boots" onClick={() => setSearchOpen(false)} className="suggestion-pill">Football Boots</Link>
+                      <Link href="/shop?category=Player%20Jerseys" onClick={() => setSearchOpen(false)} className="suggestion-pill">Player Jerseys</Link>
+                    </div>
+                  </div>
+                ) : productsList.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).length > 0 ? (
+                  <div className="search-results-list">
+                    {productsList
+                      .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .slice(0, 5)
+                      .map((prod) => {
+                        const isContact = prod.contactForPrice === true ||
+                          prod.category?.toLowerCase() === "boots" ||
+                          prod.category?.toLowerCase() === "football boots" ||
+                          prod.category?.toLowerCase().includes("boot");
+                        return (
+                          <Link
+                            href={`/product/${prod.id}?id=${prod.id}&name=${encodeURIComponent(prod.name)}&price=${prod.price}${prod.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(prod.image)}`}${isContact ? '&contactForPrice=true' : ''}`}
+                            key={prod.id}
+                            className="search-result-item"
+                            onClick={() => {
+                              setSearchOpen(false);
+                              setSearchQuery("");
+                            }}
+                          >
+                            <img src={prod.image || "/assets/jersey1.jpg"} alt={prod.name} className="search-result-img" />
+                            <div className="search-result-info">
+                              <span className="search-result-name">{prod.name}</span>
+                              <span className="search-result-category">{prod.category || "Uncategorized"}</span>
+                            </div>
+                            <div className="search-result-price">
+                              {isContact ? (
+                                <span style={{ color: "var(--clr-gold)", fontWeight: 600, fontSize: "0.85rem" }}>Contact for Price</span>
+                              ) : (
+                                <span>₹{prod.price.toLocaleString("en-IN")}</span>
+                              )}
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    <div className="search-see-all">
+                      <Link
+                        href={`/shop?search=${encodeURIComponent(searchQuery)}`}
+                        onClick={() => {
+                          setSearchOpen(false);
+                          setSearchQuery("");
+                        }}
+                        className="see-all-link"
+                      >
+                        See all results for "{searchQuery}" →
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="search-status">No matches found for "{searchQuery}"</div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
+    </>
   );
 }
