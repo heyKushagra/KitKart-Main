@@ -32,10 +32,10 @@ export default function SplashScreen() {
         setShowText(true);
       }, 3700);
 
-      // Auto hide (6.0 seconds total duration)
+      // Auto hide (8.5 seconds total duration)
       const hideTimer = setTimeout(() => {
         handleSkip();
-      }, 6000);
+      }, 8500);
 
       return () => {
         clearTimeout(explodeTimer);
@@ -107,14 +107,14 @@ export default function SplashScreen() {
         
         {/* The Impact Flash */}
         <div className="impact-flash"></div>
-
+ 
         {/* Football */}
         <div className={`football-wrapper ${explode ? "exploded" : ""}`}>
           <div className="football-body">
             <div className="football-pattern"></div>
           </div>
         </div>
-
+ 
         {/* Particles */}
         <div className={`particles-container ${explode ? "explode-active" : ""}`}>
           {particles.map((p, i) => (
@@ -131,11 +131,16 @@ export default function SplashScreen() {
              ></div>
           ))}
         </div>
-
+ 
         {/* Text Reveal */}
-        <h1 className={`welcome-text ${showText ? "text-active" : ""}`}>
-          Welcome to the <span>KitKart</span> Family
-        </h1>
+        <div className={`welcome-container ${showText ? "text-active" : ""}`}>
+          <h1 className="welcome-text">
+            Welcome to the <span>KitKart</span> Family
+          </h1>
+          <p className="promo-text">
+            Get <span className="highlight-discount">FLAT 5% OFF</span> on your First Order. Use Code- <span className="highlight-code">NEW5</span>
+          </p>
+        </div>
       </div>
     </div>
   );
