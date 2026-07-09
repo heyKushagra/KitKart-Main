@@ -552,7 +552,7 @@ function ProductContent() {
                   </div>
                   <div className="delivery-info-content">
                     <span className="delivery-info-title">Delivery</span>
-                    <span className="delivery-info-text">Usually 5-6 business days.</span>
+                    <span className="delivery-info-text">Usually 3-5 business days.</span>
                   </div>
                 </div>
 
