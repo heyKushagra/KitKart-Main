@@ -465,15 +465,15 @@ export default function Home() {
                 Join the KitKart Community
               </h2>
               <p>
-                Be part of a growing family of football and cricket fans. Follow us on Instagram for new drops, behind the scenes and exclusive collections.
+                Be part of a growing family of football fans. Join WhatsApp Community for new drops, behind the scenes and exclusive collections.
               </p>
               <a
-                href="https://www.instagram.com/kitkart.01/"
+                href="https://chat.whatsapp.com/JOQC6IlORCI4tv1OWE61nG"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-gold"
               >
-                <svg
+                {/* <svg
                   viewBox="0 0 24 24"
                   width="16"
                   height="16"
@@ -486,8 +486,8 @@ export default function Home() {
                   <rect x="2" y="2" width="20" height="20" rx="5" />
                   <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                </svg>
-                Follow @kitkart.01
+                </svg> */}
+                Join KitKart Family
               </a>
             </div>
             <div className="community-images">
