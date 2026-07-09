@@ -29,21 +29,14 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <h4 className="footer-title">Company</h4>
-            <div className="footer-links">
-              {/* <Link href="#" className="footer-link">About Us</Link> */}
-              {/* <Link href="#" className="footer-link">Our Story</Link> */}
-              <Link href="/faq" className="footer-link">FAQ</Link>
-              {/* <Link href="#" className="footer-link">Size Guide</Link> */}
-              <Link href="/shipping-returns" className="footer-link">Shipping & Returns</Link>
-            </div>
-          </div>
-          <div>
             <h4 className="footer-title">Help</h4>
             <div className="footer-links">
               <Link href="/contact" className="footer-link">Contact Us</Link>
               <Link href="/terms-of-service" className="footer-link">Terms of Service</Link>
               <Link href="/privacy-policy" className="footer-link">Privacy Policy</Link>
+              <Link href="/faq" className="footer-link">FAQ</Link>
+              {/* <Link href="#" className="footer-link">Size Guide</Link> */}
+              <Link href="/shipping-returns" className="footer-link">Shipping & Returns</Link>
               {/* <Link href="#" className="footer-link">Terms & Conditions</Link> */}
             </div>
           </div>
