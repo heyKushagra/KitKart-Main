@@ -104,8 +104,8 @@ export default function ShippingReturnsClient() {
                 </svg>
               </div>
               <div className="callout-content">
-                <strong>Cash on Delivery (COD) Available</strong>
-                <p>Cash on Delivery (COD) is Available for Jerseys. Boots must be prepaid before dispatch.</p>
+                <strong>Partial Cash on Delivery (COD) Available</strong>
+                <p> Partial Cash on Delivery (COD) is Available for Jerseys. Boots must be prepaid before dispatch.</p>
               </div>
             </div>
           </section>
