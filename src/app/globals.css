@@ -706,7 +706,7 @@ h6 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--sp-6) var(--sp-4);
+  padding: var(--sp-4) var(--sp-3);
   background: rgba(197, 160, 89, 0.04);
   border: 1px solid rgba(197, 160, 89, 0.15);
   border-radius: var(--r-lg);
@@ -721,9 +721,9 @@ h6 {
 }
 
 .feature-icon-wrap {
-  width: 56px;
-  height: 56px;
-  margin-bottom: var(--sp-4);
+  width: 46px;
+  height: 46px;
+  margin-bottom: var(--sp-3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -741,8 +741,8 @@ h6 {
 }
 
 .feature-icon-wrap svg {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   stroke: var(--clr-gold);
   fill: none;
   stroke-width: 1.75;
@@ -750,15 +750,15 @@ h6 {
 
 .feature-title {
   font-family: var(--ff-heading);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--clr-text);
-  margin-bottom: var(--sp-2);
+  margin-bottom: var(--sp-1);
   letter-spacing: 0.02em;
 }
 
 .feature-desc {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--clr-text-secondary);
   line-height: 1.5;
 }
