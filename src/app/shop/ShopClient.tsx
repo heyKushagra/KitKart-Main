@@ -45,6 +45,8 @@ const CATEGORIES = [
   "Retro Version",
   "Master Version",
   "Football Boots",
+  "Shin Guard",
+  "Socks",
   "Cricket",
   "Oversized T Shirt"
 ];
@@ -306,7 +308,7 @@ export default function ShopClient() {
         </div>
         <h1 className="shop-title">Premium Sports Jerseys & Fan Merchandise</h1>
         <p className="shop-subtitle">
-          Explore authentic football, cricket and custom team jerseys. Shop premium-quality sports apparel with fast delivery across whole India with Free Shipping.
+          Explore authentic football, cricket and custom team jerseys. Shop premium-quality sports apparel with fast delivery across whole India & Free Shipping.
         </p>
       </section>
 

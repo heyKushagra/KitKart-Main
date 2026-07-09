@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
-import { collection, serverTimestamp, runTransaction, doc } from "firebase/firestore";
+import { collection, serverTimestamp, runTransaction, doc, updateDoc } from "firebase/firestore";
 
 interface CartItem {
   id: string;
@@ -49,7 +50,7 @@ export default function Checkout() {
     country: "India",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("cod");
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "cod">("online");
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -156,6 +157,81 @@ export default function Checkout() {
     }
 
     setLoading(true);
+
+    // --- Delhivery Serviceability Check ---
+    try {
+      const servRes = await fetch(`/api/delhivery/serviceability?pincode=${pincode.trim()}`);
+      const servData = await servRes.json();
+      
+      if (!servRes.ok || !servData.serviceable) {
+        showToast("error", servData.message || "Delivery is not available for this pincode.");
+        setLoading(false);
+        return;
+      }
+    } catch (err) {
+      console.error("Serviceability check failed:", err);
+      showToast("error", "Failed to check delivery serviceability. Please try again.");
+      setLoading(false);
+      return;
+    }
+    // --------------------------------------
+
+    if (paymentMethod === "cod") {
+      // Direct placement (Full COD)
+      await processSuccessfulPayment(undefined, undefined, "cod");
+      return;
+    }
+
+    // --- Razorpay Order Creation ---
+    try {
+      const rpRes = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: total })
+      });
+      const rpData = await rpRes.json();
+
+      if (!rpRes.ok || !rpData.id) {
+        showToast("error", "Failed to initiate payment. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: rpData.amount,
+        currency: rpData.currency,
+        name: "KitKart",
+        description: "Order Payment",
+        order_id: rpData.id,
+        handler: async function (response: any) {
+          // Payment Success Handler
+          await processSuccessfulPayment(response.razorpay_payment_id, response.razorpay_order_id, "online");
+        },
+        prefill: {
+          name: fullName,
+          email: email,
+          contact: phone
+        },
+        theme: {
+          color: "#c5a059"
+        }
+      };
+
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.on('payment.failed', function (response: any){
+        showToast("error", "Payment failed! " + response.error.description);
+        setLoading(false);
+      });
+      rzp1.open();
+    } catch (err) {
+      console.error("Razorpay error:", err);
+      showToast("error", "Something went wrong with the payment gateway.");
+      setLoading(false);
+    }
+  };
+
+  const processSuccessfulPayment = async (razorpayPaymentId?: string, razorpayOrderId?: string, method: "online" | "cod" = paymentMethod) => {
     try {
       // 1. Aggregate quantities by product ID to handle multiple sizes of the same product
       const productQuantities: { [productId: string]: { name: string; quantity: number } } = {};
@@ -233,7 +309,13 @@ export default function Checkout() {
           discountAmount: discountAmount,
           couponCode: discountAmount > 0 ? couponCode : "",
           totalAmount: total,
-          paymentMethod: paymentMethod,
+          paymentMethod: method,
+          ...(method === "online" && razorpayPaymentId ? {
+            paymentDetails: {
+              razorpayPaymentId,
+              razorpayOrderId
+            }
+          } : {}),
           status: "Pending",
           createdAt: serverTimestamp(),
         };
@@ -248,7 +330,43 @@ export default function Checkout() {
       localStorage.setItem("kitkart_cart", "[]");
       window.dispatchEvent(new Event("cart_updated"));
 
-      showToast("success", "Order placed successfully! Redirecting...");
+      // --- Delhivery Shipment Creation ---
+      try {
+        const shipmentRes = await fetch("/api/delhivery/create-shipment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: orderRef.id,
+            customerDetails: shippingForm,
+            products: cart,
+            subtotal,
+            shipping,
+            discount: discountAmount,
+            totalAmount: total,
+            paymentMethod: method
+          })
+        });
+        const shipmentData = await shipmentRes.json();
+        
+        if (shipmentData.success && shipmentData.shipment) {
+          // Update order with shipment details
+          await updateDoc(orderRef, {
+            shipment: {
+              ...shipmentData.shipment,
+              pickupRequested: false,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            }
+          });
+        } else {
+          console.error("Failed to create Delhivery shipment:", shipmentData.error);
+        }
+      } catch (err) {
+        console.error("Delhivery integration error:", err);
+      }
+      // -----------------------------------
+
+      showToast("success", "Payment successful! Order placed. Redirecting...");
       setTimeout(() => {
         router.replace(`/checkout/success?orderId=${orderRef.id}`);
       }, 1500);
@@ -291,6 +409,7 @@ export default function Checkout() {
 
   return (
     <div className="checkout-page-wrapper">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       {/* Toast Notifications */}
       <div className="toasts-container">
         {toasts.map((t) => (
@@ -444,6 +563,20 @@ export default function Checkout() {
                 <h2>Payment Method</h2>
               </div>
               <div className="section-card-body payment-options">
+                <label className={`payment-option-label ${paymentMethod === "online" ? "active" : ""}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="online"
+                    checked={paymentMethod === "online"}
+                    onChange={() => setPaymentMethod("online")}
+                  />
+                  <div className="option-info">
+                    <span className="option-title">Pay Online (Razorpay)</span>
+                    <span className="option-desc">Pay securely via UPI, Cards, or Netbanking. Delhivery will not collect cash on delivery.</span>
+                  </div>
+                </label>
+
                 <label className={`payment-option-label ${paymentMethod === "cod" ? "active" : ""}`}>
                   <input
                     type="radio"
@@ -453,22 +586,8 @@ export default function Checkout() {
                     onChange={() => setPaymentMethod("cod")}
                   />
                   <div className="option-info">
-                    <span className="option-title">Cash on Delivery (COD)</span>
-                    <span className="option-desc">Pay with cash when your package is delivered to your doorstep.</span>
-                  </div>
-                </label>
-
-                <label className={`payment-option-label disabled ${paymentMethod === "online" ? "active" : ""}`}>
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="online"
-                    checked={paymentMethod === "online"}
-                    disabled
-                  />
-                  <div className="option-info">
-                    <span className="option-title">Online Payment (UPI, Card, Netbanking)</span>
-                    <span className="option-desc text-gold-dim">Online heckout integration coming soon.</span>
+                    <span className="option-title">Partial COD (Pay ₹100 online, rest on delivery)</span>
+                    <span className="option-desc">Currently treated as Full Cash on Delivery (COD) for testing. No advance payment required now.</span>
                   </div>
                 </label>
               </div>

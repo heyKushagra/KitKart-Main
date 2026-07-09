@@ -40,6 +40,9 @@ function ProductContent() {
   const router = useRouter();
   const pathId = pathname.split('/').pop() || "";
 
+  const [showSizeChart, setShowSizeChart] = useState(false);
+  const [isHomeHovered, setIsHomeHovered] = useState(false);
+
   const local = LOCAL_PRODUCTS.find(p => p.id === pathId);
   const [productData, setProductData] = useState({
     name: searchParams.get("name") || (local ? local.name : "Loading..."),
@@ -60,54 +63,54 @@ function ProductContent() {
       if (!pathId) return;
 
       const local = LOCAL_PRODUCTS.find(p => p.id === pathId);
-        const initialData = {
-          id: pathId,
-          name: searchParams.get("name") || (local ? local.name : "Loading..."),
-          price: searchParams.get("price") || (local ? local.price.toString() : "0"),
-          image: searchParams.get("image") || (local ? local.image : ""),
-          optionalImages: [] as string[],
-          stock: 10,
-          status: "In Stock",
-          category: "",
-          description: "",
-          sizes: [] as string[],
-          contactForPrice: searchParams.get("contactForPrice") === "true"
-        };
-  
-        try {
-          const docRef = doc(db, "products", pathId);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            setProductData({
-              id: docSnap.id,
-              name: data.name || initialData.name,
-              price: data.price?.toString() || initialData.price,
-              image: data.mainImage || data.image || initialData.image,
-              optionalImages: data.optionalImages || initialData.optionalImages,
-              stock: data.stock !== undefined ? Number(data.stock) : 10,
-              status: data.status || "In Stock",
-              category: data.category || "",
-              description: data.description || "",
-              sizes: data.sizes || [],
-              contactForPrice: data.contactForPrice === true
-            });
-          } else {
-            setProductData(initialData);
-          }
-        } catch (err) {
-          console.error("Error fetching product:", err);
+      const initialData = {
+        id: pathId,
+        name: searchParams.get("name") || (local ? local.name : "Loading..."),
+        price: searchParams.get("price") || (local ? local.price.toString() : "0"),
+        image: searchParams.get("image") || (local ? local.image : ""),
+        optionalImages: [] as string[],
+        stock: 10,
+        status: "In Stock",
+        category: "",
+        description: "",
+        sizes: [] as string[],
+        contactForPrice: searchParams.get("contactForPrice") === "true"
+      };
+
+      try {
+        const docRef = doc(db, "products", pathId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setProductData({
+            id: docSnap.id,
+            name: data.name || initialData.name,
+            price: data.price?.toString() || initialData.price,
+            image: data.mainImage || data.image || initialData.image,
+            optionalImages: data.optionalImages || initialData.optionalImages,
+            stock: data.stock !== undefined ? Number(data.stock) : 10,
+            status: data.status || "In Stock",
+            category: data.category || "",
+            description: data.description || "",
+            sizes: data.sizes || [],
+            contactForPrice: data.contactForPrice === true
+          });
+        } else {
           setProductData(initialData);
         }
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        setProductData(initialData);
+      }
     };
     fetchProduct();
   }, [pathId]);
 
   const { name, price, image, id, stock, status, optionalImages, category, description, sizes, contactForPrice } = productData;
   const isOutOfStock = stock !== undefined ? (stock <= 0 || status === "Out of Stock") : false;
-  
-  const isContactForPrice = contactForPrice === true || 
-    category?.toLowerCase() === "boots" || 
+
+  const isContactForPrice = contactForPrice === true ||
+    category?.toLowerCase() === "boots" ||
     category?.toLowerCase() === "football boots" ||
     category?.toLowerCase().includes("boot");
 
@@ -207,13 +210,49 @@ function ProductContent() {
   };
 
   return (
-    <div style={{ paddingTop: "80px" }}>
+    <div style={{ paddingTop: "90px" }}>
       {/* ===== PRODUCT DETAILS ===== */}
-      <section className="section product-page-section">
+      <section className="section product-page-section" style={{ paddingTop: '10px' }}>
         <div className="container">
           <div className="product-layout">
             {/* Product Image Gallery */}
             <div className="product-gallery">
+              {/* Back to Home Link */}
+              <div className="gallery-back-nav" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center' }}>
+                <Link
+                  href="/"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    color: isHomeHovered ? 'var(--clr-gold, #C5A059)' : 'var(--clr-text-secondary, #9A9A9A)',
+                    fontSize: '0.9rem',
+                    fontWeight: 500,
+                    transition: 'color 0.2s ease'
+                  }}
+                  onMouseEnter={() => setIsHomeHovered(true)}
+                  onMouseLeave={() => setIsHomeHovered(false)}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    width="16"
+                    height="16"
+                    style={{
+                      transform: isHomeHovered ? 'translateX(-4px)' : 'none',
+                      transition: 'transform 0.2s ease'
+                    }}
+                  >
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                  </svg>
+                  Back to Home
+                </Link>
+              </div>
               <div className="product-image-main">
                 {activeImage ? (
                   <>
@@ -326,7 +365,31 @@ function ProductContent() {
               {/* Sizes */}
               {!isContactForPrice && availableSizes.length > 0 && (
                 <div className="product-options">
-                  <h4 className="option-title">Select Size</h4>
+                  <div className="size-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <h4 className="option-title" style={{ margin: 0 }}>Select Size</h4>
+                    <button
+                      type="button"
+                      onClick={() => setShowSizeChart(true)}
+                      style={{
+                        fontSize: '0.8rem',
+                        color: 'var(--clr-gold, #C5A059)',
+                        fontWeight: 400,
+                        letterSpacing: '0.05em',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+                        <line x1="4" y1="9" x2="20" y2="9"></line>
+                        <line x1="4" y1="15" x2="20" y2="15"></line>
+                        <line x1="10" y1="3" x2="10" y2="21"></line>
+                        <line x1="14" y1="3" x2="14" y2="21"></line>
+                      </svg>
+                      Size Chart
+                    </button>
+                  </div>
                   <div className="size-selector">
                     {availableSizes.map((s) => (
                       <label key={s} className="size-option">
@@ -429,6 +492,47 @@ function ProductContent() {
                 )}
               </div>
 
+              {/* Highlights Card with Animating Border */}
+              <div className="highlights-card-wrapper">
+                <div className="highlights-card-inner">
+                  <div className="highlight-item">
+                    <span className="highlight-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                      </svg>
+                    </span>
+                    <span className="highlight-text">
+                      FREE Shipping<br />Pan India
+                    </span>
+                  </div>
+
+                  <div className="highlight-item">
+                    <span className="highlight-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                      </svg>
+                    </span>
+                    <span className="highlight-text">
+                      Premium Quality<br />Products
+                    </span>
+                  </div>
+
+                  <div className="highlight-item">
+                    <span className="highlight-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </span>
+                    <span className="highlight-text">
+                      Secured<br />Payments
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {/* Delivery & Returns Info Blocks */}
               <div className="delivery-returns-container" style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
                 {/* Delivery Box */}
@@ -490,6 +594,78 @@ function ProductContent() {
           </div>
         </div>
       </section >
+      {showSizeChart && (
+        <div
+          onClick={() => setShowSizeChart(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '20px',
+            cursor: 'pointer'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              backgroundColor: '#131313',
+              border: '1px solid var(--clr-border, #252525)',
+              borderRadius: 'var(--r-lg, 16px)',
+              padding: '24px',
+              maxWidth: '500px',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              boxShadow: '0 24px 48px rgba(0,0,0,0.8)'
+            }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowSizeChart(false)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                color: 'var(--clr-text-secondary, #9A9A9A)',
+                cursor: 'pointer',
+                transition: 'color var(--t-fast)',
+                background: 'none',
+                border: 'none',
+                padding: 0
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--clr-text-secondary, #9A9A9A)'}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            {/* Title */}
+            <h3 style={{ fontFamily: 'var(--ff-heading)', color: '#fff', fontSize: '1.25rem', marginBottom: '16px', alignSelf: 'flex-start' }}>Jersey Size Chart</h3>
+
+            {/* Image */}
+            <div style={{ width: '100%', borderRadius: 'var(--r-md, 10px)', overflow: 'hidden', backgroundColor: '#000' }}>
+              <img
+                src="/assets/Size Chart Jersey.jpg"
+                alt="Size Chart"
+                style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div >
   );
 }
