@@ -25,7 +25,7 @@ interface Toast {
 
 export default function Checkout() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, phone, profileData } = useAuth();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -72,9 +72,9 @@ export default function Checkout() {
     }
   };
 
-  // Prefill Address, Name, Email, & Phone from authenticated user and local storage
+  // Prefill Address, Name, Email, & Phone from authenticated user, profileData, and local storage
   useEffect(() => {
-    if (user) {
+    if (user || profileData) {
       const savedPhone = localStorage.getItem("kitkart_phone") || "";
       const savedAddressStr = localStorage.getItem("kitkart_saved_address");
 
@@ -87,21 +87,34 @@ export default function Checkout() {
         }
       }
 
+      // Merge savedAddress from profileData if present
+      if (profileData?.savedAddress) {
+        savedAddress = {
+          ...savedAddress,
+          ...profileData.savedAddress
+        };
+      }
+
       setShippingForm((prev) => ({
         ...prev,
         ...savedAddress,
-        fullName: user.displayName || (savedAddress as any).fullName || "",
-        email: user.email || (savedAddress as any).email || "",
-        phone: savedPhone || (savedAddress as any).phone || "",
+        fullName: profileData?.displayName || user?.displayName || (savedAddress as any).fullName || "",
+        email: profileData?.email || user?.email || (savedAddress as any).email || "",
+        phone: profileData?.phoneNumber || phone || savedPhone || (savedAddress as any).phone || "",
       }));
     }
-  }, [user]);
+  }, [user, profileData, phone]);
 
-  // Load Cart from LocalStorage
+  // Load Cart from LocalStorage & listen to updates
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
-    setCart(savedCart);
+    const loadCart = () => {
+      const savedCart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
+      setCart(savedCart);
+    };
+    loadCart();
     setLoaded(true);
+    window.addEventListener("cart_updated", loadCart);
+    return () => window.removeEventListener("cart_updated", loadCart);
   }, []);
 
   const showToast = (type: "success" | "error", message: string) => {
@@ -115,6 +128,13 @@ export default function Checkout() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setShippingForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "phone") {
+      const cleanPhone = value.replace(/[\s-+]/g, "");
+      if (cleanPhone.length === 10) {
+        localStorage.setItem("kitkart_phone", cleanPhone);
+        window.dispatchEvent(new Event("phone_updated"));
+      }
+    }
   };
 
   // Totals calculations

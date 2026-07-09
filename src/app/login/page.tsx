@@ -110,7 +110,7 @@ export default function Login() {
           router.replace(redirectPath);
         }, 1500);
       } else {
-        await signUp(email, password, fullName);
+        await signUp(email, password, fullName, phone);
         localStorage.setItem("kitkart_phone", phone);
         setIsRedirecting(true);
         showToast("success", "Account created successfully! Redirecting...");

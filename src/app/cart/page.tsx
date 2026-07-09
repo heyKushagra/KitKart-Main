@@ -22,9 +22,14 @@ export default function Cart() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
-    setCart(savedCart);
+    const loadCart = () => {
+      const savedCart = JSON.parse(localStorage.getItem("kitkart_cart") || "[]");
+      setCart(savedCart);
+    };
+    loadCart();
     setLoaded(true);
+    window.addEventListener("cart_updated", loadCart);
+    return () => window.removeEventListener("cart_updated", loadCart);
   }, []);
 
   const saveCart = (newCart: CartItem[]) => {

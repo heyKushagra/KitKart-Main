@@ -9,9 +9,49 @@ import { collection, query, where, orderBy, limit, getDocs } from "firebase/fire
 
 export default function Account() {
   const router = useRouter();
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, phone, profileData, updateProfileData } = useAuth();
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+
+  // Profile Edit Modal States
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const openEditModal = () => {
+    setEditName(profileData?.displayName || user?.displayName || "");
+    setEditPhone(profileData?.phoneNumber || phone || "");
+    setEditEmail(profileData?.email || user?.email || "");
+    setIsEditing(true);
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editName.trim()) {
+      alert("Name is required");
+      return;
+    }
+    if (!editPhone.trim() || editPhone.trim().length < 10) {
+      alert("Please enter a valid 10-digit phone number");
+      return;
+    }
+    setIsSaving(true);
+    try {
+      await updateProfileData({
+        displayName: editName,
+        phone: editPhone,
+        email: editEmail
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update profile", err);
+      alert("Failed to update profile details. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   useEffect(() => {
     const fetchRecentOrders = async () => {
@@ -114,7 +154,7 @@ export default function Account() {
           </div>
           <div className="header-text">
             <span className="welcome-label">Welcome back,</span>
-            <h1 className="user-name">{user.displayName || "Fan"}</h1>
+            <h1 className="user-name">{profileData?.displayName || user.displayName || "Fan"}</h1>
             <p className="joined-date">Member since {getJoinedDate()}</p>
           </div>
         </div>
@@ -135,15 +175,17 @@ export default function Account() {
               <div className="card-body">
                 <div className="info-item">
                   <span className="info-label">Full Name</span>
-                  <span className="info-value">{user.displayName || "Not Specified"}</span>
+                  <span className="info-value">{profileData?.displayName || user.displayName || "Not Specified"}</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Email Address</span>
-                  <span className="info-value">{user.email}</span>
+                  <span className="info-value">{profileData?.email || user.email}</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Mobile Number</span>
-                  <span className="info-value text-muted">Not Added (Placeholder)</span>
+                  <span className={`info-value ${(!profileData?.phoneNumber && !phone) ? "text-muted" : ""}`}>
+                    {profileData?.phoneNumber || phone || "Not Added"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -158,7 +200,7 @@ export default function Account() {
                 <h2>Account Settings</h2>
               </div>
               <div className="card-body action-list">
-                <button className="action-row" disabled>
+                <button className="action-row" onClick={openEditModal}>
                   <span>Edit Profile Details</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="9 18 15 12 9 6" />
@@ -252,18 +294,243 @@ export default function Account() {
                 <h2>Saved Addresses</h2>
               </div>
               <div className="card-body address-body">
-                <div className="address-placeholder">
-                  <p className="placeholder-title">No Saved Addresses</p>
-                  <p className="placeholder-desc">Add a shipping address for faster and smoother checkouts.</p>
-                  <button className="btn-add-address" disabled>+ Add Shipping Address</button>
-                </div>
+                {profileData?.savedAddress ? (
+                  <div className="saved-address-container">
+                    <div className="saved-address-header">
+                      <span className="address-badge">Default Shipping</span>
+                    </div>
+                    <p className="address-name">{profileData.savedAddress.fullName}</p>
+                    <p className="address-text">{profileData.savedAddress.address}</p>
+                    <p className="address-city-state">{profileData.savedAddress.city}, {profileData.savedAddress.state} - {profileData.savedAddress.pincode}</p>
+                    <p className="address-country">{profileData.savedAddress.country}</p>
+                    <p className="address-phone">Phone: {profileData.savedAddress.phone}</p>
+                  </div>
+                ) : (
+                  <div className="address-placeholder">
+                    <p className="placeholder-title">No Saved Addresses</p>
+                    <p className="placeholder-desc">Add a shipping address for faster and smoother checkouts.</p>
+                    <button className="btn-add-address" disabled>+ Add Shipping Address</button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Edit Profile Modal */}
+      {isEditing && (
+        <div className="modal-overlay">
+          <div className="modal-content animate-scale">
+            <div className="modal-header">
+              <h2>Edit Profile Details</h2>
+              <button className="close-btn" onClick={() => setIsEditing(false)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+            <form onSubmit={handleSaveProfile} className="modal-form">
+              <div className="input-group">
+                <label htmlFor="editName">Full Name</label>
+                <input
+                  type="text"
+                  id="editName"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="modal-input"
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="editPhone">Mobile Number</label>
+                <input
+                  type="tel"
+                  id="editPhone"
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  className="modal-input"
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="editEmail">Email Address</label>
+                <input
+                  type="email"
+                  id="editEmail"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  className="modal-input"
+                  required
+                />
+              </div>
+              <button type="submit" disabled={isSaving} className="modal-submit-btn">
+                {isSaving ? "Saving..." : "Save Changes"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
+        /* Modal Styles */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.75);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+          background: rgba(19, 19, 19, 0.95);
+          border: 1px solid var(--clr-border);
+          border-radius: var(--r-lg);
+          width: 90%;
+          max-width: 450px;
+          padding: var(--sp-6);
+          box-shadow: 0 24px 72px rgba(0, 0, 0, 0.8), 0 0 40px rgba(197, 160, 89, 0.1);
+        }
+        .animate-scale {
+          animation: scaleUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .modal-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: var(--sp-6);
+          border-bottom: 1px solid var(--clr-border);
+          padding-bottom: var(--sp-3);
+        }
+        .modal-header h2 {
+          font-family: var(--ff-heading);
+          font-size: 1.25rem;
+          color: var(--clr-text);
+          margin: 0;
+        }
+        .close-btn {
+          background: none;
+          border: none;
+          color: var(--clr-text-secondary);
+          cursor: pointer;
+          transition: color var(--t-fast);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .close-btn:hover {
+          color: var(--clr-gold);
+        }
+        .modal-form {
+          display: flex;
+          flex-direction: column;
+          gap: var(--sp-4);
+        }
+        .modal-form .input-group {
+          display: flex;
+          flex-direction: column;
+          gap: var(--sp-1.5);
+        }
+        .modal-form label {
+          font-size: 0.75rem;
+          color: var(--clr-text-secondary);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          text-align: left;
+        }
+        .modal-input {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--clr-border);
+          border-radius: var(--r-md);
+          padding: var(--sp-3);
+          color: var(--clr-text);
+          font-size: 0.95rem;
+          transition: border-color var(--t-fast), box-shadow var(--t-fast);
+        }
+        .modal-input:focus {
+          outline: none;
+          border-color: var(--clr-gold);
+          box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.25);
+        }
+        .modal-submit-btn {
+          background: var(--clr-gold);
+          color: var(--clr-bg);
+          border: none;
+          border-radius: var(--r-md);
+          padding: var(--sp-3.5);
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform var(--t-fast), filter var(--t-fast);
+          margin-top: var(--sp-2);
+        }
+        .modal-submit-btn:hover {
+          filter: brightness(1.1);
+          transform: translateY(-1px);
+        }
+        .modal-submit-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+        
+        /* Address styling */
+        .saved-address-container {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          text-align: left;
+        }
+        .saved-address-header {
+          margin-bottom: var(--sp-2);
+        }
+        .address-badge {
+          font-size: 0.7rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          color: var(--clr-gold);
+          border: 1px solid var(--clr-gold);
+          border-radius: 4px;
+          padding: 2px 6px;
+          background: rgba(197, 160, 89, 0.05);
+        }
+        .address-name {
+          font-weight: 600;
+          font-size: 1rem;
+          color: var(--clr-text);
+          margin-bottom: 2px;
+        }
+        .address-text, .address-city-state, .address-country, .address-phone {
+          font-size: 0.9rem;
+          color: var(--clr-text-secondary);
+          margin: 0;
+        }
+        .address-phone {
+          margin-top: var(--sp-2);
+          font-weight: 500;
+        }
+
+        @keyframes scaleUp {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
         .account-page-wrapper {
           min-height: 100vh;
           background: radial-gradient(circle at top right, #161616 0%, #0b0b0b 100%);
