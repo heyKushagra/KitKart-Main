@@ -391,11 +391,12 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link href="/shop?category=Cricket%20Jerseys" className="category-card">
+
+            <Link href="/shop?category=Fan%20Version" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/IndJersey.jpg" alt="Cricket Jerseys" />
+                <img src="/assets/jersey3.jpg" alt="Fan Jerseys" />
               </div>
-              <h3 className="category-name">Cricket</h3>
+              <h3 className="category-name">Fan Version</h3>
               <span className="category-explore">
                 Explore{" "}
                 <svg
@@ -409,11 +410,11 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            {/* <Link href="/shop?category=Club%20Jerseys" className="category-card">
+            <Link href="/shop?category=Player%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jersey3.jpg" alt="Club Jerseys" />
+                <img src="/assets/player.jpg" alt="Player Jerseys" />
               </div>
-              <h3 className="category-name">Club Jerseys</h3>
+              <h3 className="category-name">Player Version</h3>
               <span className="category-explore">
                 Explore{" "}
                 <svg
@@ -426,12 +427,30 @@ export default function Home() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </span>
-            </Link> */}
-            <Link href="/shop?category=Player%20Jerseys" className="category-card">
+            </Link>
+            <Link href="/shop?category=Master%20Version" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/player.jpg" alt="Player Jerseys" />
+                <img src="/assets/Master.png" alt="Master Version" />
               </div>
-              <h3 className="category-name">Player's Jerseys</h3>
+              <h3 className="category-name">Master Version</h3>
+              <span className="category-explore">
+                Explore{" "}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </span>
+            </Link>
+            <Link href="/shop?category=Cricket%20Jerseys" className="category-card">
+              <div className="category-img-wrapper">
+                <img src="/assets/IndJersey.jpg" alt="Cricket Jerseys" />
+              </div>
+              <h3 className="category-name">Cricket</h3>
               <span className="category-explore">
                 Explore{" "}
                 <svg

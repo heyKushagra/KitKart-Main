@@ -2621,8 +2621,8 @@ h6 {
 
 @media (max-width: 375px) {
   .highlight-icon svg {
-    display: none;
-    /* Hide icons on extremely small screens to prevent wrapping */
+    width: 12px;
+    height: 12px;
   }
 
   .highlight-text {

@@ -217,10 +217,10 @@ function ProductContent() {
           <div className="product-layout">
             {/* Product Image Gallery */}
             <div className="product-gallery">
-              {/* Back to Home Link */}
+              {/* Back Link */}
               <div className="gallery-back-nav" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center' }}>
-                <Link
-                  href="/"
+                <button
+                  onClick={() => router.back()}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -228,7 +228,12 @@ function ProductContent() {
                     color: isHomeHovered ? 'var(--clr-gold, #C5A059)' : 'var(--clr-text-secondary, #9A9A9A)',
                     fontSize: '0.9rem',
                     fontWeight: 500,
-                    transition: 'color 0.2s ease'
+                    transition: 'color 0.2s ease',
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit'
                   }}
                   onMouseEnter={() => setIsHomeHovered(true)}
                   onMouseLeave={() => setIsHomeHovered(false)}
@@ -250,8 +255,8 @@ function ProductContent() {
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                   </svg>
-                  Back to Home
-                </Link>
+                  Back
+                </button>
               </div>
               <div className="product-image-main">
                 {activeImage ? (
@@ -497,7 +502,7 @@ function ProductContent() {
                 <div className="highlights-card-inner">
                   <div className="highlight-item">
                     <span className="highlight-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                         <line x1="12" y1="22.08" x2="12" y2="12"></line>
@@ -510,7 +515,7 @@ function ProductContent() {
 
                   <div className="highlight-item">
                     <span className="highlight-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                       </svg>
                     </span>
@@ -521,7 +526,7 @@ function ProductContent() {
 
                   <div className="highlight-item">
                     <span className="highlight-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                       </svg>
