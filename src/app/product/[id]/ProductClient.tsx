@@ -333,7 +333,7 @@ function ProductContent() {
               {isOutOfStock && (
                 <div className="special-request-box" style={{ marginBottom: "20px", padding: "20px", border: "1px solid var(--clr-border)", borderRadius: "var(--r-md)", background: "rgba(255, 255, 255, 0.02)", textAlign: "center" }}>
                   <p style={{ margin: "0 0 12px 0", fontSize: "0.92rem", color: "var(--clr-text-secondary)", lineHeight: "1.5" }}>
-                    Want to get that product on special request? Do it right away
+                    This product might be available. Want to get that product on special request? Do it right away
                   </p>
                   <Link
                     href="https://wa.me/918849376973"
