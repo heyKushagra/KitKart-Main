@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useRef, type ReactNode } from "react";
 import { auth, db } from "@/lib/firebase";
 import {
   onAuthStateChanged,
@@ -13,6 +13,39 @@ import {
   signInWithPopup
 } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp } from "firebase/firestore";
+
+const isCartEqual = (cart1: any[] | undefined, cart2: any[] | undefined) => {
+  if (!cart1 || !cart2) return cart1 === cart2;
+  if (cart1.length !== cart2.length) return false;
+  
+  const sorted1 = [...cart1].sort((a, b) => (a.id || "").localeCompare(b.id || ""));
+  const sorted2 = [...cart2].sort((a, b) => (a.id || "").localeCompare(b.id || ""));
+
+  return sorted1.every((item1, idx) => {
+    const item2 = sorted2[idx];
+    if (!item2) return false;
+    return (
+      item1.id === item2.id &&
+      Number(item1.quantity) === Number(item2.quantity) &&
+      (item1.size || "").toLowerCase() === (item2.size || "").toLowerCase() &&
+      Number(item1.price) === Number(item2.price)
+    );
+  });
+};
+
+const isAddressEqual = (addr1: any, addr2: any) => {
+  if (!addr1 || !addr2) return addr1 === addr2;
+  return (
+    (addr1.fullName || "").trim() === (addr2.fullName || "").trim() &&
+    (addr1.email || "").trim() === (addr2.email || "").trim() &&
+    (addr1.phone || "").trim().replace(/[\s-+]/g, "") === (addr2.phone || "").trim().replace(/[\s-+]/g, "") &&
+    (addr1.address || "").trim() === (addr2.address || "").trim() &&
+    (addr1.city || "").trim() === (addr2.city || "").trim() &&
+    (addr1.state || "").trim() === (addr2.state || "").trim() &&
+    (addr1.pincode || "").trim() === (addr2.pincode || "").trim() &&
+    (addr1.country || "").trim() === (addr2.country || "").trim()
+  );
+};
 
 interface AuthContextValue {
   user: FirebaseUser | null;
@@ -35,6 +68,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [phone, setPhone] = useState<string>("");
   const [profileData, setProfileData] = useState<any>(null);
   const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
+  const profileDataRef = useRef<any>(null);
+
+  // Sync profileData to ref
+  useEffect(() => {
+    profileDataRef.current = profileData;
+  }, [profileData]);
 
   // Initialize phone from localStorage on client side mount
   useEffect(() => {
@@ -116,7 +155,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Sync cart to local storage if it differs
         if (data.cart) {
           const localCartStr = localStorage.getItem("kitkart_cart") || "[]";
-          if (JSON.stringify(data.cart) !== localCartStr) {
+          let localCart = [];
+          try {
+            localCart = JSON.parse(localCartStr);
+          } catch (e) {}
+
+          if (!isCartEqual(data.cart, localCart)) {
             localStorage.setItem("kitkart_cart", JSON.stringify(data.cart));
             window.dispatchEvent(new Event("cart_updated"));
           }
@@ -125,7 +169,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Sync saved address to local storage if it differs
         if (data.savedAddress) {
           const localAddressStr = localStorage.getItem("kitkart_saved_address") || "null";
-          if (JSON.stringify(data.savedAddress) !== localAddressStr) {
+          let localAddress = null;
+          try {
+            localAddress = JSON.parse(localAddressStr);
+          } catch (e) {}
+
+          if (!isAddressEqual(data.savedAddress, localAddress)) {
             localStorage.setItem("kitkart_saved_address", JSON.stringify(data.savedAddress));
           }
         }
@@ -168,22 +217,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (e) {}
       }
 
-      // Check against Firestore to prevent endless loop
-      const profileRef = doc(db, "profiles_by_phone", phone);
-      const profileSnap = await getDoc(profileRef);
-
+      // Check against Firestore using the local Ref instead of doing getDoc read
       let firestoreCart = [];
       let firestoreAddress = null;
-      if (profileSnap.exists()) {
-        const data = profileSnap.data();
-        firestoreCart = data.cart || [];
-        firestoreAddress = data.savedAddress || null;
+      if (profileDataRef.current) {
+        firestoreCart = profileDataRef.current.cart || [];
+        firestoreAddress = profileDataRef.current.savedAddress || null;
       }
 
-      const cartChanged = JSON.stringify(firestoreCart) !== JSON.stringify(localCart);
-      const addressChanged = JSON.stringify(firestoreAddress) !== JSON.stringify(localAddress);
+      const cartChanged = !isCartEqual(firestoreCart, localCart);
+      const addressChanged = !isAddressEqual(firestoreAddress, localAddress);
 
       if (cartChanged || addressChanged) {
+        const profileRef = doc(db, "profiles_by_phone", phone);
         await setDoc(profileRef, {
           cart: localCart,
           savedAddress: localAddress,
