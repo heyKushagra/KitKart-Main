@@ -69,7 +69,7 @@ function SuccessContent() {
 
         <h1 className="success-title">Order Placed Successfully!</h1>
         <p className="success-text">
-          Thank you for shopping with KitKart. Your premium jerseys will be crafted and dispatched shortly.
+          Thank you for shopping with KitKart. Order details have been sent to your email address. Your premium jerseys will be dispatched shortly.
         </p>
 
         <div className="order-details-grid">
