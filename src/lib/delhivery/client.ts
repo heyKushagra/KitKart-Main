@@ -1,16 +1,22 @@
 import { DelhiveryServiceabilityResponse, DelhiveryShipmentRequest, DelhiveryShipmentResponse, DelhiveryTrackResponse } from "./types";
 
-const DELHIVERY_API_TOKEN = process.env.DELHIVERY_API_TOKEN;
-const DELHIVERY_BASE_URL = process.env.DELHIVERY_BASE_URL || "https://track.delhivery.com";
-
 export class DelhiveryClient {
-  private static getHeaders() {
-    if (!DELHIVERY_API_TOKEN) {
+  private static getApiToken() {
+    const token = process.env.DELHIVERY_API_TOKEN;
+    if (!token) {
       throw new Error("Delhivery API token is not configured.");
     }
+    return token;
+  }
+
+  private static getBaseUrl() {
+    return process.env.DELHIVERY_BASE_URL || "https://track.delhivery.com";
+  }
+
+  private static getHeaders() {
     return {
       "Content-Type": "application/json",
-      Authorization: `Token ${DELHIVERY_API_TOKEN}`,
+      Authorization: `Token ${this.getApiToken()}`,
     };
   }
 
@@ -18,7 +24,7 @@ export class DelhiveryClient {
    * Check if a pincode is serviceable by Delhivery
    */
   static async checkServiceability(pincode: string): Promise<DelhiveryServiceabilityResponse> {
-    const url = `${DELHIVERY_BASE_URL}/c/api/pin-codes/json/?filter_codes=${pincode}`;
+    const url = `${this.getBaseUrl()}/c/api/pin-codes/json/?filter_codes=${pincode}`;
     
     const response = await fetch(url, {
       method: "GET",
@@ -37,7 +43,7 @@ export class DelhiveryClient {
    * Create a shipment in Delhivery
    */
   static async createShipment(request: DelhiveryShipmentRequest): Promise<DelhiveryShipmentResponse> {
-    const url = `${DELHIVERY_BASE_URL}/api/cmu/create.json`;
+    const url = `${this.getBaseUrl()}/api/cmu/create.json`;
     
     // Delhivery expects the request in format `format=json&data={json_string}`
     const formData = new URLSearchParams();
@@ -47,7 +53,7 @@ export class DelhiveryClient {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        Authorization: `Token ${DELHIVERY_API_TOKEN}`,
+        Authorization: `Token ${this.getApiToken()}`,
         "Content-Type": "application/x-www-form-urlencoded", // Required for this endpoint
       },
       body: formData.toString(),
@@ -65,7 +71,7 @@ export class DelhiveryClient {
    * Track a shipment by Waybill (AWB)
    */
   static async trackShipment(waybill: string): Promise<DelhiveryTrackResponse> {
-    const url = `${DELHIVERY_BASE_URL}/api/v1/packages/json/?waybill=${waybill}`;
+    const url = `${this.getBaseUrl()}/api/v1/packages/json/?waybill=${waybill}`;
     
     const response = await fetch(url, {
       method: "GET",
