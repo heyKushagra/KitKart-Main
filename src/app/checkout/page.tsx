@@ -182,7 +182,7 @@ export default function Checkout() {
     try {
       const servRes = await fetch(`/api/delhivery/serviceability?pincode=${pincode.trim()}`);
       const servData = await servRes.json();
-      
+
       if (!servRes.ok || !servData.serviceable) {
         showToast("error", servData.message || "Delivery is not available for this pincode.");
         setLoading(false);
@@ -239,7 +239,7 @@ export default function Checkout() {
       };
 
       const rzp1 = new (window as any).Razorpay(options);
-      rzp1.on('payment.failed', function (response: any){
+      rzp1.on('payment.failed', function (response: any) {
         showToast("error", "Payment failed! " + response.error.description);
         setLoading(false);
       });
@@ -367,7 +367,7 @@ export default function Checkout() {
           })
         });
         const shipmentData = await shipmentRes.json();
-        
+
         if (shipmentData.success && shipmentData.shipment) {
           // Update order with shipment details
           await updateDoc(orderRef, {
@@ -384,6 +384,23 @@ export default function Checkout() {
       } catch (err) {
         console.error("Delhivery integration error:", err);
       }
+      // --- Send Order Details Email ---
+      try {
+        await fetch("/api/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: shippingForm.email || user?.email || "",
+            orderId: orderRef.id,
+            products: cart,
+            subtotal: subtotal,
+            totalAmount: total,
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to send order email:", err);
+      }
+
       // -----------------------------------
 
       showToast("success", "Payment successful! Order placed. Redirecting...");

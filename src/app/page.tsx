@@ -394,7 +394,7 @@ export default function Home() {
 
             <Link href="/shop?category=Fan%20Version" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jersey3.jpg" alt="Fan Jerseys" />
+                <img src="/assets/jerseyBG.jpg" alt="Fan Jerseys" />
               </div>
               <h3 className="category-name">Fan Version</h3>
               <span className="category-explore">
