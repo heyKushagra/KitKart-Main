@@ -92,7 +92,7 @@ function SuccessContent() {
         </div>
 
         <p className="success-subtext">
-          Details of product will be shortly updated on website. Please check Order Status by clicking on <Link href="/account/orders">View My Orders</Link> button.
+          Status of product will be shortly updated on website. Please check Order Status by clicking on <Link href="/account/orders"><strong>View My Orders</strong></Link> button.
         </p>
 
         <div className="action-buttons">
