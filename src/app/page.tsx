@@ -177,7 +177,7 @@ export default function Home() {
               Premium quality jerseys crafted for fans who expect more than just merchandise.
             </p>
             <div className="hero-ctas">
-              <Link href="/shop" className="btn btn-primary">
+              <Link href="/shop" className="btn hero-btn-primary">
                 Shop Collection
                 <svg
                   viewBox="0 0 24 24"
@@ -191,7 +191,7 @@ export default function Home() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </Link>
-              <Link href="/categories" className="btn btn-outline">
+              <Link href="/categories" className="btn hero-btn-outline">
                 Explore Categories
               </Link>
             </div>

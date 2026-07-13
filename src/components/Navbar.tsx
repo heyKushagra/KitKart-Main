@@ -191,11 +191,11 @@ export default function Navbar() {
                 Categories
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link href="/" className="nav-link">
                 About
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link href="/contact" className={`nav-link ${isActive("/contact") ? "active" : ""}`}>
                 Contact

@@ -63,7 +63,7 @@ export default function Checkout() {
     if (code === "SOCKS50") {
       setDiscountAmount(150);
       showToast("success", "Coupon applied successfully!");
-    } else if (code === "NEW10") {
+    } else if (code === "NEW5") {
       setDiscountAmount(subtotal * 0.05);
       showToast("success", "Coupon applied successfully!");
     } else {
