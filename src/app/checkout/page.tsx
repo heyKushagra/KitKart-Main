@@ -61,8 +61,26 @@ export default function Checkout() {
     // Example: You can change "KITKART10" to any keyword, and adjust the discount math (e.g., subtotal * 0.1 for 10% off)
     const code = couponCode.trim().toUpperCase();
     if (code === "SOCKS50") {
-      setDiscountAmount(150);
-      showToast("success", "Coupon applied successfully!");
+      let jerseyQty = 0;
+      let socksValue = 0;
+
+      cart.forEach(item => {
+        const name = item.name.toLowerCase();
+        if (name.includes("jersey") || name.includes("shirt") || name.includes("kit") || name.includes("top")) {
+          jerseyQty += item.quantity;
+        }
+        if (name.includes("sock")) {
+          socksValue += (item.price * item.quantity);
+        }
+      });
+
+      if (jerseyQty >= 2 && subtotal >= 1500 && socksValue > 199) {
+        setDiscountAmount(150);
+        showToast("success", "Coupon applied successfully!");
+      } else {
+        setDiscountAmount(0);
+        showToast("error", "Please follow guidelines for availing offer");
+      }
     } else if (code === "NEW5") {
       setDiscountAmount(subtotal * 0.05);
       showToast("success", "Coupon applied successfully!");
