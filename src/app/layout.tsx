@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -31,7 +31,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <SplashScreen />
         <div id="main-content" style={{ opacity: "var(--content-opacity, 1)", transition: "opacity 0.6s ease-in" }}>
           <AuthProvider>

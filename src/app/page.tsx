@@ -289,7 +289,7 @@ export default function Home() {
               return (
                 <Link
                   key={product.id}
-                  href={`/product/${product.id}?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}${product.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(product.image)}`}${isContactForPrice ? '&contactForPrice=true' : ''}`}
+                  href={`/product/${product.id}?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}${(product.image || '').startsWith('data:') ? '' : `&image=${encodeURIComponent(product.image || '')}`}${isContactForPrice ? '&contactForPrice=true' : ''}`}
                   className="product-card"
                 >
                   <div className="product-img-wrapper">

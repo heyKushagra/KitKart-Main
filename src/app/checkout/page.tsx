@@ -74,7 +74,7 @@ export default function Checkout() {
         }
       });
 
-      if (jerseyQty >= 2 && subtotal >= 1500 && socksValue > 199) {
+      if (jerseyQty >= 2 && subtotal >= 1500 && socksValue >= 199) {
         setDiscountAmount(150);
         showToast("success", "Coupon applied successfully!");
       } else {
