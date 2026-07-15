@@ -71,6 +71,9 @@ export default function ShopClient() {
 
   const [visibleCount, setVisibleCount] = useState(12);
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [copied, setCopied] = useState(false);
+
   // Sync category query parameter on mount/load
   useEffect(() => {
     if (categoryParam) {
@@ -173,6 +176,17 @@ export default function ShopClient() {
     };
 
     fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const isShown = sessionStorage.getItem("kitkart_shop_popup_shown");
+    if (!isShown) {
+      const timer = setTimeout(() => {
+        setShowPopup(true);
+        sessionStorage.setItem("kitkart_shop_popup_shown", "true");
+      }, 800);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const handleQuickAdd = (
@@ -467,6 +481,189 @@ export default function ShopClient() {
           </div>
         )}
       </section>
+      {showPopup && (
+        <div className="shop-popup-overlay" onClick={() => setShowPopup(false)}>
+          <div className="shop-popup-content" onClick={(e) => e.stopPropagation()}>
+            <button className="shop-popup-close" onClick={() => setShowPopup(false)} aria-label="Close Pop-up">
+              &times;
+            </button>
+            <div className="shop-popup-badge">LIMITED TIME OFFER</div>
+            <h2 className="shop-popup-title">Exclusive Discount</h2>
+            <p className="shop-popup-text">
+              Get <span className="highlight-gold">FLAT 5% Off</span> on your First Order.
+            </p>
+            <div className="coupon-box">
+              <span className="coupon-code">NEW5</span>
+              <button 
+                className="coupon-copy-btn" 
+                onClick={() => {
+                  navigator.clipboard.writeText("NEW5");
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+              >
+                {copied ? "Copied!" : "Copy Code"}
+              </button>
+            </div>
+            <button className="btn-popup-cta" onClick={() => setShowPopup(false)}>
+              Start Shopping
+            </button>
+          </div>
+        </div>
+      )}
+      <style>{`
+        .shop-popup-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(8px);
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .shop-popup-content {
+          background: var(--clr-surface);
+          border: 1px solid var(--clr-border);
+          padding: var(--sp-8) var(--sp-6);
+          border-radius: var(--r-lg);
+          max-width: 400px;
+          width: 90%;
+          text-align: center;
+          position: relative;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+          transform: translateY(30px) scale(0.9);
+          animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          font-family: var(--ff-body);
+        }
+
+        .shop-popup-close {
+          position: absolute;
+          top: 12px;
+          right: 16px;
+          background: transparent;
+          border: none;
+          color: var(--clr-text-secondary);
+          font-size: 1.8rem;
+          cursor: pointer;
+          line-height: 1;
+          transition: color 0.2s ease, transform 0.2s ease;
+        }
+        
+        .shop-popup-close:hover {
+          color: var(--clr-text);
+          transform: scale(1.1);
+        }
+
+        .shop-popup-badge {
+          display: inline-block;
+          font-family: var(--ff-heading);
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          color: var(--clr-gold);
+          background: var(--clr-gold-dim);
+          border: 1px solid var(--clr-gold);
+          padding: 4px 12px;
+          border-radius: var(--r-full);
+          margin-bottom: var(--sp-4);
+        }
+
+        .shop-popup-title {
+          font-family: var(--ff-heading);
+          color: var(--clr-text);
+          font-size: 1.6rem;
+          font-weight: 600;
+          margin-bottom: var(--sp-2);
+        }
+
+        .shop-popup-text {
+          color: var(--clr-text-secondary);
+          font-size: 1.05rem;
+          margin-bottom: var(--sp-6);
+          line-height: 1.5;
+        }
+
+        .highlight-gold {
+          color: var(--clr-gold);
+          font-weight: 700;
+        }
+
+        .coupon-box {
+          background: var(--clr-card);
+          border: 1px dashed var(--clr-gold);
+          border-radius: var(--r-md);
+          padding: 8px 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: var(--sp-6);
+        }
+
+        .coupon-code {
+          font-family: var(--ff-heading);
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: var(--clr-text);
+          letter-spacing: 1px;
+        }
+
+        .coupon-copy-btn {
+          background: var(--clr-gold);
+          color: var(--clr-bg);
+          border: none;
+          font-family: var(--ff-heading);
+          font-size: 0.85rem;
+          font-weight: 600;
+          padding: 8px 16px;
+          border-radius: var(--r-sm);
+          cursor: pointer;
+          transition: background 0.2s ease;
+        }
+
+        .coupon-copy-btn:hover {
+          background: var(--clr-gold-hover);
+        }
+
+        .btn-popup-cta {
+          width: 100%;
+          background: transparent;
+          color: var(--clr-text);
+          border: 1px solid var(--clr-border);
+          font-family: var(--ff-heading);
+          font-size: 0.95rem;
+          font-weight: 600;
+          padding: 12px;
+          border-radius: var(--r-md);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-popup-cta:hover {
+          background: var(--clr-text);
+          color: var(--clr-bg);
+          border-color: var(--clr-text);
+        }
+
+        @keyframes fadeIn {
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideUp {
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </main>
   );
 }
