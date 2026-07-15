@@ -196,23 +196,6 @@ export default function Checkout() {
 
     setLoading(true);
 
-    // --- Delhivery Serviceability Check ---
-    try {
-      const servRes = await fetch(`/api/delhivery/serviceability?pincode=${pincode.trim()}`);
-      const servData = await servRes.json();
-
-      if (!servRes.ok || !servData.serviceable) {
-        showToast("error", servData.message || "Delivery is not available for this pincode.");
-        setLoading(false);
-        return;
-      }
-    } catch (err) {
-      console.error("Serviceability check failed:", err);
-      showToast("error", "Failed to check delivery serviceability. Please try again.");
-      setLoading(false);
-      return;
-    }
-    // --------------------------------------
 
     if (paymentMethod === "cod") {
       // Direct placement (Full COD)
@@ -368,40 +351,7 @@ export default function Checkout() {
       localStorage.setItem("kitkart_cart", "[]");
       window.dispatchEvent(new Event("cart_updated"));
 
-      // --- Delhivery Shipment Creation ---
-      try {
-        const shipmentRes = await fetch("/api/delhivery/create-shipment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            orderId: orderRef.id,
-            customerDetails: shippingForm,
-            products: cart,
-            subtotal,
-            shipping,
-            discount: discountAmount,
-            totalAmount: total,
-            paymentMethod: method
-          })
-        });
-        const shipmentData = await shipmentRes.json();
 
-        if (shipmentData.success && shipmentData.shipment) {
-          // Update order with shipment details
-          await updateDoc(orderRef, {
-            shipment: {
-              ...shipmentData.shipment,
-              pickupRequested: false,
-              createdAt: serverTimestamp(),
-              updatedAt: serverTimestamp()
-            }
-          });
-        } else {
-          console.error("Failed to create Delhivery shipment:", shipmentData.error);
-        }
-      } catch (err) {
-        console.error("Delhivery integration error:", err);
-      }
       // --- Send Order Details Email ---
       try {
         await fetch("/api/send-email", {
@@ -628,7 +578,7 @@ export default function Checkout() {
                   />
                   <div className="option-info">
                     <span className="option-title">Pay Online (Razorpay)</span>
-                    <span className="option-desc">Pay securely via UPI, Cards, or Netbanking. Delhivery will not collect cash on delivery.</span>
+                    <span className="option-desc">Pay securely via UPI, Cards, or Netbanking.</span>
                   </div>
                 </label>
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-// import { initiateShiprocketCheckout } from "@/lib/shiprocket/checkout";
+import { initiateShiprocketCheckout } from "@/lib/shiprocket/checkout";
 
 type CartItem = {
   id: string;
@@ -57,7 +57,15 @@ export default function Cart() {
   };
 
   const handleCheckout = async () => {
-    router.push("/checkout");
+    setIsCheckingOut(true);
+    try {
+      await initiateShiprocketCheckout(cart);
+    } catch (error) {
+      console.error("Shiprocket checkout error:", error);
+      alert("Failed to initiate checkout. Please try again.");
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   if (!loaded) return null; // Wait until local storage is loaded to avoid hydration mismatch

@@ -49,7 +49,7 @@ export const initiateShiprocketCheckout = async (cart: any[]) => {
       (window as any).HeadlessCheckout.addToCart(
         new Event('click'),
         token, 
-        { }, // Removed fallbackUrl to debug live redirect issue
+        { fallbackUrl: window.location.origin + '/checkout' },
         (callbackEvent: any) => {
           console.log('[Shiprocket Client] Checkout Callback received:', callbackEvent);
         }
@@ -74,15 +74,7 @@ const loadShiprocketAssets = (): Promise<void> => {
       return;
     }
 
-    // Inject hidden input for seller domain (required by Shiprocket JS)
-    if (!document.getElementById('sellerDomain')) {
-      const hiddenInput = document.createElement('input');
-      hiddenInput.type = 'hidden';
-      // Always use the registered store domain to prevent domain authorization mismatch (e.g. on localhost)
-      hiddenInput.value = 'kitkarttest.vercel.app';
-      hiddenInput.id = 'sellerDomain';
-      document.body.appendChild(hiddenInput);
-    }
+    // Inject hidden input for sellerDomain removed as it might force Fastrr to reject localhost
 
     // Load stylesheet
     if (!document.getElementById('shiprocket-checkout-style')) {
