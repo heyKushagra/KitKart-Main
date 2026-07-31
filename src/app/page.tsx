@@ -81,12 +81,23 @@ export default function Home() {
           }
         });
 
+        const getTimestamp = (createdAt: any): number => {
+          if (!createdAt) return 0;
+          if (typeof createdAt === 'object' && createdAt.seconds !== undefined) {
+            return createdAt.seconds * 1000;
+          }
+          if (typeof createdAt === 'object' && typeof createdAt.toDate === 'function') {
+            return createdAt.toDate().getTime();
+          }
+          if (typeof createdAt === 'string') {
+            const parsed = Date.parse(createdAt);
+            if (!isNaN(parsed)) return parsed;
+          }
+          return Number(createdAt) || 0;
+        };
+
         // Sort by createdAt descending so newly added products are in the first column
-        const sorted = merged.sort((a, b) => {
-          const dateA = a.createdAt || "2024-01-01";
-          const dateB = b.createdAt || "2024-01-01";
-          return dateB.localeCompare(dateA);
-        });
+        const sorted = merged.sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
 
         setProducts(sorted);
         setLoading(false);
