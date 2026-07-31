@@ -243,6 +243,11 @@ export default function Checkout() {
         },
         theme: {
           color: "#c5a059"
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          }
         }
       };
 
