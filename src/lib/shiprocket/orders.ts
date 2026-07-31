@@ -103,7 +103,18 @@ export function mapFirebaseOrderToShiprocketPayload(orderId: string, orderData: 
 
   // Payment method mapping: "COD" or "Prepaid"
   const method = String(orderData.paymentMethod || '').toLowerCase();
-  const payment_method = method === 'cod' ? 'COD' : 'Prepaid';
+  const paymentType = String(orderData.payment_type || '');
+  
+  let payment_method = 'Prepaid';
+  let sub_total = Number(orderData.totalAmount || orderData.subtotal || 0);
+
+  if (method === 'cod' || paymentType === 'Partial COD') {
+    payment_method = 'COD';
+    
+    if (paymentType === 'Partial COD') {
+      sub_total = orderData.cod_amount !== undefined ? Number(orderData.cod_amount) : (sub_total - (orderData.advance_paid || 149));
+    }
+  }
 
   return {
     order_id: orderId,
@@ -120,7 +131,7 @@ export function mapFirebaseOrderToShiprocketPayload(orderId: string, orderData: 
     shipping_is_billing: true,
     order_items: orderItems,
     payment_method,
-    sub_total: Number(orderData.totalAmount || orderData.subtotal || 0),
+    sub_total,
     length: orderData.length || 15,
     breadth: orderData.breadth || 10,
     height: orderData.height || 5,
@@ -147,6 +158,18 @@ export async function processShiprocketOrderForDoc(orderId: string, orderDataInp
   try {
     console.log("Calling Shiprocket...", orderId);
     const payload = mapFirebaseOrderToShiprocketPayload(orderId, orderData);
+
+    console.log("Shiprocket Payment Mapping:", {
+      payment_type: orderData.payment_type,
+      paymentMethod: orderData.paymentMethod,
+      advance_paid: orderData.advance_paid,
+      cod_amount: orderData.cod_amount,
+      order_total: orderData.order_total,
+      totalAmount: orderData.totalAmount,
+      shiprocket_payment_method: payload.payment_method,
+      shiprocket_sub_total: payload.sub_total
+    });
+
     const response = await createAdhocOrder(payload);
     console.log("Shiprocket response:", response);
 
