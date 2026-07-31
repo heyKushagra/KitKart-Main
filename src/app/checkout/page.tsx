@@ -50,7 +50,7 @@ export default function Checkout() {
     country: "India",
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<"online" | "cod">("online");
+  const [paymentMethod, setPaymentMethod] = useState<"online" | "partial_cod" | "cod">("online");
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -160,6 +160,12 @@ export default function Checkout() {
   const shipping = 0; // Set to always 0 for Free Shipping
   const total = subtotal + shipping - discountAmount;
 
+  useEffect(() => {
+    if (total <= 149 && paymentMethod === "partial_cod") {
+      setPaymentMethod("online");
+    }
+  }, [total, paymentMethod]);
+
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
@@ -205,10 +211,11 @@ export default function Checkout() {
 
     // --- Razorpay Order Creation ---
     try {
+      const razorpayAmount = paymentMethod === "partial_cod" ? 149 : total;
       const rpRes = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: total })
+        body: JSON.stringify({ amount: razorpayAmount })
       });
       const rpData = await rpRes.json();
 
@@ -227,7 +234,7 @@ export default function Checkout() {
         order_id: rpData.id,
         handler: async function (response: any) {
           // Payment Success Handler
-          await processSuccessfulPayment(response.razorpay_payment_id, response.razorpay_order_id, "online");
+          await processSuccessfulPayment(response.razorpay_payment_id, response.razorpay_order_id, paymentMethod);
         },
         prefill: {
           name: fullName,
@@ -252,7 +259,7 @@ export default function Checkout() {
     }
   };
 
-  const processSuccessfulPayment = async (razorpayPaymentId?: string, razorpayOrderId?: string, method: "online" | "cod" = paymentMethod) => {
+  const processSuccessfulPayment = async (razorpayPaymentId?: string, razorpayOrderId?: string, method: "online" | "partial_cod" | "cod" = paymentMethod) => {
     try {
       // 1. Aggregate quantities by product ID to handle multiple sizes of the same product
       const productQuantities: { [productId: string]: { name: string; quantity: number } } = {};
@@ -331,7 +338,12 @@ export default function Checkout() {
           couponCode: discountAmount > 0 ? couponCode : "",
           totalAmount: total,
           paymentMethod: method,
-          ...(method === "online" && razorpayPaymentId ? {
+          payment_type: method === "partial_cod" ? "Partial COD" : (method === "cod" ? "COD" : "Prepaid"),
+          order_total: total,
+          advance_paid: method === "partial_cod" ? 149 : (method === "cod" ? 0 : total),
+          cod_amount: method === "partial_cod" ? total - 149 : (method === "cod" ? total : 0),
+          payment_status: method === "partial_cod" ? "Advance Paid" : (method === "online" ? "Paid" : "Pending"),
+          ...(method !== "cod" && razorpayPaymentId ? {
             paymentDetails: {
               razorpayPaymentId,
               razorpayOrderId
@@ -603,19 +615,21 @@ export default function Checkout() {
                   </div>
                 </label>
 
-                <label className={`payment-option-label ${paymentMethod === "cod" ? "active" : ""}`}>
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="cod"
-                    checked={paymentMethod === "cod"}
-                    onChange={() => setPaymentMethod("cod")}
-                  />
-                  <div className="option-info">
-                    <span className="option-title">Partial COD (Pay ₹100 online, rest on delivery)</span>
-                    <span className="option-desc">Currently treated as Full Cash on Delivery (COD) for testing. No advance payment required now.</span>
-                  </div>
-                </label>
+                {total > 149 && (
+                  <label className={`payment-option-label ${paymentMethod === "partial_cod" ? "active" : ""}`}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="partial_cod"
+                      checked={paymentMethod === "partial_cod"}
+                      onChange={() => setPaymentMethod("partial_cod")}
+                    />
+                    <div className="option-info">
+                      <span className="option-title">Partial COD (Pay ₹149 online, rest on delivery)</span>
+                      <span className="option-desc">Pay ₹149 securely now. The remaining balance of the order will be collected as Cash on Delivery (COD).</span>
+                    </div>
+                  </label>
+                )}
               </div>
             </div>
 
