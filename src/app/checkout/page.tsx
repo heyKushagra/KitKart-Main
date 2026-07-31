@@ -373,13 +373,14 @@ export default function Checkout() {
 
       // --- Trigger Shiprocket Order Creation ---
       try {
-        console.log("Calling Shiprocket...");
-        const res = await fetch("/api/shiprocket/process-order", {
+        console.log("Calling process-order API...");
+        const response = await fetch("/api/shiprocket/process-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ orderId: orderRef.id }),
         });
-        const data = await res.json();
+        console.log("process-order response:", response.status);
+        const data = await response.json();
         if (data.success) {
           console.log("Shiprocket response:", data.response);
         } else {
