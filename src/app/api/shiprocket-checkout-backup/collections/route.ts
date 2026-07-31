@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { hashStringToLong } from '@/lib/shiprocket/checkout';
+import { hashStringToLong } from '@/lib/shiprocket-checkout-backup/checkout';
 
 export async function GET(req: Request) {
   try {

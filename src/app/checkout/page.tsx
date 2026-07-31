@@ -344,6 +344,8 @@ export default function Checkout() {
         transaction.set(orderRef, orderData);
       });
 
+      console.log("Order saved to Firebase", orderRef.id);
+
       // Save address for future pre-filling
       localStorage.setItem("kitkart_saved_address", JSON.stringify(shippingForm));
 
@@ -367,6 +369,24 @@ export default function Checkout() {
         });
       } catch (err) {
         console.error("Failed to send order email:", err);
+      }
+
+      // --- Trigger Shiprocket Order Creation ---
+      try {
+        console.log("Calling Shiprocket...");
+        const res = await fetch("/api/shiprocket/process-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId: orderRef.id }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          console.log("Shiprocket response:", data.response);
+        } else {
+          console.error("Shiprocket error:", data.error);
+        }
+      } catch (err) {
+        console.error("Shiprocket error:", err);
       }
 
       // -----------------------------------

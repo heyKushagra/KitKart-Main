@@ -9,7 +9,6 @@ export function hashStringToLong(str: string): number {
   return Math.abs(hash);
 }
 
-
 export const initiateShiprocketCheckout = async (cart: any[]) => {
   console.log('[Shiprocket Client] Starting checkout initiation with cart:', cart);
   
@@ -57,7 +56,6 @@ export const initiateShiprocketCheckout = async (cart: any[]) => {
       console.log('[Shiprocket Client] HeadlessCheckout.addToCart called successfully.');
     } catch (checkoutErr) {
       console.error('[Shiprocket Client] HeadlessCheckout.addToCart threw an error:', checkoutErr);
-      // Removed automatic redirect to let the error display on screen
       const errorMessage = checkoutErr instanceof Error ? checkoutErr.message : String(checkoutErr);
       alert("Shiprocket checkout error: " + errorMessage);
     }

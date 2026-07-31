@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { hashStringToLong } from '@/lib/shiprocket/checkout';
+import { hashStringToLong } from '@/lib/shiprocket-checkout-backup/checkout';
 
 export async function GET(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     // Log the incoming request to Firestore for diagnostics
     try {
       await addDoc(collection(db, 'shiprocket_api_logs'), {
-        endpoint: 'products-by-collection',
+        endpoint: 'products',
         timestamp: new Date().toISOString(),
         headers: {
           'x-api-key': apiKeyHeader,
@@ -30,50 +30,21 @@ export async function GET(req: Request) {
     }
 
     const { searchParams } = new URL(req.url);
-    const collectionIdParam = searchParams.get('collection_id');
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '100', 10);
     const skip = (page - 1) * limit;
 
-    if (!collectionIdParam) {
-      return NextResponse.json({ error: 'Missing collection_id parameter' }, { status: 400 });
-    }
-
-    const targetCollectionId = parseInt(collectionIdParam, 10);
-
-    // Fetch products
+    // Fetch all products from Firestore
     const querySnapshot = await getDocs(collection(db, 'products'));
     const fbProducts: any[] = [];
-    
-    // Track categories to map collection_id back to category name
-    const categoryNames = new Set<string>();
-
     querySnapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      if (data.status !== 'Draft') {
-        fbProducts.push({ id: docSnap.id, ...data });
-        if (data.category) {
-          categoryNames.add(data.category);
-        }
+      if (docSnap.data().status !== 'Draft') {
+        fbProducts.push({ id: docSnap.id, ...docSnap.data() });
       }
     });
 
-    // Find the category matching the collection_id hash
-    let matchedCategoryName: string | null = null;
-    for (const catName of Array.from(categoryNames)) {
-      if (hashStringToLong(catName) === targetCollectionId) {
-        matchedCategoryName = catName;
-        break;
-      }
-    }
-
-    // Filter products belonging to this category
-    const filteredProducts = matchedCategoryName
-      ? fbProducts.filter((p) => p.category === matchedCategoryName)
-      : [];
-
-    const total = filteredProducts.length;
-    const paginatedProducts = filteredProducts.slice(skip, skip + limit);
+    const total = fbProducts.length;
+    const paginatedProducts = fbProducts.slice(skip, skip + limit);
 
     // Map to Shiprocket JSON Schema
     const products = paginatedProducts.map((p) => {
@@ -97,10 +68,10 @@ export async function GET(req: Request) {
         },
         variants: [
           {
-            id: longId,
+            id: longId, // Variant ID must also be a unique long
             title: 'Default Title',
             price: priceVal.toFixed(2),
-            compare_at_price: (priceVal * 1.2).toFixed(2),
+            compare_at_price: (priceVal * 1.2).toFixed(2), // Mock compare price
             sku: p.sku || `KK-${longId}`,
             quantity: p.stock !== undefined ? Number(p.stock) : 10,
             created_at: new Date().toISOString(),
@@ -129,7 +100,7 @@ export async function GET(req: Request) {
       }
     });
   } catch (error: any) {
-    console.error('Shiprocket Fetch Products by Collection API error:', error);
+    console.error('Shiprocket Fetch Products API error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

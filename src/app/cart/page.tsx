@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { initiateShiprocketCheckout } from "@/lib/shiprocket/checkout";
+// import { initiateShiprocketCheckout } from "@/lib/shiprocket/checkout";
 
 type CartItem = {
   id: string;
@@ -59,9 +59,9 @@ export default function Cart() {
   const handleCheckout = async () => {
     setIsCheckingOut(true);
     try {
-      await initiateShiprocketCheckout(cart);
+      router.push("/checkout");
     } catch (error) {
-      console.error("Shiprocket checkout error:", error);
+      console.error("Checkout navigation error:", error);
       alert("Failed to initiate checkout. Please try again.");
     } finally {
       setIsCheckingOut(false);
