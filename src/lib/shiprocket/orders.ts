@@ -121,8 +121,8 @@ export function mapFirebaseOrderToShiprocketPayload(orderId: string, orderData: 
     order_items: orderItems,
     // TEMP TEST: Force COD and ₹899 collectable amount.
     // Revert after Shiprocket dashboard verification.
-    payment_method: 'COD',
-    sub_total: 899,
+    payment_method,
+    sub_total: Number(orderData.totalAmount || orderData.subtotal || 0),
     length: orderData.length || 15,
     breadth: orderData.breadth || 10,
     height: orderData.height || 5,
