@@ -221,9 +221,13 @@ export default function MyOrders() {
               <div className="orders-list">
                 {filteredOrders.map((order) => {
                   const isExpanded = expandedOrder === order.id;
-                  const orderDate = order.createdAt?.toDate ? order.createdAt.toDate() : new Date();
+                  const orderDate = order.createdAt?.toDate ? order.createdAt.toDate() : (order.createdAt?.seconds ? new Date(order.createdAt.seconds * 1000) : new Date());
                   const dateString = orderDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
                   const timeString = orderDate.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
+                  
+                  const hoursPassed = (Date.now() - orderDate.getTime()) / (1000 * 60 * 60);
+                  const isPast12Hours = hoursPassed > 12;
+                  const isCancelled = order.status.toLowerCase() === 'cancelled';
                   
                   return (
                     <div key={order.id} className={`order-card ${isExpanded ? 'expanded' : ''}`}>
@@ -272,6 +276,23 @@ export default function MyOrders() {
                             <div className="meta-actions">
                               {/* Future feature: Invoice download */}
                               <button className="btn-secondary" disabled>Download Invoice</button>
+                              
+                              {!isCancelled && (
+                                <button 
+                                  className={`btn-cancel-order ${isPast12Hours ? 'disabled-look' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isPast12Hours) {
+                                      alert("Notice: Orders can only be cancelled within 12 hours of placement.\n\nSince 12 hours have passed, this order cannot be cancelled automatically. Please contact support on WhatsApp for help.");
+                                    } else {
+                                      window.location.href = `https://wa.me/918849376973?text=${encodeURIComponent(`Hi KitKart, I wish to cancel my order: ${order.id}`)}`;
+                                    }
+                                  }}
+                                  title={isPast12Hours ? "Cancellation period expired (12h limit)" : "Cancel this order"}
+                                >
+                                  {isPast12Hours ? 'Cancel Expired' : 'Cancel Order'}
+                                </button>
+                              )}
                             </div>
                           </div>
                           
@@ -764,6 +785,42 @@ export default function MyOrders() {
             gap: var(--sp-4);
           }
         }
+
+        .meta-actions {
+          display: flex;
+          align-items: center;
+          gap: var(--sp-3);
+        }
+        
+        .btn-cancel-order {
+          background: #e74c3c;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: var(--r-md);
+          font-family: var(--ff-heading);
+          font-weight: 600;
+          font-size: 0.85rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .btn-cancel-order:hover {
+          background: #c0392b;
+          transform: translateY(-2px);
+        }
+        
+        .btn-cancel-order.disabled-look {
+          background: rgba(231, 76, 60, 0.4);
+          color: rgba(255, 255, 255, 0.6);
+          cursor: not-allowed;
+        }
+        .btn-cancel-order.disabled-look:hover {
+          transform: none;
+          background: rgba(231, 76, 60, 0.4);
+        }
+
+        @media (max-width: 768px) { }
 
         @keyframes slideInDown {
           from { opacity: 0; transform: translateY(-20px); }
