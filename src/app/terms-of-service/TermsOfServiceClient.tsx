@@ -72,7 +72,31 @@ export default function TermsOfServiceClient() {
           </section>
 
           <section className="policy-card">
-            <h2 className="policy-sec-title">4. Changes to Terms of Service</h2>
+            <h2 className="policy-sec-title">4. Your Account & Security Responsibilities</h2>
+            <p className="policy-text" style={{ marginBottom: "1rem" }}>
+              If you create an account on KitKart, you are solely responsible for maintaining the strict confidentiality of your account credentials, login information, and password, as well as restricting unauthorized access to your personal devices and computer.
+            </p>
+            <p className="policy-text" style={{ marginBottom: "1rem" }}>
+              You expressly agree to accept full legal and financial responsibility for all activities, order placements, and actions that occur under your registered account or password.
+            </p>
+            <ul style={{ color: "var(--clr-text-secondary)", lineHeight: "1.6", fontSize: "0.95rem", paddingLeft: "1.25rem", listStyleType: "disc" }}>
+              <li style={{ marginBottom: "0.5rem" }}>
+                <strong>Credential Security:</strong> You must not disclose or share your account password with any third party.
+              </li>
+              <li style={{ marginBottom: "0.5rem" }}>
+                <strong>Prompt Notification:</strong> You agree to notify us immediately upon becoming aware of any breach of security, loss of credentials, or unauthorized access to your account.
+              </li>
+              <li style={{ marginBottom: "0.5rem" }}>
+                <strong>Information Accuracy:</strong> You agree to maintain accurate, complete, and up-to-date account and contact information.
+              </li>
+              <li>
+                <strong>Right to Terminate:</strong> KitKart reserves the right to decline service, terminate user accounts, or cancel orders at our sole discretion if suspicious or fraudulent activity is detected.
+              </li>
+            </ul>
+          </section>
+
+          <section className="policy-card">
+            <h2 className="policy-sec-title">5. Changes to Terms of Service</h2>
             <p className="policy-text">
               You can review the most current version of the Terms of Service at any time on this page. We reserve the right, at our sole discretion, to update, change or replace any part of these Terms of Service by posting updates and changes to our website. It is your responsibility to check our website periodically for changes.
             </p>

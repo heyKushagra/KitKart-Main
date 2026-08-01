@@ -112,10 +112,12 @@ function ProductContent() {
   const isOversizedTshirt = category?.toLowerCase().includes("oversized") || name?.toLowerCase().includes("oversized");
   const whatsappNumber = isOversizedTshirt ? "918840887100" : "918849376973";
 
-  const isContactForPrice = contactForPrice === true ||
-    category?.toLowerCase() === "boots" ||
+  const isBoot = category?.toLowerCase() === "boots" ||
     category?.toLowerCase() === "football boots" ||
-    category?.toLowerCase().includes("boot");
+    category?.toLowerCase().includes("boot") ||
+    name?.toLowerCase().includes("boot");
+
+  const isContactForPrice = contactForPrice === true || isBoot;
 
   const availableSizes = sizes && sizes.length > 0 ? sizes : ["xs", "s", "m", "l", "xl", "xxl"];
   const [selectedSize, setSelectedSize] = useState("m");
@@ -530,6 +532,47 @@ function ProductContent() {
                 )}
               </div>
 
+              {/* Boots NOTE Card */}
+              {isBoot && (
+                <div style={{
+                  background: "rgba(197, 160, 89, 0.08)",
+                  border: "1px solid rgba(197, 160, 89, 0.35)",
+                  borderRadius: "12px",
+                  padding: "14px 16px",
+                  marginBottom: "20px"
+                }}>
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    color: "var(--clr-gold, #C5A059)",
+                    fontFamily: "var(--ff-heading)",
+                    fontWeight: 700,
+                    fontSize: "0.88rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.03em",
+                    marginBottom: "8px"
+                  }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <span>IMPORTANT NOTE FOR BOOTS</span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "0.84rem", color: "var(--clr-text-secondary)", lineHeight: "1.45" }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
+                      <span style={{ color: "var(--clr-gold, #C5A059)", fontWeight: 700 }}>1.</span>
+                      <span><strong>Boots are 100% Prepaid:</strong> Cash on Delivery (COD) is not available for football boots. Orders must be paid in full online.</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
+                      <span style={{ color: "var(--clr-gold, #C5A059)", fontWeight: 700 }}>2.</span>
+                      <span><strong>Boots are Non-Returnable:</strong> Football boots are non-returnable and non-refundable. Exchange is applicable ONLY if a damaged or wrong product is delivered.</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Highlights Card with Animating Border */}
               <div className="highlights-card-wrapper">
                 <div className="highlights-card-inner">
@@ -542,7 +585,7 @@ function ProductContent() {
                       </svg>
                     </span>
                     <span className="highlight-text">
-                      FREE Shipping<br />Pan India
+                      Pan India<br />Shipping
                     </span>
                   </div>
 
@@ -598,22 +641,24 @@ function ProductContent() {
                     </svg>
                   </div>
                   <div className="delivery-info-content">
-                    <span className="delivery-info-title">Returns & Exchange Available</span>
-                    <span className="delivery-info-text">For Return Policies, please refer to <Link href="/shipping-returns"><strong>Shipping and Returns page</strong></Link>. Free exchange only if product is damaged or different.</span>
+                    <span className="delivery-info-title">{isBoot ? "Exchange Only for Damaged / Wrong Product" : "Returns & Exchange Available"}</span>
+                    <span className="delivery-info-text">{isBoot ? "Football boots are non-returnable & non-refundable. Exchange is valid ONLY if a damaged or wrong product is delivered." : "For Return Policies, please refer to Shipping and Returns page. Free exchange only if product is damaged or different."}</span>
                   </div>
                 </div>
 
                 {/* Returns size exchange note below the box */}
-                <div style={{ padding: "0 4px", fontSize: "0.8rem", color: "var(--clr-text-secondary)", lineHeight: "1.4", display: "flex", gap: "8px", alignItems: "flex-start" }}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" style={{ flexShrink: 0, marginTop: "2px", color: "var(--clr-gold)" }}>
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
-                  <span>Note: If you want to change the size, you must bear the shipping costs for both sides.
-                    For return, refund amount will be processed after deducting outward and return shipping charges of product.
-                  </span>
-                </div>
+                {!isBoot && (
+                  <div style={{ padding: "0 4px", fontSize: "0.8rem", color: "var(--clr-text-secondary)", lineHeight: "1.4", display: "flex", gap: "8px", alignItems: "flex-start" }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" style={{ flexShrink: 0, marginTop: "2px", color: "var(--clr-gold)" }}>
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>Note: If you want to change the size, you must bear the shipping costs for both sides.
+                      For return, refund amount will be processed after deducting outward and return shipping charges of product.
+                    </span>
+                  </div>
+                )}
               </div>
 
 

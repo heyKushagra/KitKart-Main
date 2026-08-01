@@ -227,7 +227,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="feature-title">Free Shipping</h3>
-              <p className="feature-desc">Free shipping on all kind of orders across whole India.</p>
+              <p className="feature-desc">Free shipping across whole India on orders above ₹399.</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon-wrap">

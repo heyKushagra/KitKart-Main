@@ -7,6 +7,7 @@ import Script from "next/script";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
 import { collection, serverTimestamp, runTransaction, doc, updateDoc } from "firebase/firestore";
+import { calculateShippingCharge } from "@/lib/shipping";
 
 interface CartItem {
   id: string;
@@ -157,7 +158,7 @@ export default function Checkout() {
 
   // Totals calculations
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = 0; // Set to always 0 for Free Shipping
+  const shipping = calculateShippingCharge(subtotal);
   const total = subtotal + shipping - discountAmount;
 
   useEffect(() => {
@@ -336,6 +337,8 @@ export default function Checkout() {
           })),
           subtotal: subtotal,
           shipping: shipping,
+          shipping_charge: shipping,
+          final_total: total,
           discount: discountAmount,
           discountName: discountAmount > 0 ? couponCode : "",
           discountValue: discountAmount,
@@ -382,6 +385,7 @@ export default function Checkout() {
             products: cart,
             subtotal: subtotal,
             totalAmount: total,
+            shipping_charge: shipping,
           }),
         });
       } catch (err) {

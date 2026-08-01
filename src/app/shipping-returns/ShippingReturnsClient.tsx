@@ -161,7 +161,7 @@ export default function ShippingReturnsClient() {
             </div>
 
             <p className="exchange-disclaimer">
-              Returns and exchanges are <strong>available for all products</strong> under the terms and conditions outlined below.
+              Returns and exchanges are <strong>available for jerseys and apparel</strong> under the terms and conditions outlined below. <strong>Please note: Football Boots are non-returnable and non-refundable, but can be exchanged if damaged or wrong product is delivered.</strong>
             </p>
 
             {/* Sub-section 1: Return & Refund Policy */}
@@ -184,6 +184,21 @@ export default function ShippingReturnsClient() {
                 <div className="callout-content">
                   <strong>Refund Deductions & Charges</strong>
                   <p>Your refund will be processed after deducting the <strong>original outward shipping charges</strong> and the <strong>return pickup shipping/handling fees</strong> required to return the package to our warehouse.</p>
+                </div>
+              </div>
+
+              {/* Football Boots Non-Returnable Callout */}
+              <div className="callout-box warning" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+                <div className="callout-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <circle cx="12" cy="17" r="1" />
+                  </svg>
+                </div>
+                <div className="callout-content">
+                  <strong>Football Boots Return & Exchange Policy</strong>
+                  <p><strong>Football Boots are 100% Prepaid, Non-Returnable, and Non-Refundable</strong>. Exchange is provided ONLY in the event that a damaged or incorrect product is delivered. Standard return policies apply exclusively to jerseys and sportswear apparel.</p>
                 </div>
               </div>
             </div>
@@ -299,6 +314,18 @@ export default function ShippingReturnsClient() {
               <div className="note-content">
                 <h3>Order Cancellation Policy</h3>
                 <p>Orders can be cancelled on WhatsApp within <strong>12 hours</strong> of placement. Partial COD advance amounts are non-refundable upon cancellation.</p>
+              </div>
+            </div>
+
+            <div className="note-box">
+              <div className="note-bullet" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <div className="note-content">
+                <h3>Football Boots Exception</h3>
+                <p>Football boots are strictly <strong>100% Prepaid</strong> and <strong>Non-Returnable / Non-Refundable</strong>. Exchanges are allowed strictly if a damaged or wrong product is delivered.</p>
               </div>
             </div>
           </div>

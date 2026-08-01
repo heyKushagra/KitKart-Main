@@ -30,6 +30,8 @@ interface Order {
   discountValue?: number;
   discountAmount?: number;
   couponCode?: string;
+  shipping_charge?: number;
+  shipping?: number;
 }
 
 export default function MyOrders() {
@@ -335,7 +337,11 @@ export default function MyOrders() {
                                 )}
                                 <div className="total-row">
                                   <span>Shipping</span>
-                                  <span style={{ color: "var(--clr-primary, #25D366)", fontWeight: "bold" }}>FREE</span>
+                                  {order.shipping_charge || order.shipping ? (
+                                    <span>₹{order.shipping_charge || order.shipping}</span>
+                                  ) : (
+                                    <span style={{ color: "var(--clr-primary, #25D366)", fontWeight: "bold" }}>FREE</span>
+                                  )}
                                 </div>
                                 <div className="total-row grand-total">
                                   <span>Grand Total</span>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { calculateShippingCharge } from "@/lib/shipping";
 // import { initiateShiprocketCheckout } from "@/lib/shiprocket/checkout";
 
 type CartItem = {
@@ -74,7 +75,7 @@ export default function Cart() {
     (total, item) => total + item.price * item.quantity,
     0
   );
-  const shipping = 0; // Set to always 0 for Free Shipping
+  const shipping = calculateShippingCharge(subtotal);
   const total = subtotal + shipping;
 
   return (

@@ -106,7 +106,7 @@ export function mapFirebaseOrderToShiprocketPayload(orderId: string, orderData: 
   const paymentType = String(orderData.payment_type || '');
   
   let payment_method = 'Prepaid';
-  let sub_total = Number(orderData.totalAmount || orderData.subtotal || 0);
+  let sub_total = Number(orderData.final_total || orderData.totalAmount || orderData.subtotal || 0);
 
   if (method === 'cod' || paymentType === 'Partial COD') {
     payment_method = 'COD';

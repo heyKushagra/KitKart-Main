@@ -15,12 +15,13 @@ interface CartItem {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { email, orderId, products, subtotal, totalAmount } = body as {
+        const { email, orderId, products, subtotal, totalAmount, shipping_charge = 0 } = body as {
             email: string;
             orderId: string;
             products: CartItem[];
             subtotal: number;
             totalAmount: number;
+            shipping_charge?: number;
         };
 
         if (!email) {
@@ -221,7 +222,10 @@ export async function POST(request: Request) {
             }
                 <tr>
                   <td class="summary-label">Shipping</td>
-                  <td class="summary-value" style="color: #28a745; font-weight: 600;">FREE</td>
+                  ${shipping_charge > 0
+                ? `<td class="summary-value">₹${shipping_charge}</td>`
+                : `<td class="summary-value" style="color: #28a745; font-weight: 600;">FREE</td>`
+            }
                 </tr>
                 <tr class="total-row">
                   <td class="summary-label">Total Amount</td>

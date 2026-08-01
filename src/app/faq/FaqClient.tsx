@@ -35,7 +35,7 @@ const FAQS: FaqItem[] = [
   },
   {
     question: "Can I cancel my order?",
-    answer: "Yes. Orders can be cancelled within 1 hour of placing them."
+    answer: "Yes. Orders can be cancelled within 12 hours of placing them."
   },
   {
     question: "What is your return policy?",
