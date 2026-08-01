@@ -282,6 +282,17 @@ export default function Checkout() {
       const orderRef = doc(orderCollectionRef);
 
       // 2. Run Firestore transaction to update stock and save order
+      let newOrderId = 1000;
+      try {
+        const idRes = await fetch("/api/generate-order-id", { method: "POST" });
+        const idData = await idRes.json();
+        if (idData.success) {
+          newOrderId = idData.order_id;
+        }
+      } catch (err) {
+        console.error("Failed to generate order ID:", err);
+      }
+
       await runTransaction(db, async (transaction) => {
         const productRefsAndData: Array<{
           productRef: any;
@@ -325,6 +336,7 @@ export default function Checkout() {
         }
 
         const orderData = {
+          order_id: newOrderId,
           userId: user?.uid || "guest",
           customerDetails: shippingForm,
           products: cart.map(item => ({
@@ -382,6 +394,7 @@ export default function Checkout() {
           body: JSON.stringify({
             email: shippingForm.email || user?.email || "",
             orderId: orderRef.id,
+            displayOrderId: newOrderId,
             products: cart,
             subtotal: subtotal,
             totalAmount: total,

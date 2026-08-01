@@ -117,7 +117,7 @@ export function mapFirebaseOrderToShiprocketPayload(orderId: string, orderData: 
   }
 
   return {
-    order_id: orderId,
+    order_id: orderData.order_id ? String(orderData.order_id) : orderId,
     order_date: orderDateFormatted,
     billing_customer_name: firstName,
     billing_last_name: lastName,

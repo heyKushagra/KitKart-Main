@@ -15,9 +15,10 @@ interface CartItem {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { email, orderId, products, subtotal, totalAmount, shipping_charge = 0 } = body as {
+        const { email, orderId, displayOrderId, products, subtotal, totalAmount, shipping_charge = 0 } = body as {
             email: string;
             orderId: string;
+            displayOrderId?: number;
             products: CartItem[];
             subtotal: number;
             totalAmount: number;
@@ -190,7 +191,7 @@ export async function POST(request: Request) {
               <p class="sub-text">We've received your order and are getting it ready to ship. Here are your order details:</p>
               
               <div class="order-badge">
-                Order ID: #${orderId}
+                Order ID: #${displayOrderId || orderId}
               </div>
 
               <table class="products-table">
@@ -247,7 +248,7 @@ export async function POST(request: Request) {
         const { data, error } = await resend.emails.send({
             from: "KitKart <onboarding@resend.dev>",
             to: [email],
-            subject: `Order Confirmation #${orderId} - KitKart`,
+            subject: `Order Confirmation #${displayOrderId || orderId} - KitKart`,
             html: emailHtmlContent,
         });
 

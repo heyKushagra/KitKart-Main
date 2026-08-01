@@ -75,7 +75,7 @@ function SuccessContent() {
         <div className="order-details-grid">
           <div className="detail-item">
             <span className="detail-label">Order ID</span>
-            <span className="detail-value">{orderId || "N/A"}</span>
+            <span className="detail-value">{orderDetails?.order_id ? `#${orderDetails.order_id}` : (orderId || "N/A")}</span>
           </div>
           <div className="detail-item">
             <span className="detail-label">Order Date</span>
@@ -99,7 +99,7 @@ function SuccessContent() {
             </p>
           </div>
           <a
-            href={`https://wa.me/918849376973?text=${encodeURIComponent(`Hi KitKart, I wish to cancel my order: ${orderId || ''}`)}`}
+            href={`https://wa.me/918849376973?text=${encodeURIComponent(`Hi KitKart, I wish to cancel my order: ${orderDetails?.order_id ? `#${orderDetails.order_id}` : (orderId || '')}`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-whatsapp-cancel"

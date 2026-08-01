@@ -18,6 +18,7 @@ interface OrderProduct {
 
 interface Order {
   id: string;
+  order_id?: number;
   userId: string;
   status: string;
   totalAmount: number;
@@ -100,7 +101,8 @@ export default function MyOrders() {
   };
 
   const filteredOrders = orders.filter((order) => {
-    const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchTarget = order.order_id ? String(order.order_id) : order.id;
+    const matchesSearch = searchTarget.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "All" || order.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -237,7 +239,7 @@ export default function MyOrders() {
                         <div className="order-info-grid">
                           <div className="info-block id-block">
                             <span className="block-label">Order ID</span>
-                            <span className="block-value id-value">#{order.id.slice(0, 8).toUpperCase()}...</span>
+                            <span className="block-value id-value">#{order.order_id || order.id.slice(0, 8).toUpperCase()}</span>
                           </div>
                           
                           <div className="info-block date-block">
@@ -287,7 +289,7 @@ export default function MyOrders() {
                                     if (isPast12Hours) {
                                       alert("Notice: Orders can only be cancelled within 12 hours of placement.\n\nSince 12 hours have passed, this order cannot be cancelled automatically. Please contact support on WhatsApp for help.");
                                     } else {
-                                      window.location.href = `https://wa.me/918849376973?text=${encodeURIComponent(`Hi KitKart, I wish to cancel my order: ${order.id}`)}`;
+                                      window.location.href = `https://wa.me/918849376973?text=${encodeURIComponent(`Hi KitKart, I wish to cancel my order: ${order.order_id ? '#' + order.order_id : order.id}`)}`;
                                     }
                                   }}
                                   title={isPast12Hours ? "Cancellation period expired (12h limit)" : "Cancel this order"}
