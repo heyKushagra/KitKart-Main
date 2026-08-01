@@ -15,7 +15,7 @@ const FAQS: FaqItem[] = [
   },
   {
     question: "Do you offer free shipping?",
-    answer: "Yes. Free shipping is available on all products."
+    answer: "Yes. Free shipping is available on orders above 399"
   },
   {
     question: "Which payment methods are available?",
@@ -39,13 +39,13 @@ const FAQS: FaqItem[] = [
   },
   {
     question: "What is your return policy?",
-    answer: "Refunds are available after deducting the outward shipping and return shipping charges from the refund amount."
+    answer: "Refunds are available after deducting the outward shipping and return shipping charges from the refund amount. Football boots are only exchangable (not returnable)"
   },
   {
     question: "What is your exchange policy?",
     answer: (
       <span>
-        We offer free exchanges for:
+        We offer exchanges for:
         <ul style={{ marginTop: "0.5rem", paddingLeft: "1.25rem", listStyleType: "disc" }}>
           <li>Damaged products</li>
           <li>Different size requests</li>
