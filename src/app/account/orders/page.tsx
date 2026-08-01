@@ -41,11 +41,11 @@ export default function MyOrders() {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Filtering & Search state
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  
+
   // Expanded order details state
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
@@ -58,27 +58,27 @@ export default function MyOrders() {
   useEffect(() => {
     const fetchOrders = async () => {
       if (!user) return;
-      
+
       try {
         const ordersRef = collection(db, "orders");
         const q = query(
           ordersRef,
           where("userId", "==", user.uid)
         );
-        
+
         const snapshot = await getDocs(q);
         const fetchedOrders: Order[] = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         })) as Order[];
-        
+
         // Sort in memory to avoid needing a composite index
         fetchedOrders.sort((a, b) => {
           const timeA = a.createdAt?.seconds || 0;
           const timeB = b.createdAt?.seconds || 0;
           return timeB - timeA;
         });
-        
+
         setOrders(fetchedOrders);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -191,16 +191,16 @@ export default function MyOrders() {
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-                <input 
-                  type="text" 
-                  placeholder="Search by Order ID..." 
+                <input
+                  type="text"
+                  placeholder="Search by Order ID..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div className="status-filter">
-                <select 
-                  value={statusFilter} 
+                <select
+                  value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
                   <option value="All">All Statuses</option>
@@ -228,11 +228,11 @@ export default function MyOrders() {
                   const orderDate = order.createdAt?.toDate ? order.createdAt.toDate() : (order.createdAt?.seconds ? new Date(order.createdAt.seconds * 1000) : new Date());
                   const dateString = orderDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
                   const timeString = orderDate.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
-                  
+
                   const hoursPassed = (Date.now() - orderDate.getTime()) / (1000 * 60 * 60);
                   const isPast12Hours = hoursPassed > 12;
                   const isCancelled = order.status.toLowerCase() === 'cancelled';
-                  
+
                   return (
                     <div key={order.id} className={`order-card ${isExpanded ? 'expanded' : ''}`}>
                       <div className="order-summary" onClick={() => handleToggleDetails(order.id)}>
@@ -241,7 +241,7 @@ export default function MyOrders() {
                             <span className="block-label">Order ID</span>
                             <span className="block-value id-value">#{order.order_id || order.id.slice(0, 8).toUpperCase()}</span>
                           </div>
-                          
+
                           <div className="info-block date-block">
                             <span className="block-label">Date Placed</span>
                             <span className="block-value">{dateString}</span>
@@ -278,11 +278,9 @@ export default function MyOrders() {
                               <p><strong>Estimated Delivery:</strong> {getEstimatedDelivery(orderDate)}</p>
                             </div>
                             <div className="meta-actions">
-                              {/* Future feature: Invoice download */}
-                              <button className="btn-secondary" disabled>Download Invoice</button>
-                              
+
                               {!isCancelled && (
-                                <button 
+                                <button
                                   className={`btn-cancel-order ${isPast12Hours ? 'disabled-look' : ''}`}
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -299,7 +297,7 @@ export default function MyOrders() {
                               )}
                             </div>
                           </div>
-                          
+
                           <div className="products-list">
                             <h4 className="products-title">Items in this order</h4>
                             {order.products?.map((product, idx) => (
@@ -320,7 +318,7 @@ export default function MyOrders() {
                               </div>
                             ))}
                           </div>
-                          
+
                           {(() => {
                             const subtotal = order.subtotal !== undefined ? order.subtotal : (order.products?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0);
                             const discountName = order.discountName || order.couponCode || (typeof order.discount === "string" ? order.discount : "");
