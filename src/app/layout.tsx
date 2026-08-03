@@ -3,7 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
-import SplashScreen from "@/components/SplashScreen";
+import Preloader from "@/components/Preloader";
 
 export const metadata: Metadata = {
   title: "KitKart – Premium Sports Jerseys | Wear The Game",
@@ -32,7 +32,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-        <SplashScreen />
+        <Preloader />
         <div id="main-content" style={{ opacity: "var(--content-opacity, 1)", transition: "opacity 0.6s ease-in" }}>
           <AuthProvider>
             <Navbar />
