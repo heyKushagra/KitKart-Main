@@ -10,7 +10,8 @@ import {
   updateProfile,
   type User as FirebaseUser,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp } from "firebase/firestore";
 
@@ -58,6 +59,7 @@ interface AuthContextValue {
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   updateProfileData: (updates: { displayName?: string; email?: string; phone?: string; savedAddress?: any }) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -306,6 +308,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.dispatchEvent(new Event("cart_updated"));
   }
 
+  async function resetPassword(email: string) {
+    await sendPasswordResetEmail(auth, email);
+  }
+
   async function updateProfileData(updates: { displayName?: string; email?: string; phone?: string; savedAddress?: any }) {
     let activePhone = phone || updates.phone || localStorage.getItem("kitkart_phone") || "";
     activePhone = activePhone.replace(/[\s-+]/g, "");
@@ -359,7 +365,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signUp,
       loginWithGoogle,
       logout,
-      updateProfileData
+      updateProfileData,
+      resetPassword
     }}>
       {children}
     </AuthContext.Provider>

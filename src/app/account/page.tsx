@@ -9,7 +9,7 @@ import { collection, query, where, orderBy, limit, getDocs } from "firebase/fire
 
 export default function Account() {
   const router = useRouter();
-  const { user, loading, logout, phone, profileData, updateProfileData } = useAuth();
+  const { user, loading, logout, phone, profileData, updateProfileData, resetPassword } = useAuth();
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
 
@@ -19,6 +19,25 @@ export default function Account() {
   const [editPhone, setEditPhone] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+
+  const handleResetPassword = async () => {
+    const emailToReset = profileData?.email || user?.email;
+    if (!emailToReset) {
+      alert("No email associated with this account.");
+      return;
+    }
+    setIsResettingPassword(true);
+    try {
+      await resetPassword(emailToReset);
+      alert("Password reset email sent! Please check your inbox. Check SPAM Folder if you don't find it.");
+    } catch (err) {
+      console.error("Failed to send password reset email", err);
+      alert("Failed to send password reset email. Please try again later.");
+    } finally {
+      setIsResettingPassword(false);
+    }
+  };
 
   const openEditModal = () => {
     setEditName(profileData?.displayName || user?.displayName || "");
@@ -206,8 +225,8 @@ export default function Account() {
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
-                <button className="action-row" disabled>
-                  <span>Change Password</span>
+                <button className="action-row" onClick={handleResetPassword} disabled={isResettingPassword}>
+                  <span>{isResettingPassword ? "Sending Reset Email..." : "Change Password"}</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
