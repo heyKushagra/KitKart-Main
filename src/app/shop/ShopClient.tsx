@@ -11,6 +11,7 @@ interface Product {
   id: string;
   name: string;
   price: number;
+  mrp?: number;
   image: string;
   badge?: string;
   status?: string;
@@ -127,12 +128,13 @@ export default function ShopClient() {
             return {
               ...lp,
               price: typeof fp.price === 'string' ? parseFloat(fp.price) : fp.price,
+              mrp: fp.mrp ? (typeof fp.mrp === 'string' ? parseFloat(fp.mrp) : fp.mrp) : undefined,
               image: fp.mainImage || fp.image || lp.image,
               badge: fp.badge || fp.tag || lp.badge || "",
-              category: fp.category || lp.category,
-              createdAt: fp.createdAt || lp.createdAt || Date.now(),
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
               status: fp.status || "In Stock",
+              category: fp.category || lp.category || "",
+              createdAt: fp.createdAt || lp.createdAt || "2024-01-01",
               contactForPrice: fp.contactForPrice === true
             };
           }
@@ -150,13 +152,14 @@ export default function ShopClient() {
             merged.push({
               id: fp.id,
               name: fp.name,
-              price: typeof fp.price === "string" ? parseFloat(fp.price) : fp.price,
+              price: typeof fp.price === 'string' ? parseFloat(fp.price) : fp.price,
+              mrp: fp.mrp ? (typeof fp.mrp === 'string' ? parseFloat(fp.mrp) : fp.mrp) : undefined,
               image: fp.mainImage || fp.image,
               badge: fp.badge || fp.tag || "",
-              category: fp.category || "Uncategorized",
-              createdAt: fp.createdAt || Date.now(),
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
               status: fp.status || "In Stock",
+              category: fp.category || "",
+              createdAt: fp.createdAt || "2024-01-01",
               contactForPrice: fp.contactForPrice === true
             });
           }
@@ -433,7 +436,19 @@ export default function ShopClient() {
                       {isContactForPrice ? (
                         <div className="product-price" style={{ color: "var(--clr-gold)", fontSize: "0.9rem", fontWeight: "600" }}>Contact for Price</div>
                       ) : (
-                        <div className="product-price">₹{product.price.toLocaleString("en-IN")}</div>
+                        <div className="product-price">
+                          {product.mrp && product.mrp > product.price ? (
+                            <>
+                              <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "8px", fontSize: "0.85em" }}>₹{product.mrp.toLocaleString("en-IN")}</span>
+                              ₹{product.price.toLocaleString("en-IN")}
+                              <span style={{ marginLeft: "8px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold" }}>
+                                {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+                              </span>
+                            </>
+                          ) : (
+                            <>₹{product.price.toLocaleString("en-IN")}</>
+                          )}
+                        </div>
                       )}
                     </div>
                     {!isContactForPrice && (

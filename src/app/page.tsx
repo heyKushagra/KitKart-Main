@@ -11,6 +11,7 @@ interface Product {
   id: string;
   name: string;
   price: number;
+  mrp?: number;
   image: string;
   badge?: string;
   status?: string;
@@ -44,6 +45,7 @@ export default function Home() {
             return {
               ...lp,
               price: typeof fp.price === 'string' ? parseFloat(fp.price) : fp.price,
+              mrp: fp.mrp ? (typeof fp.mrp === 'string' ? parseFloat(fp.mrp) : fp.mrp) : undefined,
               image: fp.mainImage || fp.image || lp.image,
               badge: fp.badge || fp.tag || lp.badge || "",
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
@@ -70,6 +72,7 @@ export default function Home() {
               id: fp.id,
               name: fp.name,
               price: typeof fp.price === 'string' ? parseFloat(fp.price) : fp.price,
+              mrp: fp.mrp ? (typeof fp.mrp === 'string' ? parseFloat(fp.mrp) : fp.mrp) : undefined,
               image: fp.mainImage || fp.image,
               badge: fp.badge || fp.tag || "",
               stock: fp.stock !== undefined ? Number(fp.stock) : 10,
@@ -300,7 +303,7 @@ export default function Home() {
               return (
                 <Link
                   key={product.id}
-                  href={`/product/${product.id}?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}${(product.image || '').startsWith('data:') ? '' : `&image=${encodeURIComponent(product.image || '')}`}${isContactForPrice ? '&contactForPrice=true' : ''}`}
+                  href={`/product/${product.id}?id=${product.id}&name=${encodeURIComponent(product.name)}&price=${product.price}${product.mrp ? `&mrp=${product.mrp}` : ''}${(product.image || '').startsWith('data:') ? '' : `&image=${encodeURIComponent(product.image || '')}`}${isContactForPrice ? '&contactForPrice=true' : ''}`}
                   className="product-card"
                 >
                   <div className="product-img-wrapper">
@@ -313,7 +316,19 @@ export default function Home() {
                       {isContactForPrice ? (
                         <span className="product-price" style={{ color: "var(--clr-gold)", fontSize: "0.95rem", fontWeight: "600" }}>Contact for Price</span>
                       ) : (
-                        <span className="product-price">₹{product.price}</span>
+                        <span className="product-price">
+                          {product.mrp && product.mrp > product.price ? (
+                            <>
+                              <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "8px", fontSize: "0.85em" }}>₹{product.mrp}</span>
+                              ₹{product.price}
+                              <span style={{ marginLeft: "8px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold" }}>
+                                {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+                              </span>
+                            </>
+                          ) : (
+                            <>₹{product.price}</>
+                          )}
+                        </span>
                       )}
                     </div>
                     {!isContactForPrice && (

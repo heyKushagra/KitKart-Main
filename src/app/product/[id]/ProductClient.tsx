@@ -5,7 +5,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 
 const LOCAL_PRODUCTS = [
   {
@@ -55,7 +55,8 @@ function ProductContent() {
     category: "",
     description: "",
     sizes: [] as string[],
-    contactForPrice: searchParams.get("contactForPrice") === "true"
+    contactForPrice: searchParams.get("contactForPrice") === "true",
+    mrp: searchParams.get("mrp") ? Number(searchParams.get("mrp")) : undefined as number | undefined
   });
 
   useEffect(() => {
@@ -74,7 +75,8 @@ function ProductContent() {
         category: "",
         description: "",
         sizes: [] as string[],
-        contactForPrice: searchParams.get("contactForPrice") === "true"
+        contactForPrice: searchParams.get("contactForPrice") === "true",
+        mrp: searchParams.get("mrp") ? Number(searchParams.get("mrp")) : undefined as number | undefined
       };
 
       try {
@@ -93,7 +95,8 @@ function ProductContent() {
             category: data.category || "",
             description: data.description || "",
             sizes: data.sizes || [],
-            contactForPrice: data.contactForPrice === true
+            contactForPrice: data.contactForPrice === true,
+            mrp: data.mrp ? Number(data.mrp) : undefined
           });
         } else {
           setProductData(initialData);
@@ -106,7 +109,7 @@ function ProductContent() {
     fetchProduct();
   }, [pathId]);
 
-  const { name, price, image, id, stock, status, optionalImages, category, description, sizes, contactForPrice } = productData;
+  const { name, price, image, id, stock, status, optionalImages, category, description, sizes, contactForPrice, mrp } = productData;
   const isOutOfStock = stock !== undefined ? (stock <= 0 || status === "Out of Stock") : false;
 
   const isOversizedTshirt = category?.toLowerCase().includes("oversized") || name?.toLowerCase().includes("oversized");
@@ -131,10 +134,51 @@ function ProductContent() {
   }, [sizes, selectedSize]);
   const [isAdded, setIsAdded] = useState(false);
   const [activeImage, setActiveImage] = useState(image);
+  const [recommendedProducts, setRecommendedProducts] = useState<any[]>([]);
 
   useEffect(() => {
     setActiveImage(image);
   }, [image]);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!category || !pathId) return;
+      try {
+        const q = query(
+          collection(db, "products"),
+          where("category", "==", category)
+        );
+        const snapshot = await getDocs(q);
+        let sameCat: any[] = [];
+        snapshot.forEach(docSnap => {
+          if (docSnap.id !== pathId && docSnap.data().status !== "Draft") {
+            sameCat.push({ id: docSnap.id, ...docSnap.data() });
+          }
+        });
+
+        sameCat = sameCat.sort(() => 0.5 - Math.random());
+        let selected = sameCat.slice(0, 4);
+
+        if (selected.length < 4) {
+          const allQ = query(collection(db, "products"));
+          const allSnap = await getDocs(allQ);
+          let otherCat: any[] = [];
+          allSnap.forEach(docSnap => {
+            if (docSnap.id !== pathId && docSnap.data().category !== category && docSnap.data().status !== "Draft") {
+              otherCat.push({ id: docSnap.id, ...docSnap.data() });
+            }
+          });
+          otherCat = otherCat.sort(() => 0.5 - Math.random());
+          selected = [...selected, ...otherCat.slice(0, 4 - selected.length)];
+        }
+
+        setRecommendedProducts(selected);
+      } catch (err) {
+        console.error("Error fetching recommendations:", err);
+      }
+    };
+    fetchRecommendations();
+  }, [category, pathId]);
 
   const allImages = [image, ...(optionalImages || [])].filter(Boolean);
   const currentIndex = allImages.indexOf(activeImage);
@@ -361,7 +405,17 @@ function ProductContent() {
               <h1 className="product-page-title">{name}</h1>
               {!isContactForPrice && (
                 <p className="product-page-price">
-                  ₹{parseFloat(price.replace(/[^\d]/g, "")).toLocaleString("en-IN")}
+                  {mrp && mrp > parseFloat(price.replace(/[^\d]/g, "")) ? (
+                    <>
+                      <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "12px", fontSize: "0.85em" }}>₹{mrp.toLocaleString("en-IN")}</span>
+                      ₹{parseFloat(price.replace(/[^\d]/g, "")).toLocaleString("en-IN")}
+                      <span style={{ marginLeft: "12px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold" }}>
+                        {Math.round(((mrp - parseFloat(price.replace(/[^\d]/g, ""))) / mrp) * 100)}% OFF
+                      </span>
+                    </>
+                  ) : (
+                    <>₹{parseFloat(price.replace(/[^\d]/g, "")).toLocaleString("en-IN")}</>
+                  )}
                 </p>
               )}
 
@@ -682,6 +736,66 @@ function ProductContent() {
           </div>
         </div>
       </section >
+
+      {/* ===== RECOMMENDATIONS ===== */}
+      {recommendedProducts.length > 0 && (
+        <section className="section" style={{ paddingTop: '20px', paddingBottom: '40px' }}>
+          <div className="container">
+            <div className="section-header">
+              <div>
+                <h2 className="section-title">Complete Your Lineup</h2>
+              </div>
+            </div>
+            <div className="products-grid">
+              {recommendedProducts.map((product) => {
+                const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
+                const isContact = product.contactForPrice === true ||
+                  product.category?.toLowerCase() === "boots" ||
+                  product.category?.toLowerCase() === "football boots" ||
+                  product.category?.toLowerCase().includes("boot");
+                const productImage = product.mainImage || product.image || "/assets/jersey1.jpg";
+                
+                return (
+                  <Link
+                    key={product.id}
+                    href={`/product/${product.id}?id=${product.id}&name=${encodeURIComponent(product.name || '')}&price=${product.price}${product.mrp ? `&mrp=${product.mrp}` : ''}${productImage.startsWith('data:') ? '' : `&image=${encodeURIComponent(productImage)}`}${isContact ? '&contactForPrice=true' : ''}`}
+                    className="product-card"
+                  >
+                    <div className="product-img-wrapper">
+                      {product.badge && <span className="product-badge">{product.badge}</span>}
+                      {isOutOfStock && <div className="out-of-stock-overlay">Out of Stock</div>}
+                      <img src={productImage} alt={product.name} className="product-img" />
+                    </div>
+                    <div className="product-meta">
+                      <div>
+                        <h3 className="product-title">{product.name}</h3>
+                        {isContact ? (
+                          <span className="product-price" style={{ color: "var(--clr-gold)", fontSize: "0.95rem", fontWeight: "600" }}>Contact for Price</span>
+                        ) : (
+                          <span className="product-price">
+                            {product.mrp && product.mrp > (product.price || 0) ? (
+                              <>
+                                <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "8px", fontSize: "0.85em" }}>₹{product.mrp}</span>
+                                ₹{product.price}
+                                <span style={{ marginLeft: "8px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold" }}>
+                                  {Math.round((((product.mrp) - (product.price || 0)) / product.mrp) * 100)}% OFF
+                                </span>
+                              </>
+                            ) : (
+                              <>₹{product.price || 0}</>
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {showSizeChart && (
         <div
           onClick={() => setShowSizeChart(false)}

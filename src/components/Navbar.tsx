@@ -11,6 +11,7 @@ interface SearchProduct {
   id: string;
   name: string;
   price: number;
+  mrp?: number;
   image: string;
   category?: string;
   contactForPrice?: boolean;
@@ -61,6 +62,7 @@ export default function Navbar() {
                 id: docSnap.id,
                 name: data.name || "",
                 price: typeof data.price === 'string' ? parseFloat(data.price) : (data.price || 0),
+                mrp: data.mrp ? (typeof data.mrp === 'string' ? parseFloat(data.mrp) : data.mrp) : undefined,
                 image: data.mainImage || data.image || "",
                 category: data.category || "",
                 contactForPrice: data.contactForPrice === true
@@ -987,7 +989,7 @@ export default function Navbar() {
                           prod.category?.toLowerCase().includes("boot");
                         return (
                           <Link
-                            href={`/product/${prod.id}?id=${prod.id}&name=${encodeURIComponent(prod.name)}&price=${prod.price}${prod.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(prod.image)}`}${isContact ? '&contactForPrice=true' : ''}`}
+                            href={`/product/${prod.id}?id=${prod.id}&name=${encodeURIComponent(prod.name)}&price=${prod.price}${prod.mrp ? `&mrp=${prod.mrp}` : ''}${prod.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(prod.image)}`}${isContact ? '&contactForPrice=true' : ''}`}
                             key={prod.id}
                             className="search-result-item"
                             onClick={() => {
@@ -1004,7 +1006,16 @@ export default function Navbar() {
                               {isContact ? (
                                 <span style={{ color: "var(--clr-gold)", fontWeight: 600, fontSize: "0.85rem" }}>Contact for Price</span>
                               ) : (
-                                <span>₹{prod.price.toLocaleString("en-IN")}</span>
+                                <span>
+                                  {prod.mrp && prod.mrp > prod.price ? (
+                                    <>
+                                      <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "6px", fontSize: "0.85em" }}>₹{prod.mrp.toLocaleString("en-IN")}</span>
+                                      ₹{prod.price.toLocaleString("en-IN")}
+                                    </>
+                                  ) : (
+                                    <>₹{prod.price.toLocaleString("en-IN")}</>
+                                  )}
+                                </span>
                               )}
                             </div>
                           </Link>
