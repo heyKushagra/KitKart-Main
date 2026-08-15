@@ -321,7 +321,7 @@ export default function Home() {
                             <>
                               <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "8px", fontSize: "0.85em" }}>₹{product.mrp}</span>
                               ₹{product.price}
-                              <span style={{ marginLeft: "8px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold" }}>
+                              <span style={{ marginLeft: "8px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold", whiteSpace: "nowrap" }}>
                                 {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
                               </span>
                             </>

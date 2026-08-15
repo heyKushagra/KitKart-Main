@@ -124,6 +124,7 @@ function ProductContent() {
 
   const availableSizes = sizes && sizes.length > 0 ? sizes : ["xs", "s", "m", "l", "xl", "xxl"];
   const [selectedSize, setSelectedSize] = useState("m");
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   useEffect(() => {
     if (sizes && sizes.length > 0) {
@@ -310,7 +311,12 @@ function ProductContent() {
               <div className="product-image-main">
                 {activeImage ? (
                   <>
-                    <img src={activeImage} alt={name} />
+                    <img 
+                      src={activeImage} 
+                      alt={name} 
+                      onClick={() => setIsImageZoomed(true)}
+                      style={{ cursor: "zoom-in" }}
+                    />
                     {allImages.length > 1 && (
                       <>
                         <button
@@ -409,7 +415,7 @@ function ProductContent() {
                     <>
                       <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "12px", fontSize: "0.85em" }}>₹{mrp.toLocaleString("en-IN")}</span>
                       ₹{parseFloat(price.replace(/[^\d]/g, "")).toLocaleString("en-IN")}
-                      <span style={{ marginLeft: "12px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold" }}>
+                      <span style={{ marginLeft: "12px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold", whiteSpace: "nowrap" }}>
                         {Math.round(((mrp - parseFloat(price.replace(/[^\d]/g, ""))) / mrp) * 100)}% OFF
                       </span>
                     </>
@@ -777,7 +783,7 @@ function ProductContent() {
                               <>
                                 <span style={{ textDecoration: "line-through", color: "var(--clr-text-secondary)", marginRight: "8px", fontSize: "0.85em" }}>₹{product.mrp}</span>
                                 ₹{product.price}
-                                <span style={{ marginLeft: "8px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold" }}>
+                                <span style={{ marginLeft: "8px", color: "#25D366", fontSize: "0.85em", fontWeight: "bold", whiteSpace: "nowrap" }}>
                                   {Math.round((((product.mrp) - (product.price || 0)) / product.mrp) * 100)}% OFF
                                 </span>
                               </>
@@ -866,6 +872,66 @@ function ProductContent() {
               />
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Image Zoom Modal */}
+      {isImageZoomed && (
+        <div
+          onClick={() => setIsImageZoomed(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0,0,0,0.92)',
+            backdropFilter: 'blur(10px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 999999,
+            cursor: 'zoom-out'
+          }}
+        >
+          {/* Close Button */}
+          <button
+            onClick={() => setIsImageZoomed(false)}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              color: '#fff',
+              cursor: 'pointer',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              padding: '12px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000000,
+              backdropFilter: 'blur(4px)'
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
+          <img
+            src={activeImage}
+            alt={name}
+            onClick={(e) => e.stopPropagation()}
+            style={{ 
+              maxWidth: '95vw', 
+              maxHeight: '95vh', 
+              objectFit: 'contain', 
+              borderRadius: 'var(--r-md)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.8)'
+            }}
+          />
         </div>
       )}
     </div >
