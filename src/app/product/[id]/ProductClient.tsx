@@ -454,7 +454,7 @@ function ProductContent() {
                   </Link>
                 </div>
               )}
-              <p className="product-page-desc">
+              <p className="product-page-desc" style={{ whiteSpace: "pre-wrap" }}>
                 {description || (
                   (name.toLowerCase().includes("boot") || name.toLowerCase().includes("shoe") || category?.toLowerCase().includes("boot"))
                     ? "Take your game to the next level with our premium football boots. Engineered for maximum traction, superior ball control, and explosive speed on the pitch."
