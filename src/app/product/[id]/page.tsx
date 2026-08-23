@@ -10,7 +10,7 @@ export async function generateStaticParams() {
     const paths = querySnapshot.docs
       .filter((doc) => doc.data().status !== "Draft")
       .map((doc) => ({
-        id: doc.id,
+        id: String(doc.id),
       }));
 
     // Ensure local products are also included
@@ -34,7 +34,6 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductPage(props: { params: Promise<{ id: string }> }) {
-  // Await the params as required by Next.js 15
   await props.params;
   return <ProductClient />;
 }
