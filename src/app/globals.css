@@ -748,6 +748,11 @@ h6 {
   gap: var(--sp-3);
 }
 
+.product-meta > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
 .product-title {
   font-family: var(--ff-body);
   font-size: 0.9rem;

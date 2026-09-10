@@ -70,7 +70,8 @@ export default function ShopClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
 
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 16;
 
   const [showPopup, setShowPopup] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -311,8 +312,10 @@ export default function ShopClient() {
     return result;
   }, [products, activeCategory, searchQuery, sortOption]);
 
-  const visibleProducts = filteredAndSortedProducts.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredAndSortedProducts.length;
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const visibleProducts = filteredAndSortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredAndSortedProducts.length / productsPerPage);
 
   return (
     <main>
@@ -338,7 +341,7 @@ export default function ShopClient() {
                 className={`pill-btn ${activeCategory === cat ? "active" : ""}`}
                 onClick={() => {
                   setActiveCategory(cat);
-                  setVisibleCount(12);
+                  setCurrentPage(1);
                 }}
               >
                 {cat}
@@ -357,14 +360,20 @@ export default function ShopClient() {
                 placeholder="Search products..."
                 className="search-input"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
             </div>
 
             <select
               className="sort-select"
               value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
+              onChange={(e) => {
+                setSortOption(e.target.value);
+                setCurrentPage(1);
+              }}
             >
               {SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -376,7 +385,11 @@ export default function ShopClient() {
         </div>
 
         <div className="shop-results-meta">
-          <span>Showing {visibleProducts.length} of {filteredAndSortedProducts.length} products</span>
+          <span>
+            {filteredAndSortedProducts.length > 0 
+              ? `Showing ${indexOfFirstProduct + 1}-${Math.min(indexOfLastProduct, filteredAndSortedProducts.length)} of ${filteredAndSortedProducts.length} products` 
+              : "Showing 0 products"}
+          </span>
         </div>
 
         {/* Product Grid */}
@@ -485,13 +498,56 @@ export default function ShopClient() {
           </div>
         )}
 
-        {!loading && hasMore && (
-          <div className="load-more-container">
+        {!loading && totalPages > 1 && (
+          <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '2rem', paddingBottom: '2rem' }}>
             <button
-              className="btn-secondary"
-              onClick={() => setVisibleCount((prev) => prev + 12)}
+              onClick={() => {
+                setCurrentPage((prev) => Math.max(prev - 1, 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === 1}
+              style={{
+                width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--clr-border)', 
+                background: 'transparent', color: 'var(--clr-text)', display: 'flex', justifyContent: 'center', alignItems: 'center',
+                opacity: currentPage === 1 ? 0.5 : 1, cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+              }}
             >
-              Load More
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => {
+                  setCurrentPage(pageNum);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                style={{
+                  width: '40px', height: '40px', borderRadius: '50%', 
+                  border: pageNum === currentPage ? '1px solid var(--clr-gold)' : '1px solid var(--clr-border)', 
+                  background: pageNum === currentPage ? 'var(--clr-gold)' : 'transparent', 
+                  color: pageNum === currentPage ? 'var(--clr-bg)' : 'var(--clr-text)', 
+                  display: 'flex', justifyContent: 'center', alignItems: 'center',
+                  cursor: 'pointer', fontWeight: 'bold'
+                }}
+              >
+                {pageNum}
+              </button>
+            ))}
+
+            <button
+              onClick={() => {
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === totalPages}
+              style={{
+                width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--clr-border)', 
+                background: 'transparent', color: 'var(--clr-text)', display: 'flex', justifyContent: 'center', alignItems: 'center',
+                opacity: currentPage === totalPages ? 0.5 : 1, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
           </div>
         )}
