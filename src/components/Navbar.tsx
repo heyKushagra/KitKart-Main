@@ -983,10 +983,14 @@ export default function Navbar() {
                       .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
                       .slice(0, 5)
                       .map((prod) => {
-                        const isContact = prod.contactForPrice === true ||
-                          prod.category?.toLowerCase() === "boots" ||
+                        const isBootCategory = prod.category?.toLowerCase() === "boots" ||
                           prod.category?.toLowerCase() === "football boots" ||
-                          prod.category?.toLowerCase().includes("boot");
+                          prod.category?.toLowerCase().includes("boot") ||
+                          prod.name?.toLowerCase().includes("boot");
+                        const isExcludedBootBrand = prod.name?.toLowerCase().includes("anza") || 
+                          prod.name?.toLowerCase().includes("puks") || 
+                          prod.name?.toLowerCase().includes("spika");
+                        const isContact = isBootCategory ? !isExcludedBootBrand : (prod.contactForPrice === true);
                         return (
                           <Link
                             href={`/product/${prod.id}?id=${prod.id}&name=${encodeURIComponent(prod.name)}&price=${prod.price}${prod.mrp ? `&mrp=${prod.mrp}` : ''}${prod.image.startsWith('data:') ? '' : `&image=${encodeURIComponent(prod.image)}`}${isContact ? '&contactForPrice=true' : ''}`}

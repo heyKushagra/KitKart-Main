@@ -424,10 +424,14 @@ export default function ShopClient() {
           <div className="products-grid">
             {visibleProducts.map((product) => {
               const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
-              const isContactForPrice = product.contactForPrice === true ||
-                product.category?.toLowerCase() === "boots" ||
+              const isBootCategory = product.category?.toLowerCase() === "boots" ||
                 product.category?.toLowerCase() === "football boots" ||
-                product.category?.toLowerCase().includes("boot");
+                product.category?.toLowerCase().includes("boot") ||
+                product.name?.toLowerCase().includes("boot");
+              const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") || 
+                product.name?.toLowerCase().includes("puks") || 
+                product.name?.toLowerCase().includes("spika");
+              const isContactForPrice = isBootCategory ? !isExcludedBootBrand : (product.contactForPrice === true);
               return (
                 <Link href={`/product/${product.id}`} className="product-card" key={product.id}>
                   <div className="product-img-wrapper">

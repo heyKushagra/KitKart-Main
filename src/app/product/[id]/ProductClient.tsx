@@ -120,7 +120,11 @@ function ProductContent() {
     category?.toLowerCase().includes("boot") ||
     name?.toLowerCase().includes("boot");
 
-  const isContactForPrice = contactForPrice === true || isBoot;
+  const isExcludedBootBrand = name?.toLowerCase().includes("anza") || 
+                              name?.toLowerCase().includes("puks") || 
+                              name?.toLowerCase().includes("spika");
+
+  const isContactForPrice = isBoot ? !isExcludedBootBrand : (contactForPrice === true);
 
   const availableSizes = sizes && sizes.length > 0 ? sizes : ["xs", "s", "m", "l", "xl", "xxl"];
   const [selectedSize, setSelectedSize] = useState("m");
@@ -755,10 +759,14 @@ function ProductContent() {
             <div className="products-grid">
               {recommendedProducts.map((product) => {
                 const isOutOfStock = product.stock !== undefined ? (product.stock <= 0 || product.status === "Out of Stock") : false;
-                const isContact = product.contactForPrice === true ||
-                  product.category?.toLowerCase() === "boots" ||
+                const isBootCategory = product.category?.toLowerCase() === "boots" ||
                   product.category?.toLowerCase() === "football boots" ||
-                  product.category?.toLowerCase().includes("boot");
+                  product.category?.toLowerCase().includes("boot") ||
+                  product.name?.toLowerCase().includes("boot");
+                const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") || 
+                  product.name?.toLowerCase().includes("puks") || 
+                  product.name?.toLowerCase().includes("spika");
+                const isContact = isBootCategory ? !isExcludedBootBrand : (product.contactForPrice === true);
                 const productImage = product.mainImage || product.image || "/assets/jersey1.jpg";
 
                 return (
