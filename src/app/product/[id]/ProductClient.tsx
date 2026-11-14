@@ -123,9 +123,9 @@ function ProductContent() {
   const isSocks = category?.toLowerCase().includes("sock") || name?.toLowerCase().includes("sock");
   const isShinGuard = category?.toLowerCase().includes("shin") || name?.toLowerCase().includes("shin");
 
-  const isExcludedBootBrand = name?.toLowerCase().includes("anza") || 
-                              name?.toLowerCase().includes("puks") || 
-                              name?.toLowerCase().includes("spika");
+  const isExcludedBootBrand = name?.toLowerCase().includes("anza") ||
+    name?.toLowerCase().includes("puks") ||
+    name?.toLowerCase().includes("spika");
 
   const isContactForPrice = isBoot ? !isExcludedBootBrand : (contactForPrice === true);
 
@@ -502,13 +502,7 @@ function ProductContent() {
                   </Link>
                 </div>
               )}
-              <p className="product-page-desc" style={{ whiteSpace: "pre-wrap" }}>
-                {description || (
-                  (name.toLowerCase().includes("boot") || name.toLowerCase().includes("shoe") || category?.toLowerCase().includes("boot"))
-                    ? "Take your game to the next level with our premium football boots. Engineered for maximum traction, superior ball control, and explosive speed on the pitch."
-                    : "Experience ultimate comfort and style with our premium jersey. Crafted with high-grade breathable fabric, this jersey ensures you stay cool whether you're on the pitch or cheering from the stands."
-                )}
-              </p>
+
 
               {/* Sizes */}
               {!isContactForPrice && !isShinGuard && allSizes.length > 0 && (
@@ -789,7 +783,18 @@ function ProductContent() {
                   </div>
                 )}
               </div>
-
+              <div style={{ marginTop: "29px", marginBottom: "20px" }}>
+                <h4 className="option-title" style={{ fontWeight: 700, marginBottom: "8px" }}>
+                  Product Description
+                </h4>
+                <p className="product-page-desc" style={{ whiteSpace: "pre-wrap", marginBottom: 0 }}>
+                  {description || (
+                    (name.toLowerCase().includes("boot") || name.toLowerCase().includes("shoe") || category?.toLowerCase().includes("boot"))
+                      ? "Take your game to the next level with our premium football boots. Engineered for maximum traction, superior ball control, and explosive speed on the pitch."
+                      : "Experience ultimate comfort and style with our premium jersey. Crafted with high-grade breathable fabric, this jersey ensures you stay cool whether you're on the pitch or cheering from the stands."
+                  )}
+                </p>
+              </div>
 
 
               {/* Support / Whatsapp */}
@@ -828,8 +833,8 @@ function ProductContent() {
                   product.category?.toLowerCase() === "football boots" ||
                   product.category?.toLowerCase().includes("boot") ||
                   product.name?.toLowerCase().includes("boot");
-                const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") || 
-                  product.name?.toLowerCase().includes("puks") || 
+                const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") ||
+                  product.name?.toLowerCase().includes("puks") ||
                   product.name?.toLowerCase().includes("spika");
                 const isContact = isBootCategory ? !isExcludedBootBrand : (product.contactForPrice === true);
                 const productImage = product.mainImage || product.image || "/assets/jersey1.jpg";
