@@ -2175,6 +2175,52 @@ h6 {
   color: var(--clr-bg);
 }
 
+/* Year Sub-Filter Pills */
+.year-pills {
+  display: flex;
+  gap: var(--sp-2);
+  overflow-x: auto;
+  padding-bottom: var(--sp-3);
+  scrollbar-width: thin;
+  scrollbar-color: var(--clr-border) transparent;
+  width: 100%;
+}
+
+.year-pills::-webkit-scrollbar {
+  height: 3px;
+}
+
+.year-pills::-webkit-scrollbar-thumb {
+  background: var(--clr-border);
+  border-radius: 3px;
+}
+
+.year-pill-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--clr-text-secondary);
+  padding: 0.35rem 1rem;
+  border-radius: var(--r-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--t-fast);
+  letter-spacing: 0.02em;
+}
+
+.year-pill-btn:hover {
+  border-color: rgba(197, 160, 89, 0.5);
+  color: var(--clr-text);
+}
+
+.year-pill-btn.active {
+  background: rgba(197, 160, 89, 0.15);
+  border-color: var(--clr-gold);
+  color: var(--clr-gold);
+  font-weight: 600;
+}
+
 .shop-results-meta {
   display: flex;
   justify-content: space-between;

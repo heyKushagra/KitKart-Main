@@ -19,6 +19,7 @@ interface Product {
   createdAt?: any;
   stock?: number;
   contactForPrice?: boolean;
+  jerseyYear?: string;
 }
 
 const getTimestamp = (createdAt: any): number => {
@@ -69,6 +70,11 @@ export default function ShopClient() {
   const [activeCategory, setActiveCategory] = useState("All Products");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("featured");
+  const [selectedYear, setSelectedYear] = useState("All Years");
+
+  const JERSEY_YEAR_CATEGORIES = ["Fan Version", "Player Version", "Retro Version", "Master Version"];
+  const YEAR_OPTIONS = ["All Years", "2027", "2026", "2025", "2024"];
+  const showYearFilter = JERSEY_YEAR_CATEGORIES.includes(activeCategory);
 
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 16;
@@ -136,7 +142,8 @@ export default function ShopClient() {
               status: fp.status || "In Stock",
               category: fp.category || lp.category || "",
               createdAt: fp.createdAt || lp.createdAt || "2024-01-01",
-              contactForPrice: fp.contactForPrice === true
+              contactForPrice: fp.contactForPrice === true,
+              jerseyYear: fp.jerseyYear || undefined
             };
           }
           return {
@@ -161,7 +168,8 @@ export default function ShopClient() {
               status: fp.status || "In Stock",
               category: fp.category || "",
               createdAt: fp.createdAt || "2024-01-01",
-              contactForPrice: fp.contactForPrice === true
+              contactForPrice: fp.contactForPrice === true,
+              jerseyYear: fp.jerseyYear || undefined
             });
           }
         });
@@ -288,6 +296,11 @@ export default function ShopClient() {
       }
     }
 
+    // Year sub-filter (only applies for jersey version categories)
+    if (showYearFilter && selectedYear !== "All Years") {
+      result = result.filter((p) => p.jerseyYear === selectedYear);
+    }
+
     if (searchQuery.trim()) {
       const lowerQuery = searchQuery.toLowerCase();
       result = result.filter((p) => p.name.toLowerCase().includes(lowerQuery));
@@ -310,7 +323,7 @@ export default function ShopClient() {
     }
 
     return result;
-  }, [products, activeCategory, searchQuery, sortOption]);
+  }, [products, activeCategory, searchQuery, sortOption, selectedYear, showYearFilter]);
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -341,6 +354,7 @@ export default function ShopClient() {
                 className={`pill-btn ${activeCategory === cat ? "active" : ""}`}
                 onClick={() => {
                   setActiveCategory(cat);
+                  setSelectedYear("All Years");
                   setCurrentPage(1);
                 }}
               >
@@ -348,6 +362,24 @@ export default function ShopClient() {
               </button>
             ))}
           </div>
+
+          {/* Year Sub-Filter */}
+          {showYearFilter && (
+            <div className="year-pills">
+              {YEAR_OPTIONS.map((year) => (
+                <button
+                  key={year}
+                  className={`year-pill-btn ${selectedYear === year ? "active" : ""}`}
+                  onClick={() => {
+                    setSelectedYear(year);
+                    setCurrentPage(1);
+                  }}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="search-sort-group">
             <div className="search-wrapper">
@@ -386,8 +418,8 @@ export default function ShopClient() {
 
         <div className="shop-results-meta">
           <span>
-            {filteredAndSortedProducts.length > 0 
-              ? `Showing ${indexOfFirstProduct + 1}-${Math.min(indexOfLastProduct, filteredAndSortedProducts.length)} of ${filteredAndSortedProducts.length} products` 
+            {filteredAndSortedProducts.length > 0
+              ? `Showing ${indexOfFirstProduct + 1}-${Math.min(indexOfLastProduct, filteredAndSortedProducts.length)} of ${filteredAndSortedProducts.length} products`
               : "Showing 0 products"}
           </span>
         </div>
@@ -415,6 +447,7 @@ export default function ShopClient() {
               onClick={() => {
                 setSearchQuery("");
                 setActiveCategory("All Products");
+                setSelectedYear("All Years");
               }}
             >
               Clear Filters
@@ -428,8 +461,8 @@ export default function ShopClient() {
                 product.category?.toLowerCase() === "football boots" ||
                 product.category?.toLowerCase().includes("boot") ||
                 product.name?.toLowerCase().includes("boot");
-              const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") || 
-                product.name?.toLowerCase().includes("puks") || 
+              const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") ||
+                product.name?.toLowerCase().includes("puks") ||
                 product.name?.toLowerCase().includes("spika");
               const isContactForPrice = isBootCategory ? !isExcludedBootBrand : (product.contactForPrice === true);
               return (
@@ -511,7 +544,7 @@ export default function ShopClient() {
               }}
               disabled={currentPage === 1}
               style={{
-                width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--clr-border)', 
+                width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--clr-border)',
                 background: 'transparent', color: 'var(--clr-text)', display: 'flex', justifyContent: 'center', alignItems: 'center',
                 opacity: currentPage === 1 ? 0.5 : 1, cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
               }}
@@ -527,10 +560,10 @@ export default function ShopClient() {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 style={{
-                  width: '40px', height: '40px', borderRadius: '50%', 
-                  border: pageNum === currentPage ? '1px solid var(--clr-gold)' : '1px solid var(--clr-border)', 
-                  background: pageNum === currentPage ? 'var(--clr-gold)' : 'transparent', 
-                  color: pageNum === currentPage ? 'var(--clr-bg)' : 'var(--clr-text)', 
+                  width: '40px', height: '40px', borderRadius: '50%',
+                  border: pageNum === currentPage ? '1px solid var(--clr-gold)' : '1px solid var(--clr-border)',
+                  background: pageNum === currentPage ? 'var(--clr-gold)' : 'transparent',
+                  color: pageNum === currentPage ? 'var(--clr-bg)' : 'var(--clr-text)',
                   display: 'flex', justifyContent: 'center', alignItems: 'center',
                   cursor: 'pointer', fontWeight: 'bold'
                 }}
@@ -546,7 +579,7 @@ export default function ShopClient() {
               }}
               disabled={currentPage === totalPages}
               style={{
-                width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--clr-border)', 
+                width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--clr-border)',
                 background: 'transparent', color: 'var(--clr-text)', display: 'flex', justifyContent: 'center', alignItems: 'center',
                 opacity: currentPage === totalPages ? 0.5 : 1, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
               }}
@@ -569,8 +602,8 @@ export default function ShopClient() {
             </p>
             <div className="coupon-box">
               <span className="coupon-code">NEW5</span>
-              <button 
-                className="coupon-copy-btn" 
+              <button
+                className="coupon-copy-btn"
                 onClick={() => {
                   navigator.clipboard.writeText("NEW5");
                   setCopied(true);
