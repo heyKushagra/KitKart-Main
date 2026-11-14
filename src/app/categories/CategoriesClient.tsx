@@ -100,22 +100,22 @@ export default function CategoriesClient() {
             </div>
           </Link>
 
-          {/* CATEGORY CARD: COMPLETE FOOTBALL KIT */}
-          <Link href="/shop" className="category-item-card" id="category-complete-kit">
+          {/* CATEGORY CARD: ACCESSORIES */}
+          <Link href="/shop?category=Socks" className="category-item-card" id="category-accessories">
             <div className="card-image-wrapper">
-              <img src="/assets/football_kit.png" alt="Complete Football Kit Package" />
+              <img src="/assets/football_kit.png" alt="Accessories Collection" />
               <div className="card-image-overlay"></div>
             </div>
             <div className="card-content">
               <div>
-                <span className="card-tag">All-In-One Bundle</span>
-                <h2 className="card-heading">Complete Football Kit</h2>
+                <span className="card-tag">Gear & Essentials</span>
+                <h2 className="card-heading">Accessories</h2>
                 <p className="card-description">
-                  Get pitch-ready instantly. The complete ultimate football bundle featuring premium boots, a match jersey, and performance-grip socks.
+                  Elevate your game with essential football accessories including high-performance grip socks, shin guards, and matchday gear.
                 </p>
               </div>
               <span className="card-cta">
-                Explore Kits
+                Explore Accessories
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
@@ -337,7 +337,8 @@ export default function CategoriesClient() {
         }
 
         @media (min-width: 769px) {
-          #category-complete-kit {
+          #category-complete-kit,
+          #category-accessories {
             grid-column: span 2;
           }
         }

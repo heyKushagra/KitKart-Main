@@ -120,23 +120,67 @@ function ProductContent() {
     category?.toLowerCase().includes("boot") ||
     name?.toLowerCase().includes("boot");
 
+  const isSocks = category?.toLowerCase().includes("sock") || name?.toLowerCase().includes("sock");
+  const isShinGuard = category?.toLowerCase().includes("shin") || name?.toLowerCase().includes("shin");
+
   const isExcludedBootBrand = name?.toLowerCase().includes("anza") || 
                               name?.toLowerCase().includes("puks") || 
                               name?.toLowerCase().includes("spika");
 
   const isContactForPrice = isBoot ? !isExcludedBootBrand : (contactForPrice === true);
 
-  const availableSizes = sizes && sizes.length > 0 ? sizes : ["xs", "s", "m", "l", "xl", "xxl"];
-  const [selectedSize, setSelectedSize] = useState("m");
+  const DEFAULT_JERSEY_SIZES = ["xs", "s", "m", "l", "xl", "xxl"];
+  const isNumericOnly = sizes && sizes.length > 0 && sizes.every((s: string) => /^\d+(\.\d+)?$/.test(s.trim()));
+  const allSizes = React.useMemo(() => {
+    if (isShinGuard) return [];
+    if (isSocks) return ["Free Size"];
+    if (isNumericOnly) return sizes;
+    const list = [...DEFAULT_JERSEY_SIZES];
+    if (sizes && Array.isArray(sizes)) {
+      sizes.forEach((s: string) => {
+        const sNorm = s.trim().toLowerCase();
+        if (sNorm && !list.includes(sNorm)) {
+          list.push(sNorm);
+        }
+      });
+    }
+    return list;
+  }, [sizes, isNumericOnly, isSocks, isShinGuard]);
+
+  const isSizeAvailable = (sizeToCheck: string) => {
+    if (isShinGuard) return true;
+    if (isSocks) return true;
+    if (!sizes || sizes.length === 0) return true;
+    return sizes.some((s: string) => s.trim().toLowerCase() === sizeToCheck.trim().toLowerCase());
+  };
+
+  const [selectedSize, setSelectedSize] = useState(() => {
+    if (isSocks || isShinGuard) return "Free Size";
+    return "m";
+  });
   const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   useEffect(() => {
+    if (isSocks || isShinGuard) {
+      setSelectedSize("Free Size");
+      return;
+    }
     if (sizes && sizes.length > 0) {
-      if (!sizes.includes(selectedSize)) {
-        setSelectedSize(sizes[0]);
+      const isSelectedAvailable = sizes.some(
+        (s: string) => s.trim().toLowerCase() === selectedSize.trim().toLowerCase()
+      );
+      if (!isSelectedAvailable) {
+        const firstAvailable = allSizes.find((s) =>
+          sizes.some((avail: string) => avail.trim().toLowerCase() === s.trim().toLowerCase())
+        );
+        if (firstAvailable) {
+          setSelectedSize(firstAvailable);
+        } else if (sizes[0]) {
+          setSelectedSize(sizes[0]);
+        }
       }
     }
-  }, [sizes, selectedSize]);
+  }, [sizes, selectedSize, allSizes, isSocks, isShinGuard]);
   const [isAdded, setIsAdded] = useState(false);
   const [activeImage, setActiveImage] = useState(image);
   const [recommendedProducts, setRecommendedProducts] = useState<any[]>([]);
@@ -203,7 +247,7 @@ function ProductContent() {
   };
 
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
+    if (isOutOfStock || !isSizeAvailable(selectedSize)) return;
     const item = {
       id: `${id}-${selectedSize.toUpperCase()}`,
       name: name,
@@ -235,7 +279,7 @@ function ProductContent() {
   };
 
   const handleBuyNow = () => {
-    if (isOutOfStock) return;
+    if (isOutOfStock || !isSizeAvailable(selectedSize)) return;
     const item = {
       id: `${id}-${selectedSize.toUpperCase()}`,
       name: name,
@@ -467,46 +511,67 @@ function ProductContent() {
               </p>
 
               {/* Sizes */}
-              {!isContactForPrice && availableSizes.length > 0 && (
+              {!isContactForPrice && !isShinGuard && allSizes.length > 0 && (
                 <div className="product-options">
                   <div className="size-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                     <h4 className="option-title" style={{ margin: 0 }}>Select Size</h4>
-                    <button
-                      type="button"
-                      onClick={() => setShowSizeChart(true)}
-                      style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--clr-gold, #C5A059)',
-                        fontWeight: 400,
-                        letterSpacing: '0.05em',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px'
-                      }}
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
-                        <line x1="4" y1="9" x2="20" y2="9"></line>
-                        <line x1="4" y1="15" x2="20" y2="15"></line>
-                        <line x1="10" y1="3" x2="10" y2="21"></line>
-                        <line x1="14" y1="3" x2="14" y2="21"></line>
-                      </svg>
-                      Size Chart
-                    </button>
+                    {!isSocks && !isShinGuard && (
+                      <button
+                        type="button"
+                        onClick={() => setShowSizeChart(true)}
+                        style={{
+                          fontSize: '0.8rem',
+                          color: 'var(--clr-gold, #C5A059)',
+                          fontWeight: 400,
+                          letterSpacing: '0.05em',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+                          <line x1="4" y1="9" x2="20" y2="9"></line>
+                          <line x1="4" y1="15" x2="20" y2="15"></line>
+                          <line x1="10" y1="3" x2="10" y2="21"></line>
+                          <line x1="14" y1="3" x2="14" y2="21"></line>
+                        </svg>
+                        Size Chart
+                      </button>
+                    )}
                   </div>
                   <div className="size-selector">
-                    {availableSizes.map((s) => (
-                      <label key={s} className="size-option">
-                        <input
-                          type="radio"
-                          name="size"
-                          value={s}
-                          checked={selectedSize === s}
-                          onChange={() => setSelectedSize(s)}
-                        />
-                        <span>{s.toUpperCase()}</span>
-                      </label>
-                    ))}
+                    {allSizes.map((s) => {
+                      const available = isSizeAvailable(s);
+                      const isChecked = selectedSize.trim().toLowerCase() === s.trim().toLowerCase();
+
+                      return (
+                        <label
+                          key={s}
+                          className={`size-option ${available ? "available" : "unavailable"}`}
+                          title={available ? (s.toLowerCase() === "free size" ? "Free Size" : s.toUpperCase()) : `${s.toUpperCase()} - Out of Stock`}
+                          onClick={(e) => {
+                            if (!available) {
+                              e.preventDefault();
+                            }
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            name="size"
+                            value={s}
+                            checked={isChecked}
+                            disabled={!available}
+                            onChange={() => {
+                              if (available) {
+                                setSelectedSize(s);
+                              }
+                            }}
+                          />
+                          <span>{s.toLowerCase() === "free size" ? "Free Size" : s.toUpperCase()}</span>
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -810,7 +875,7 @@ function ProductContent() {
         </section>
       )}
 
-      {showSizeChart && (
+      {showSizeChart && !isSocks && !isShinGuard && (
         <div
           onClick={() => setShowSizeChart(false)}
           style={{

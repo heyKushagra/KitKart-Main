@@ -1241,7 +1241,8 @@ h6 {
   justify-content: center;
   min-width: 40px;
   height: 40px;
-  padding: 0 8px;
+  padding: 0 12px;
+  white-space: nowrap;
   font-size: 0.85rem;
   border-radius: var(--r-full);
   border: 1px solid var(--clr-border);
@@ -1261,6 +1262,47 @@ h6 {
   background-color: var(--clr-gold);
   border-color: var(--clr-gold);
   color: var(--clr-bg);
+}
+
+/* Available size: clearly highlighted, active and selectable */
+.size-option.available span {
+  border-color: rgba(197, 160, 89, 0.45);
+  color: var(--clr-text);
+  background-color: rgba(197, 160, 89, 0.05);
+}
+
+.size-option.available:hover span {
+  border-color: var(--clr-gold);
+  color: #fff;
+  background-color: rgba(197, 160, 89, 0.15);
+}
+
+.size-option.available input:checked+span {
+  background-color: var(--clr-gold);
+  border-color: var(--clr-gold);
+  color: var(--clr-bg);
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.35);
+  font-weight: 700;
+}
+
+/* Unavailable size: visible but unhighlighted, disabled with strikethrough */
+.size-option.unavailable {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.size-option.unavailable span {
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--clr-text-secondary);
+  text-decoration: line-through;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.size-option.unavailable:hover span {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--clr-text-secondary) !important;
+  background-color: rgba(255, 255, 255, 0.02) !important;
 }
 
 .product-actions {
