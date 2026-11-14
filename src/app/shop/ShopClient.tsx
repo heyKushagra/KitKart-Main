@@ -56,6 +56,7 @@ const CATEGORIES = [
 const SORT_OPTIONS = [
   { value: "featured", label: "Featured" },
   { value: "newest", label: "Newest" },
+  { value: "oldest", label: "Oldest" },
   { value: "price-asc", label: "Price: Low to High" },
   { value: "price-desc", label: "Price: High to Low" }
 ];
@@ -315,6 +316,9 @@ export default function ShopClient() {
         break;
       case "newest":
         result.sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
+        break;
+      case "oldest":
+        result.sort((a, b) => getTimestamp(a.createdAt) - getTimestamp(b.createdAt));
         break;
       case "featured":
       default:
