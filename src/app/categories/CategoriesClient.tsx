@@ -171,7 +171,7 @@ export default function CategoriesClient() {
 
         .categories-title {
           font-family: var(--ff-heading);
-          font-size: 3.5rem;
+          font-size: 2.8rem;
           font-weight: 700;
           letter-spacing: -0.02em;
           margin-top: var(--sp-2);
@@ -182,7 +182,7 @@ export default function CategoriesClient() {
         }
 
         .categories-subtitle {
-          font-size: 1.1rem;
+          font-size: 0.9rem;
           color: var(--clr-text-secondary);
           line-height: 1.6;
         }
@@ -270,7 +270,7 @@ export default function CategoriesClient() {
         }
 
         .card-description {
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           color: var(--clr-text-secondary);
           line-height: 1.6;
           margin-bottom: var(--sp-6);
