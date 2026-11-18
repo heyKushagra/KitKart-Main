@@ -55,7 +55,7 @@ export default function CategoriesClient() {
           {/* CATEGORY CARD: JERSEYS */}
           <Link href="/shop" className="category-item-card" id="category-jerseys">
             <div className="card-image-wrapper">
-              <img src="/assets/jerseyBG.jpg" alt="Premium Sports Jerseys Collection" />
+              <img src="/assets/fb33.png" alt="Premium Sports Jerseys Collection" />
               <div className="card-image-overlay"></div>
             </div>
             <div className="card-content">
@@ -79,7 +79,7 @@ export default function CategoriesClient() {
           {/* CATEGORY CARD: FOOTBALL BOOTS */}
           <Link href="/shop?category=Boots" className="category-item-card" id="category-boots">
             <div className="card-image-wrapper">
-              <img src="/assets/boots.png" alt="High-Performance Football Boots Cleats" />
+              <img src="/assets/boots2.jpeg" alt="High-Performance Football Boots Cleats" />
               <div className="card-image-overlay"></div>
             </div>
             <div className="card-content">

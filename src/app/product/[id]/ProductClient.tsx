@@ -505,7 +505,7 @@ function ProductContent() {
 
 
               {/* Sizes */}
-              {!isContactForPrice && !isShinGuard && allSizes.length > 0 && (
+              {!isOutOfStock && !isContactForPrice && !isShinGuard && allSizes.length > 0 && (
                 <div className="product-options">
                   <div className="size-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                     <h4 className="option-title" style={{ margin: 0 }}>Select Size</h4>

@@ -178,7 +178,7 @@ export default function Home() {
       {/* ===== HERO ===== */}
       <header className="hero">
         <div className="hero-bg-image">
-          <img src="/assets/fball.jpg" alt="" />
+          <img src="/assets/bg1.jpeg" alt="" />
         </div>
         <div className="hero-overlay"></div>
         <div className="hero-inner">
@@ -300,8 +300,8 @@ export default function Home() {
                 product.category?.toLowerCase() === "football boots" ||
                 product.category?.toLowerCase().includes("boot") ||
                 product.name?.toLowerCase().includes("boot");
-              const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") || 
-                product.name?.toLowerCase().includes("puks") || 
+              const isExcludedBootBrand = product.name?.toLowerCase().includes("anza") ||
+                product.name?.toLowerCase().includes("puks") ||
                 product.name?.toLowerCase().includes("spika");
               const isContactForPrice = isBootCategory ? !isExcludedBootBrand : (product.contactForPrice === true);
               return (
@@ -405,7 +405,7 @@ export default function Home() {
           <div className="categories-grid reveal reveal-stagger">
             <Link href="/shop?category=Football%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/football.jpg" alt="Football Jerseys" />
+                <img src="/assets/bg4.png" alt="Football Jerseys" />
               </div>
               <h3 className="category-name">Football</h3>
               <span className="category-explore">
@@ -421,10 +421,27 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-
+            <Link href="/shop?category=Master%20Version" className="category-card">
+              <div className="category-img-wrapper">
+                <img src="/assets/master version.jpeg" alt="Master Version" />
+              </div>
+              <h3 className="category-name">Master Version</h3>
+              <span className="category-explore">
+                Explore{" "}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </span>
+            </Link>
             <Link href="/shop?category=Fan%20Version" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/jerseyBG.jpg" alt="Fan Jerseys" />
+                <img src="/assets/fan version.jpeg" alt="Fan Jerseys" />
               </div>
               <h3 className="category-name">Fan Version</h3>
               <span className="category-explore">
@@ -442,7 +459,7 @@ export default function Home() {
             </Link>
             <Link href="/shop?category=Player%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
-                <img src="/assets/player.jpg" alt="Player Jerseys" />
+                <img src="/assets/player version.jpeg" alt="Player Jerseys" />
               </div>
               <h3 className="category-name">Player Version</h3>
               <span className="category-explore">
@@ -458,25 +475,8 @@ export default function Home() {
                 </svg>
               </span>
             </Link>
-            <Link href="/shop?category=Master%20Version" className="category-card">
-              <div className="category-img-wrapper">
-                <img src="/assets/Master.png" alt="Master Version" />
-              </div>
-              <h3 className="category-name">Master Version</h3>
-              <span className="category-explore">
-                Explore{" "}
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </span>
-            </Link>
-            <Link href="/shop?category=Cricket%20Jerseys" className="category-card">
+
+            {/* <Link href="/shop?category=Cricket%20Jerseys" className="category-card">
               <div className="category-img-wrapper">
                 <img src="/assets/IndJersey.jpg" alt="Cricket Jerseys" />
               </div>
@@ -493,7 +493,7 @@ export default function Home() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </span>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>
