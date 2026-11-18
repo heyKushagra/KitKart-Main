@@ -178,7 +178,7 @@ export default function Home() {
       {/* ===== HERO ===== */}
       <header className="hero">
         <div className="hero-bg-image">
-          <img src="/assets/bg1.jpeg" alt="" />
+          <img src="/assets/hero1.png" alt="" />
         </div>
         <div className="hero-overlay"></div>
         <div className="hero-inner">
